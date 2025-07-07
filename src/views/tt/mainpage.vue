@@ -1,3 +1,5 @@
+TODO:  อันนี้ตัวจริง ยังทำเลื่อนเเบรนเนอร์ใน ios ไม่ได้/รูปอื่นๆดูใน line ที่พี่ดอยส่งมา
+
 <template>
   <div class="bg-white">
     <div class="max-w-5xl mx-auto md:px-6 mt-5 md:text-lg text-sm">
@@ -96,7 +98,7 @@ import Product from "../tt/all/product.vue";
 import News from "../tt/all/news.vue";
 import Contact from "../tt/all/contact.vue";
 
-// ข้อมูล
+
 const images = [
   '/icon1/rice.jpg',
   '/graphics/bg_main1.jpg',
