@@ -10,7 +10,7 @@ TODO:  อันนี้ตัวจริง ยังทำเลื่อน
             class="w-full flex-shrink-0 h-48 md:h-72 object-cover md:rounded-xl bg-gray-200" alt="แบนเนอร์" />
         </div>
 
-        <!-- จุดวงกลม -->
+
         <div
           class="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-2 z-30 bg-white/50 rounded-full px-3 py-1">
           <button v-for="(img, idx) in images" :key="idx" @click="setCurrentIndex(idx)" :class="[
@@ -20,7 +20,7 @@ TODO:  อันนี้ตัวจริง ยังทำเลื่อน
         </div>
       </div>
 
-      <!-- เมนูแนวนอน -->
+
       <div ref="stickyContainer" class="mt-4 sticky top-0 z-50 bg-white/70 backdrop-blur-md">
         <div ref="menuBar"
           class="flex py-2 font-bold md:justify-center overflow-x-auto whitespace-nowrap gap-2 scrollbar-hide min-w-0 cursor-grab active:cursor-grabbing select-none relative px-2"
