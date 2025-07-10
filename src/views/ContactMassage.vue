@@ -1,10 +1,13 @@
 <template>
   <div>
-    <Bar />
-    <div class="bg-neutral-800 ">
+     <div class="sticky top-0 z-50">
+      <Bar />
+    </div>
+    <div class="bg-neutral-800  min-h-screen">
       <div class="max-w-7xl mx-auto ">
         <div class="bg-white py-20 md:px-12">
           <div class="flex flex-col md:flex-row md:justify-between items-center">
+            
             <div class="lg:w-3/5 md:w-4/6 px-8 space-y-3">
               <div class="flex flex-col mb-10">
                 <label class="text-2xl font-bold">ติดต่อเรา</label>
@@ -43,7 +46,7 @@
                 <input type="checkbox" id="accept" v-model="isAccepted"
                   class="mt-0.5 w-4 h-4 border border-stone-200 accent-yellow-300 rounded" />
                 <label>คุณยอมรับเงื่อนไขการใช้งานของเรา</label>
-                <button class="underline">privacy policy</button>
+                <button class="underline" @click="openHouseLoan">privacy policy</button>
               </div>
 
               <div class="pt-5">
@@ -104,6 +107,11 @@ onMounted(() => {
       'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js',
   })
 })
+
+function openHouseLoan() {
+  window.open('https://example.com/loan/house', '_blank');
+}
+
 </script>
 
 <style></style>

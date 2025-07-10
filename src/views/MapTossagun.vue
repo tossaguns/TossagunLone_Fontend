@@ -1,7 +1,9 @@
 <template>
   <div>
-    <Bar />
-    <div class="bg-neutral-800 ">
+     <div class="sticky top-0 z-50">
+      <Bar />
+    </div>
+    <div class="bg-neutral-800 min-h-screen flex flex-col">
       <div class="max-w-7xl mx-auto ">
         <div class="bg-white py-12">
           <div class="flex flex-col justify-center items-center">
@@ -27,7 +29,7 @@
                     d="M12 2C8.686 2 6 4.686 6 8c0 4.5 6 11 6 11s6-6.5 6-11c0-3.314-2.686-6-6-6z" />
                   <circle cx="12" cy="8" r="2" />
                 </svg>
-                <div class="flex flex-col"> 
+                <div class="flex flex-col">
                   <label class="font-bold text-lg">Retail Store</label>
                   <label class="">Mon-Sat 9am to 6pm.</label>
                   <div class="flex flex-col mt-4 text-yellow-400 text-sm font-bold">
@@ -72,9 +74,9 @@
             </div>
           </div>
         </div>
+        <Footer />
       </div>
     </div>
-    <Footer />
   </div>
 </template>
 

@@ -1,48 +1,168 @@
 <template>
   <div class="bg-[#323131]">
     <div
-      class="flex flex-col lg:flex-row lg:justify-between lg:items-stretch justify-center items-center text-white py-6 lg:px-24">
-      <div class="lg:w-4/12">
-        <div class="flex justify-center items-center space-x-2">
+      class="flex flex-col lg:flex-row lg:justify-between lg:items-stretch py-8 justify-center items-center text-white lg:px-12">
+      <div class="lg:w-4/12 flex flex-col justify-center items-center px-4 md:px-0">
+        <div class="mb-4">
           <img src="/img/Bar/Tossagun.png" class="w-7" />
-          <label class="text-sm font-bold">DIGITAL NEW GENRATION CO.,LTD</label>
         </div>
-        <div class="text-stone-400 flex flex-col items-center font-bold mt-4 text-xs">
+        <div class="flex justify-center items-center space-x-2">
+          <label class="text-xs font-bold text-center">DIGITAL NEW GENRATION CO.,LTD</label>
+        </div>
+        <div class="text-stone-400 flex flex-col items-center mt-2 text-xxs">
           <label>ร้านเดียว สินค้าครบ จบทุกบริการ</label>
           <label>Digital System To Grocery Store</label>
         </div>
       </div>
 
-      <div class="md:w-8/12 mt-12 lg:mt-0 w-full px-8 ">
-        <div
-          class="flex flex-col md:flex-row md:justify-between items-stretch xl:pl-24 lg:pl-12 text-xs space-y-6 md:space-y-0">
-          <div class="flex flex-col justify-center items-center md:flex-none md:items-start">
-            <label class="font-bold">company</label>
-            <div class="flex flex-row md:flex-col items-start  mt-4  md:space-y-2 space-x-5 md:space-x-0">
-              <button class="text-stone-400 hover:text-stone-50">เกี่ยวกับเรา</button>
-              <button class="text-stone-400 hover:text-stone-50">ข่าวสาร</button>
-              <button class="text-stone-400 hover:text-stone-50">บริษัทในกลุ่ม DNG</button>
-              <button class="text-stone-400 hover:text-stone-50">ร่วมงานกับ Tossagun</button>
-            </div>
+      <div
+        class="md:w-8/12 mt-12 lg:mt-0 w-full md:pl-8 md:px-0 px-8 flex flex-col md:flex-row md:justify-between items-stretch text-xxs">
+
+        <div class="w-full flex flex-col items-center md:items-start">
+          <label class="font-bold">company</label>
+          <div class="flex flex-col items-start md:mt-4 mt-2 md:space-x-0 w-full md:pr-4">
+            <button class="text-stone-400 hover:text-stone-50 flex justify-between items-center w-full">
+              <span class="text-left">เกี่ยวกับเรา</span>
+              <span class="text-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="white" class="w-2 h-2 text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 18.75 18.75 5.25M6 5.25h12.75V18" />
+                </svg>
+              </span>
+            </button>
+            <hr class="border border-stone-600 w-full mb-1" />
+            <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
+              <span class="text-left">ข่าวสาร</span>
+              <span class="text-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="white" class="w-2 h-2 text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 18.75 18.75 5.25M6 5.25h12.75V18" />
+                </svg>
+              </span>
+            </button>
+            <hr class="border border-stone-600 w-full mb-1" />
+            <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
+              <span class="text-left">บริษัทในกลุ่ม DNG</span>
+              <span class="text-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="white" class="w-2 h-2 text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 18.75 18.75 5.25M6 5.25h12.75V18" />
+                </svg>
+              </span>
+            </button>
+            <hr class="border border-stone-600 w-full mb-1" />
+            <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
+              <span class="text-left">ร่วมงานกับ Tossagun</span>
+              <span class="text-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="white" class="w-2 h-2 text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 18.75 18.75 5.25M6 5.25h12.75V18" />
+                </svg>
+              </span>
+            </button>
+            <hr class="border border-stone-600 w-full mb-1" />
           </div>
-          <div class="flex flex-col justify-center items-center md:flex-none md:items-start">
-            <label class="font-bold">Product</label>
-            <div class="flex flex-row md:flex-col items-start mt-4  md:space-y-2 space-x-5 md:space-x-0">
-              <button class="text-stone-400 hover:text-stone-50">สินเชื่อบ้าน</button>
-              <button class="text-stone-400 hover:text-stone-50">สินเชื่อรถ</button>
-              <button class="text-stone-400 hover:text-stone-50">สินเชื่อบุคล</button>
-              <button class="text-stone-400 hover:text-stone-50">บริการอื่นๆ</button>
-            </div>
+        </div>
+
+        <div class="w-full flex flex-col items-center md:items-start mt-8 md:mt-0">
+          <label class="font-bold">Product</label>
+          <div class="flex flex-col items-start md:mt-4 mt-2 md:space-x-0 w-full md:pr-4">
+            <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
+              <span class="text-left">สินเชื่อบ้าน</span>
+              <span class="text-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="white" class="w-2 h-2 text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 18.75 18.75 5.25M6 5.25h12.75V18" />
+                </svg>
+              </span>
+            </button>
+            <hr class="border border-stone-600 w-full mb-1" />
+            <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
+              <span class="text-left">สินเชื่อรถ</span>
+              <span class="text-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="white" class="w-2 h-2 text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 18.75 18.75 5.25M6 5.25h12.75V18" />
+                </svg>
+              </span>
+            </button>
+            <hr class="border border-stone-600 w-full mb-1" />
+            <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
+              <span class="text-left">สินเชื่อบุคล</span>
+              <span class="text-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="white" class="w-2 h-2 text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 18.75 18.75 5.25M6 5.25h12.75V18" />
+                </svg>
+              </span>
+            </button>
+            <hr class="border border-stone-600 w-full mb-1" />
+            <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
+              <span class="text-left">บริการอื่นๆ</span>
+              <span class="text-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="white" class="w-2 h-2 text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 18.75 18.75 5.25M6 5.25h12.75V18" />
+                </svg>
+              </span>
+            </button>
+            <hr class="border border-stone-600 w-full mb-1" />
           </div>
-          <div class="flex flex-col justify-center items-center md:flex-none md:items-start">
-            <label class="font-bold">Policies</label>
-            <div class="flex flex-row md:flex-col items-start mt-4 md:space-y-2 space-x-5 md:space-x-0">
-              <button class="text-stone-400 hover:text-stone-50">ข้อกำหนดเเละการใช้งานเว็บไซต์</button>
-              <button class="text-stone-400 hover:text-stone-50">นโยบายความเป็นส่วนตัว</button>
-              <button class="text-stone-400 hover:text-stone-50">นโยบายคุกกี้</button>
-              <button class="text-stone-400 hover:text-stone-50">นโยบายการนำข้อมูลออกจากระบบ</button>
-              <button class="text-stone-400 hover:text-stone-50">ข้อตกลงการให้บริการ</button>
-            </div>
+        </div>
+
+        <div class="w-full flex flex-col items-center md:items-start mt-8 md:mt-0">
+          <label class="font-bold">Policies</label>
+          <div class="flex flex-col items-start md:mt-4 mt-2 md:space-x-0 w-full md:pr-4">
+            <button class="text-stone-400 hover:text-stone-50 flex justify-between items-center w-full">
+              <span class="text-left">ข้อกำหนดเเละการใช้งานเว็บไซต์</span>
+              <span class="text-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="white" class="w-2 h-2 text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 18.75 18.75 5.25M6 5.25h12.75V18" />
+                </svg>
+              </span>
+            </button>
+            <hr class="border border-stone-600 w-full mb-1" />
+            <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
+              <span class="text-left">นโยบายความเป็นส่วนตัว</span>
+              <span class="text-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="white" class="w-2 h-2 text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 18.75 18.75 5.25M6 5.25h12.75V18" />
+                </svg>
+              </span>
+            </button>
+            <hr class="border border-stone-600 w-full mb-1" />
+            <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
+              <span class="text-left">นโยบายคุกกี้</span>
+              <span class="text-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="white" class="w-2 h-2 text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 18.75 18.75 5.25M6 5.25h12.75V18" />
+                </svg>
+              </span>
+            </button>
+            <hr class="border border-stone-600 w-full mb-1" />
+            <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
+              <span class="text-left">นโยบายการนำข้อมูลออกจากระบบ</span>
+              <span class="text-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="white" class="w-2 h-2 text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 18.75 18.75 5.25M6 5.25h12.75V18" />
+                </svg>
+              </span>
+            </button>
+            <hr class="border border-stone-600 w-full mb-1" />
+            <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
+              <span class="text-left">ข้อตกลงการให้บริการ</span>
+              <span class="text-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="white" class="w-2 h-2 text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 18.75 18.75 5.25M6 5.25h12.75V18" />
+                </svg>
+              </span>
+            </button>
+            <hr class="border border-stone-600 w-full mb-1" />
           </div>
         </div>
       </div>

@@ -12,18 +12,17 @@
 // };
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    './index.html',
-    './src/**/*.{vue,js,ts,jsx,tsx}', // ต้องมี!
-  ],
+  content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+
+  important: true, //ให้ tailwind สำคัญกว่า primevue
+
   theme: {
     extend: {
       fontSize: {
-        'xxs': '0.65rem',
-        'xxxs': '0.50rem',  // เพิ่มขนาดเล็กกว่า xs (text-xs = 0.75rem)
+        xxs: "0.65rem",
+        xxxs: "0.50rem",
       },
     },
   },
   plugins: [],
-}
-
+};
