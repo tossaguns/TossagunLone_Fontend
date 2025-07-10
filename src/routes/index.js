@@ -11,10 +11,11 @@ import CreditHasIncreased from "../views/house/CreditHasIncreased.vue";
 import ForHouse from "../views/house/ForHouse.vue";
 import NewCar from "../views/Car/NewCar.vue";
 import CarIsMoney from "../views/Car/CarIsMoney.vue";
-import Refinance from "../views/Car/Refinance.vue";
+import CarRefinance from "../views/car/CarRefinance.vue";
 import UsedCar from "../views/Car/UsedCar.vue";
 import SignIn from "../views/SignIn.vue";
 import MainHouse from "../views/house/MainHouse.vue";
+import MainCar from "../views/car/MainCar.vue";
 
 import Project from "../views/tt/project.vue";
 import mainpage from "../views/tt/mainpage.vue";
@@ -33,10 +34,11 @@ const routes = [
   { path: "/forhouse", component: ForHouse },
   { path: "/newcar", component: NewCar },
   { path: "/carismoney", component: CarIsMoney },
-  { path: "/refinance", component: Refinance },
+  { path: "/carrefinance", component: CarRefinance },
   { path: "/usedcar", component: UsedCar },
   { path: "/signin", component: SignIn },
   { path: "/mainhouse", component: MainHouse },
+  { path: "/maincar", component: MainCar },
 
   { path: "/project", component: Project },
   { path: "/mainpage", component: mainpage },

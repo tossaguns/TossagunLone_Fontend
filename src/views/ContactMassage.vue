@@ -1,13 +1,17 @@
 <template>
   <div>
-     <div class="sticky top-0 z-50">
+    <div v-if="isLoading"
+      class="bg-neutral-800 min-h-screen flex justify-center items-center max-w-2xl mx-auto lg:px-0 px-8">
+      <LoadPage class="w-full " />
+    </div>
+    <div class="sticky top-0 z-50">
       <Bar />
     </div>
     <div class="bg-neutral-800  min-h-screen">
       <div class="max-w-7xl mx-auto ">
         <div class="bg-white py-20 md:px-12">
           <div class="flex flex-col md:flex-row md:justify-between items-center">
-            
+
             <div class="lg:w-3/5 md:w-4/6 px-8 space-y-3">
               <div class="flex flex-col mb-10">
                 <label class="text-2xl font-bold">ติดต่อเรา</label>
@@ -32,7 +36,7 @@
 
               <div class="flex flex-col w-full">
                 <label class="text-sm">เบอร์มือถือ</label>
-                <input ref="phoneInput" type="tel" class="border w-full rounded-full py-2 px-4"
+                <input ref="phoneInput" type="tel" class="border w-full rounded-full py-2 pr-4"
                   placeholder="+1 (555) 000-0000" />
               </div>
 
@@ -89,17 +93,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import intlTelInput from 'intl-tel-input'
 import 'intl-tel-input/build/css/intlTelInput.css'
 
 import Bar from "../components/BarLoneTossagun.vue"
 import Footer from "../components/FooterLoneTossagun.vue"
+import LoadPage from "../components/LoadPage.vue";
+
+const isLoading = ref(true)
 
 const phoneInput = ref(null)
 const isAccepted = ref(false)
 
 onMounted(() => {
+  window.scrollTo({ top: 0, behavior: 'auto' })
+  
   intlTelInput(phoneInput.value, {
     initialCountry: 'th',
     preferredCountries: ['th', 'us', 'gb'],
@@ -112,6 +121,14 @@ function openHouseLoan() {
   window.open('https://example.com/loan/house', '_blank');
 }
 
+onMounted(async () => {
+  window.scrollTo({ top: 0, behavior: 'auto' })
+
+  await nextTick()
+  setTimeout(() => {
+    isLoading.value = false
+  }, 1000)
+})
 </script>
 
 <style></style>

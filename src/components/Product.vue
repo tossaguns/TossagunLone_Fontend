@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="w-full bg-no-repeat bg-cover bg-center xl:py-20 pt-12"
-      style="background-image: url('/img/Product/Yellowbackground.svg');">
+      style="background-image: url('/img/Product/Yellowbackground.png');">
 
       <div class="inset-0 xl:px-24 ">
         <div class="md:px-12 px-12 xl:px-6 flex flex-col  text-center md:text-left">
@@ -14,7 +14,7 @@
             <div class="md:w-1/3 flex justify-center items-stretch">
               <div @click="goToHouse"
                 class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                <img src="/img/Product/p1.svg" alt="สินเชื่อบ้าน" class="w-full h-auto" />
+                <img src="/img/Product/p1.png" alt="สินเชื่อบ้าน" class="w-full h-auto" />
                 <div class="flex mt-3">
                   <label>สินเชื่อบ้าน</label>
                   <label class="ml-2">
@@ -32,9 +32,9 @@
               </div>
             </div>
             <div class="md:w-1/3 mt-8 md:mt-0 flex justify-center items-stretch">
-              <div
+              <div @click="goToCar"
                 class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                <img src="/img/Product/p2.svg" alt="สินเชื่อรถ" class="w-full h-auto" />
+                <img src="/img/Product/p2.png" alt="สินเชื่อรถ" class="w-full h-auto" />
                 <div class="flex mt-3">
                   <label>สินเชื่อรถ</label>
                   <label class="ml-2">
@@ -54,7 +54,7 @@
             <div class="md:w-1/3 mt-8 md:mt-0 flex justify-center  items-stretch">
               <div
                 class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                <img src="/img/Product/p3.svg" alt="สินเชื่อส่วนบุคคล" class="w-full h-auto" />
+                <img src="/img/Product/p3.png" alt="สินเชื่อส่วนบุคคล" class="w-full h-auto" />
                 <div class="flex mt-3">
                   <label>สินเชื่อส่วนบุคล</label>
                   <label class="ml-2">
@@ -87,7 +87,7 @@
             <div class="md:w-1/3 flex justify-center items-stretch">
               <div
                 class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                <img src="/img/Product/p4.svg" alt="สินเชื่อบ้าน" class="w-full h-auto" />
+                <img src="/img/Product/p4.png" alt="สินเชื่อบ้าน" class="w-full h-auto" />
                 <div class="flex mt-3">
                   <label>ขอหนังสือรับรองดอกเบี้ยเงินกู้</label>
                   <label class="ml-2">
@@ -106,7 +106,7 @@
             <div class="md:w-1/3 mt-8 md:mt-0 flex justify-center items-stretch">
               <div
                 class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                <img src="/img/Product/p4.svg" alt="สินเชื่อรถ" class="w-full h-auto" />
+                <img src="/img/Product/p4.png" alt="สินเชื่อรถ" class="w-full h-auto" />
                 <div class="flex mt-3">
                   <label>ให้ความยินยอมดอกเบี้ยเงินกู้ยืม</label>
                   <label class="ml-2">
@@ -126,7 +126,7 @@
             <div class="md:w-1/3 mt-8 md:mt-0 flex justify-center  items-stretch">
               <div
                 class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                <img src="/img/Product/p4.svg" alt="สินเชื่อส่วนบุคคล" class="w-full h-auto" />
+                <img src="/img/Product/p4.png" alt="สินเชื่อส่วนบุคคล" class="w-full h-auto" />
                 <div class="flex mt-3">
                   <label>เเจ้งความประสงค์ขอใช้บริการ</label>
                   <label class="ml-2">
@@ -258,7 +258,7 @@
 
         <!-- แสดงเฉพาะขนาดต่ำกว่า md -->
         <div class="mt-4 block md:hidden">
-          <img src="/img/Product/downloadApp_M.svg" alt="QRcode_downloadApp" class=" bg-[#151515]  w-full" />
+          <img src="/img/Product/downloadApp_M.png" alt="QRcode_downloadApp" class=" bg-[#151515]  w-full" />
         </div>
 
       </div>
@@ -275,6 +275,9 @@ const router = useRouter()
 
 function goToHouse() {
   router.push('/mainhouse')
+}
+function goToCar() {
+  router.push('/maincar')
 }
 </script>
 <style></style>

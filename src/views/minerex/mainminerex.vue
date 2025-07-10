@@ -31,5 +31,7 @@ import SectionPage from "../minerex/SectionPage.vue";
 import TableSection from "../minerex/TableSection.vue";
 import DatePicker from 'primevue/datepicker';
 
+
+
 </script>
 <style></style>

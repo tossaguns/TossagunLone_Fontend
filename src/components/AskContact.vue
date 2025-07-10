@@ -77,7 +77,7 @@
 
 
           <div class="w-full md:w-1/2 flex items-center justify-center">
-            <button
+            <button @click="goToContactMassage"
               class="relative w-full md:h-[170px] h-[80px] border-2 border-yellow-400 rounded-br-3xl overflow-hidden flex items-end justify-center px-4 pb-4 bg-cover bg-center"
               style="background-image: url('/img/Bar/Tossagun.png');">
               <div class="absolute inset-0 bg-black bg-opacity-90"></div>
@@ -92,7 +92,14 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+function goToContactMassage() {
+  router.push('/contactmasage')
+}
 
 </script>
 <style></style>

@@ -1,5 +1,8 @@
 <template>
   <div>
+     <div v-if="isLoading" class="bg-neutral-800 min-h-screen flex justify-center items-center max-w-2xl mx-auto lg:px-0 px-8">
+      <LoadPage class="w-full " />
+    </div>
     <div class="sticky top-0 z-50">
       <Bar />
     </div>
@@ -93,8 +96,11 @@
 
 import 'intl-tel-input/build/css/intlTelInput.css'
 import Bar from "../components/BarLoneTossagun.vue"
-import { ref } from 'vue'
 import axios from 'axios'
+import { ref, onMounted, nextTick } from 'vue'
+import LoadPage from "../components/LoadPage.vue";
+
+const isLoading = ref(true)
 
 const email = ref('')
 
@@ -137,31 +143,31 @@ const handleSocialLogin = async (provider) => {
     return
   }
   if (provider === 'google') {
-  if (!window.google || !window.google.accounts) {
-    alert('Google SDK ยังไม่โหลด')
+    if (!window.google || !window.google.accounts) {
+      alert('Google SDK ยังไม่โหลด')
+      return
+    }
+
+    window.google.accounts.id.initialize({
+      client_id: '570631158736-7flpvf32qoao2ugfhqt145th0qg0nggg.apps.googleusercontent.com',
+      callback: async (response) => {
+        console.log('[Frontend] Google callback:', response)
+        try {
+          const res = await axios.post('http://localhost:9999/lonetossagun/registerLogin/google', {
+            id_token: response.credential
+          })
+          console.log('[Frontend] Google login success:', res.data)
+          alert('เข้าสู่ระบบด้วย Google สำเร็จ')
+        } catch (e) {
+          console.error('[Frontend] Google login error:', e)
+          alert('เข้าสู่ระบบด้วย Google ล้มเหลว')
+        }
+      }
+    })
+
+    window.google.accounts.id.prompt()
     return
   }
-
-  window.google.accounts.id.initialize({
-    client_id: '570631158736-7flpvf32qoao2ugfhqt145th0qg0nggg.apps.googleusercontent.com',
-    callback: async (response) => {
-      console.log('[Frontend] Google callback:', response)
-      try {
-        const res = await axios.post('http://localhost:9999/lonetossagun/registerLogin/google', {
-          id_token: response.credential
-        })
-        console.log('[Frontend] Google login success:', res.data)
-        alert('เข้าสู่ระบบด้วย Google สำเร็จ')
-      } catch (e) {
-        console.error('[Frontend] Google login error:', e)
-        alert('เข้าสู่ระบบด้วย Google ล้มเหลว')
-      }
-    }
-  })
-
-  window.google.accounts.id.prompt() 
-  return
-}
 
   if (provider === 'line') {
     if (!window.liff) {
@@ -188,6 +194,18 @@ const handleSocialLogin = async (provider) => {
     return
   }
 }
+
+
+
+onMounted(async () => {
+  window.scrollTo({ top: 0, behavior: 'auto' })
+
+  await nextTick()
+  setTimeout(() => {
+    isLoading.value = false
+  }, 1000)
+})
+
 </script>
 
 <style></style>

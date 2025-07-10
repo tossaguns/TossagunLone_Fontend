@@ -4,7 +4,7 @@
       <div class="flex justify-between items-center pt-4">
         <div class="relative w-full">
           <!-- รูปพื้นหลัง -->
-          <img src="/img/House/MainHouse.svg" alt="background" class="w-full h-auto object-contain rounded-t-3xl" />
+          <img src="/img/House/MainHouse.png" alt="background" class="w-full h-auto object-contain rounded-t-3xl" />
 
           <div class="absolute inset-0 lg:mt-24 sm:mt-10 mt-3">
             <div class="flex flex-col lg:flex-row lg:justify-between items-start">
@@ -51,13 +51,15 @@
           </div>
 
           <hr />
-          
-          <div class="text-white ">
-            <label><span class=" mr-2">*</span>DIGITAL GROP</label>
-            <label><span class=" mr-2">*</span>DIGITAL WORLD GROP </label>
-            <label><span class=" mr-2">*</span>DIGITAL DEVELOPER SERVICE CENTER</label>
-            <label><span class=" mr-2">*</span>DIGITAL SUCCESSMORE SERVICE</label>
-            <label><span class=" mr-2">*</span>DIGITAL ACCOUNTING AND FINANCE CENTER</label>
+
+          <div class="overflow-hidden w-full bg-transparent py-1">
+            <div class="scroll-loop text-white lg:text-sm text-xs flex gap-x-12">
+              <label><span class="mr-2">*</span>DIGITAL GROP</label>
+              <label><span class="mr-2">*</span>DIGITAL WORLD GROP</label>
+              <label><span class="mr-2">*</span>DIGITAL DEVELOPER SERVICE CENTER</label>
+              <label><span class="mr-2">*</span>DIGITAL SUCCESSMORE SERVICE</label>
+              <label><span class="mr-2">*</span>DIGITAL ACCOUNTING AND FINANCE CENTER</label>
+            </div>
           </div>
         </div>
       </div>
@@ -69,4 +71,20 @@
 
 </script>
 
-<style></style>
+<style>
+@keyframes scroll-x-loop {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.scroll-loop {
+  white-space: nowrap;
+  display: inline-block;
+  animation: scroll-x-loop 40s linear infinite;
+}
+</style>

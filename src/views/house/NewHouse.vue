@@ -1,12 +1,16 @@
 <template>
   <div>
+    <div v-if="isLoading"
+      class="bg-neutral-800 min-h-screen flex justify-center items-center max-w-2xl mx-auto lg:px-0 px-8">
+      <LoadPage class="w-full " />
+    </div>
     <div class="sticky top-0 z-50">
       <Bar />
     </div>
     <div class="bg-neutral-800 min-h-screen">
       <div class="max-w-7xl mx-auto">
         <div class="bg-white">
-          <img src="/img/House/NewHouse.svg" />
+          <img src="/img/House/NewHouse.png" />
           <div class="sticky top-16 z-40 bg-white">
             <div class="border-b border-stone-600 flex justify-center items-center space-x-10 py-2 shadow-xl px-2">
               <button @click="scrollTo('detail')"
@@ -363,7 +367,7 @@
                         <label class="md:text-sm">สัญชาติไทย</label>
                       </div>
                     </div>
-                    <img src="/img/icon/VerifyIden.svg" class="mt-20 lg:mt-0" />
+                    <img src="/img/icon/VerifyIden.png" class="mt-20 lg:mt-0" />
                   </div>
                   <div class="mt-8 md:mt-0">
                     <label class="text-black lg:text-lg">เอกสารยืนยันตัวตน</label>
@@ -411,7 +415,7 @@
                         </label>
                       </div>
                     </div>
-                    <img src="/img/icon/Insurance.svg" />
+                    <img src="/img/icon/Insurance.png" />
                   </div>
                   <div class="mt-8 md:mt-0">
                     <label class="text-black lg:text-lg">เอกสารหลักประกัน</label>
@@ -437,7 +441,7 @@
                         </label>
                       </div>
                     </div>
-                    <img src="/img/icon/ConfirmIncome.svg" />
+                    <img src="/img/icon/ConfirmIncome.png" />
                   </div>
                   <div class="mt-8 md:mt-0">
                     <label class="text-black lg:text-lg">เอกสารยืนยันรายได้</label>
@@ -523,16 +527,20 @@ import Bar from "../../components/BarLoneTossagun.vue";
 import Footer from "../../components/FooterLoneTossagun.vue";
 import AskContact from "../../components/AskContact.vue";
 import Breadcrumb from 'primevue/breadcrumb';
-import { ref } from "vue";
 import 'primeicons/primeicons.css'
-import { onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
+import LoadPage from "../../components/LoadPage.vue";
+
+
+const isLoading = ref(true)
+
 
 const home = ref({
   icon: 'pi pi-home md:text-md text-xs text-stone-400',
   route: '/main'
 });
 const items = ref([
-  { label: 'สินเชื่อบ้าน', route: '/inputtext' },
+  { label: 'สินเชื่อบ้าน', route: '/mainhouse' },
   { label: 'สินเชื่อบ้านใหม่', route: '/newhouse' },
 ]);
 
@@ -552,8 +560,14 @@ function openCompareProductDocument() {
 }
 
 
-onMounted(() => {
-  window.scrollTo({ top: 0, behavior: 'auto' }) // หรือ 'smooth'
+
+onMounted(async () => {
+  window.scrollTo({ top: 0, behavior: 'auto' })
+
+  await nextTick()
+  setTimeout(() => {
+    isLoading.value = false
+  }, 1000)
 })
 </script>
 <style></style>

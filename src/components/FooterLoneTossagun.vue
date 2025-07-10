@@ -67,7 +67,8 @@
         <div class="w-full flex flex-col items-center md:items-start mt-8 md:mt-0">
           <label class="font-bold">Product</label>
           <div class="flex flex-col items-start md:mt-4 mt-2 md:space-x-0 w-full md:pr-4">
-            <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
+            <button @click="goToHouse"
+              class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
               <span class="text-left">สินเชื่อบ้าน</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -77,7 +78,8 @@
               </span>
             </button>
             <hr class="border border-stone-600 w-full mb-1" />
-            <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
+            <button @click="goToCar"
+              class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
               <span class="text-left">สินเชื่อรถ</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -170,7 +172,18 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { useRouter } from 'vue-router'
+import { ref, onMounted, nextTick } from 'vue'
 
+const router = useRouter()
+
+function goToHouse() {
+  window.open('/mainhouse', '_blank')
+}
+
+function goToCar() {
+  window.open('/maincar', '_blank')
+}
 </script>
 <style></style>

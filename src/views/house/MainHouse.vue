@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <div class="sticky top-0 z-50">
       <Bar />
     </div>
@@ -8,7 +9,7 @@
         <MainHouse />
         <div class="bg-yellow-300 ">
           <div class="w-full bg-no-repeat bg-cover bg-center xl:py-20 pt-12"
-            style="background-image: url('/img/bgHCP.svg');">
+            style="background-image: url('/img/bgHCP.png');">
 
             <div class="inset-0 xl:px-24 ">
               <div class="md:px-12 px-12 xl:px-6 flex flex-col  text-center md:text-left">
@@ -21,7 +22,7 @@
                   <div class="md:w-1/3 flex justify-center items-stretch">
                     <div @click="goToNewHouse"
                       class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                      <img src="/img/House/NewHouse.svg" alt="สินเชื่อบ้านใหม่" class="w-full h-auto  rounded-xl" />
+                      <img src="/img/House/NewHouse.png" alt="สินเชื่อบ้านใหม่" class="w-full h-auto  rounded-xl" />
                       <div class="flex mt-3">
                         <label>สินเชื่อบ้านใหม่</label>
                         <label class="ml-2">
@@ -41,7 +42,7 @@
                   <div class="md:w-1/3 mt-8 md:mt-0 flex justify-center items-stretch">
                     <div @click="goToHouseIsMoney"
                       class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                      <img src="/img/House/HouseIsMoney.svg" alt="สินเชื่อบ้านคือเงิน"
+                      <img src="/img/House/HouseIsMoney.png" alt="สินเชื่อบ้านคือเงิน"
                         class="w-full h-auto rounded-xl" />
                       <div class="flex mt-3">
                         <label>สินเชื่อบ้านคือเงิน</label>
@@ -62,7 +63,7 @@
                   <div class="md:w-1/3 mt-8 md:mt-0 flex justify-center  items-stretch">
                     <div @click="goToHouse2"
                       class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                      <img src="/img/House/House2.svg" alt="สินเชื่อบ้านมือสอง" class="w-full h-auto  rounded-xl" />
+                      <img src="/img/House/House2.png" alt="สินเชื่อบ้านมือสอง" class="w-full h-auto  rounded-xl" />
                       <div class="flex mt-3">
                         <label>สินเชื่อบ้านมือสอง</label>
                         <label class="ml-2">
@@ -85,7 +86,7 @@
                   <div class="md:w-1/3 mt-8 md:mt-0 flex justify-center  items-stretch">
                     <div @click="goToCreditHasIncreased"
                       class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                      <img src="/img/House/CreditHasIncreased.svg" alt="สินเชื่อบ้านได้เพิ่ม"
+                      <img src="/img/House/CreditHasIncreased.png" alt="สินเชื่อบ้านได้เพิ่ม"
                         class="w-full h-auto  rounded-xl" />
                       <div class="flex mt-3">
                         <label>สินเชื่อบ้านได้เพิ่ม</label>
@@ -106,7 +107,7 @@
                   <div class="md:w-1/3 mt-8 md:mt-0 flex justify-center  items-stretch">
                     <div @click="goToForHouse"
                       class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                      <img src="/img/House/ForHouse.svg" alt="สินเชื่อส่วนบุคคล" class="w-full h-auto  rounded-xl" />
+                      <img src="/img/House/ForHouse.png" alt="สินเชื่อส่วนบุคคล" class="w-full h-auto  rounded-xl" />
                       <div class="flex mt-3">
                         <label>สินเชื่อเพื่อปลูกสร้างบ้าน</label>
                         <label class="ml-2">
@@ -160,7 +161,7 @@
                   <div class="md:w-1/3 flex justify-center items-stretch">
                     <div
                       class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                      <img src="/img/Product/p4.svg" alt="สินเชื่อบ้าน" class="w-full h-auto" />
+                      <img src="/img/Product/p4.png" alt="สินเชื่อบ้าน" class="w-full h-auto" />
                       <div class="flex mt-3">
                         <label>ขอหนังสือรับรองดอกเบี้ยเงินกู้</label>
                         <label class="ml-2">
@@ -180,7 +181,7 @@
                   <div class="md:w-1/3 mt-8 md:mt-0 flex justify-center items-stretch">
                     <div
                       class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                      <img src="/img/Product/p4.svg" alt="สินเชื่อรถ" class="w-full h-auto" />
+                      <img src="/img/Product/p4.png" alt="สินเชื่อรถ" class="w-full h-auto" />
                       <div class="flex mt-3">
                         <label>ให้ความยินยอมดอกเบี้ยเงินกู้ยืม</label>
                         <label class="ml-2">
@@ -201,7 +202,7 @@
                   <div class="md:w-1/3 mt-8 md:mt-0 flex justify-center  items-stretch">
                     <div
                       class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                      <img src="/img/Product/p4.svg" alt="สินเชื่อส่วนบุคคล" class="w-full h-auto" />
+                      <img src="/img/Product/p4.png" alt="สินเชื่อส่วนบุคคล" class="w-full h-auto" />
                       <div class="flex mt-3">
                         <label>เเจ้งความประสงค์ขอใช้บริการ</label>
                         <label class="ml-2">
@@ -331,34 +332,38 @@
 <script setup>
 import Bar from "../../components/BarLoneTossagun.vue";
 import MainHouse from "../../components/MainHouse.vue";
-import { onMounted } from 'vue'
+import { ref, onMounted, } from 'vue'
 import AskContact from "../../components/AskContact.vue";
 import Footer from "../../components/FooterLoneTossagun.vue";
 import { useRouter } from 'vue-router'
+import LoadPage from "../../components/LoadPage.vue";
 
+const isLoading = ref(true)
 const router = useRouter()
 
 function goToNewHouse() {
-  router.push('/newhouse')
+  window.open('/newhouse', '_blank')
 }
 function goToHouseIsMoney() {
-  router.push('/houseismoney')
+  window.open('/houseismoney', '_blank')
 }
 function goToHouse2() {
-  router.push('/house2')
+  window.open('/house2', '_blank')
 }
 function goToCreditHasIncreased() {
-  router.push('/credithasincreased')
+  window.open('/credithasincreased', '_blank')
 }
 function goToForHouse() {
-  router.push('/forhouse')
+  window.open('/forhouse', '_blank')
 }
 function goToHouseRefinance() {
-  router.push('')
+  window.open('', '_blank')
 }
 
-onMounted(() => {
-  window.scrollTo({ top: 0, behavior: 'auto' })
+
+onMounted(async () => {
+
+
 })
 </script>
 <style></style>

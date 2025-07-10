@@ -1,12 +1,16 @@
 <template>
   <div>
+    <div v-if="isLoading"
+      class="bg-neutral-800 min-h-screen flex justify-center items-center max-w-2xl mx-auto lg:px-0 px-8">
+      <LoadPage class="w-full " />
+    </div>
     <div class="sticky top-0 z-50">
       <Bar />
     </div>
     <div class="bg-neutral-800  min-h-screen">
       <div class="max-w-7xl mx-auto">
         <div class="bg-white">
-          <img src="/img/Car/NewCar.svg" />
+          <img src="/img/Car/NewCar.png" />
           <div class="sticky top-16 z-40 bg-white">
             <div class="border-b border-stone-600 flex justify-center items-center space-x-10 py-2 shadow-xl px-2">
               <button @click="scrollTo('detail')"
@@ -18,7 +22,7 @@
             </div>
           </div>
 
-           <Breadcrumb :home="home" :model="items"
+          <Breadcrumb :home="home" :model="items"
             class="flex overflow-x-auto no-scrollbar mx-2 md:text-sm text-xxs text-stone-400 whitespace-nowrap">
             <template #item="{ item, props }">
               <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
@@ -153,7 +157,7 @@
               <div class="flex flex-col lg:flex-row justify-between items-stretch">
                 <div class="lg:w-1/2 lg:pr-6 px-4">
                   <div class="flex flex-col items-center lg:items-start">
-                    <img src="/img/icon/VerifyIden.svg" />
+                    <img src="/img/icon/VerifyIden.png" />
                   </div>
                   <div class="mt-8 md:mt-0">
                     <label class="text-black lg:text-lg">เอกสารยืนยันตัวตน</label>
@@ -174,7 +178,7 @@
 
                 <div class="lg:w-1/2 px-3 mt-28 lg:mt-0">
                   <div class="flex flex-col items-center lg:items-start">
-                    <img src="/img/icon/ConfirmAddress.svg" />
+                    <img src="/img/icon/ConfirmAddress.png" />
                   </div>
                   <div class="mt-8 md:mt-0">
                     <label class="text-black lg:text-lg">เอกสารยืนยันที่อยู่</label>
@@ -194,7 +198,7 @@
 
                 <div class="lg:w-1/2 md:pl-6 px-4 mt-28 lg:mt-0">
                   <div class="flex flex-col items-center lg:items-start">
-                    <img src="/img/icon/ConfirmIncome.svg" />
+                    <img src="/img/icon/ConfirmIncome.png" />
                   </div>
                   <div class="mt-8 md:mt-0">
                     <label class="text-black lg:text-lg">เอกสารยืนยันรายได้</label>
@@ -224,7 +228,7 @@
               <div class="flex flex-col lg:flex-row justify-between items-stretch">
                 <div class="lg:w-1/2 lg:pr-6 px-4">
                   <div class="flex flex-col items-center lg:items-start">
-                    <img src="/img/icon/InsuranceConditions.svg" />
+                    <img src="/img/icon/InsuranceConditions.png" />
                   </div>
                   <div class="mt-8 md:mt-0">
                     <label class="text-black lg:text-lg">เงื่อนไขการทำประกันภัย</label>
@@ -238,7 +242,7 @@
 
                 <div class="lg:w-1/2 px-3 mt-28 lg:mt-0">
                   <div class="flex flex-col items-center lg:items-start">
-                    <img src="/img/icon/Fee.svg" />
+                    <img src="/img/icon/Fee.png" />
                   </div>
                   <div class="mt-8 md:mt-0">
                     <label class="text-black lg:text-lg">ค่าธรรมเนียมและค่าใช้จ่าย</label>
@@ -263,7 +267,7 @@
               <div class="mt-20">
                 <label class="text-xl text-black">Sales Sheet</label>
                 <div class="mt-4 flex space-x-2 items-center">
-                  <img src="/img/icon/pdf.svg" class="w-12" />
+                  <img src="/img/icon/pdf.png" class="w-12" />
                   <label>Sales Sheet สินเชื่อรถยนต์ใหม่</label>
                 </div>
               </div>
@@ -278,21 +282,27 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, nextTick } from "vue"
 import Bar from "../../components/BarLoneTossagun.vue"
 import Footer from "../../components/FooterLoneTossagun.vue"
 import AskContact from "../../components/AskContact.vue"
+
 import Breadcrumb from 'primevue/breadcrumb'
 import 'primeicons/primeicons.css'
+import LoadPage from "../../components/LoadPage.vue";
+
+const isLoading = ref(true)
+
 
 const home = ref({
   icon: 'pi pi-home md:text-md text-xs text-stone-400',
   route: '/main'
 });
 const items = ref([
-  { label: 'สินเชื่อบ้าน', route: '/inputtext' },
+  { label: 'สินเชื่อรถ', route: '/maincar' },
   { label: 'สินเชื่อรถยนต์ใหม่', route: '/newcar' },
 ]);
+
 
 function scrollTo(id) {
   const el = document.getElementById(id)
@@ -301,8 +311,12 @@ function scrollTo(id) {
   }
 }
 
-
-onMounted(() => {
+onMounted(async () => {
   window.scrollTo({ top: 0, behavior: 'auto' })
+
+  await nextTick()
+  setTimeout(() => {
+    isLoading.value = false
+  }, 1000)
 })
 </script>

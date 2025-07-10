@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white w-full border pb-20">
     <div class="w-full bg-no-repeat bg-cover bg-center xl:pt-20 pt-16"
-      style="background-image: url('/img/Product/PlansYellow.svg');">
+      style="background-image: url('/img/Product/PlansYellow.png');">
 
       <div class="flex justify-center flex-col items-center">
         <label class="text-yellow-600 bg-yellow-200 md:px-4 md:py-2 px-2 py-1 rounded-full">Pricing plans</label>
@@ -37,11 +37,12 @@
                 <div class="my-8">
                   <div v-for="(line, i) in plan.description.split('\n')" :key="i"
                     class="self-start flex lg:px-6 md:px-3 px-6 space-x-3 py-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-500 shrink-0 bg-yellow-100 rounded-full" fill="none"
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                      class="w-5 h-5 text-yellow-500 shrink-0 bg-yellow-100 rounded-full" fill="none"
                       viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
-                    
+
                     <label class="text-stone-500 md:text-sm lg:text-base text-md break-words flex-1">
                       {{ line }}
                     </label>
