@@ -127,8 +127,7 @@
                   <div class="md:w-1/3 mt-8 md:mt-0 flex justify-center  items-stretch">
                     <div @click="goToHouseRefinance"
                       class="w-full h-full border bg-white border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-3 rounded-xl flex flex-col">
-                      <img src="/img/House/HouseRefinance.svg" alt="สินเชื่อส่วนบุคคล"
-                        class="w-full h-auto  rounded-xl" />
+                      <img src="" alt="สินเชื่อส่วนบุคคล" class="w-full h-auto  rounded-xl" />
                       <div class="flex mt-3">
                         <label class="text-red-600">สินเชื่อบ้านรีไฟเเนนนซ์(ไม่มีข้อมูล)</label>
                         <label class="ml-2">
@@ -313,7 +312,6 @@
                           *การคำนวณข้างต้นเป็นเพียงเครื่องมือที่ช่วยให้ท่านสามารถทราบค่างวดที่ต้องผ่อนชำระต่อเดือน
                           เงื่อนไข เงินดาวน์ เเละอัตราดอกเบี้ยสามารถเปลี่ยนแปลงได้ตามเงื่อนไขของบริษัท
                         </div>
-
                       </div>
                     </div>
                   </div>
@@ -336,9 +334,7 @@ import { ref, onMounted, } from 'vue'
 import AskContact from "../../components/AskContact.vue";
 import Footer from "../../components/FooterLoneTossagun.vue";
 import { useRouter } from 'vue-router'
-import LoadPage from "../../components/LoadPage.vue";
 
-const isLoading = ref(true)
 const router = useRouter()
 
 function goToNewHouse() {
@@ -362,7 +358,7 @@ function goToHouseRefinance() {
 
 
 onMounted(async () => {
-
+  window.scrollTo({ top: 0, behavior: 'auto' })
 
 })
 </script>

@@ -174,7 +174,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, } from 'vue'
 
 const router = useRouter()
 

@@ -63,7 +63,7 @@
 import SectionPage from "../minerex/SectionPage.vue";
 import TableSection from "../minerex/TableSection.vue";
 import DatePicker from 'primevue/datepicker';
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted,  } from 'vue'
 
 </script>
 <style></style>

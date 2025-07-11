@@ -12,29 +12,62 @@
           <div class="bg-neutral-700 rounded-full px-6 py-2">
             <div class="flex justify-between text-sm font-semibold ">
               <button @click="goToMain" class="text-white hover:text-yellow-400">หน้าหลัก</button>
- 
+
               <div class="relative group">
                 <button class="text-white hover:text-yellow-400">ผลิตภัณฑ์</button>
                 <div
-                  class="absolute top-full left-0 bg-white text-black rounded-md mt-2 p-4 shadow-lg w-80 hidden group-hover:block z-50">
+                  class="absolute top-full left-0 bg-white text-black rounded-md mt-2 p-4 shadow-lg w-[700px] hidden group-hover:block z-50">
 
                   <label class="font-bold">ผลิตภัณฑ์</label>
-                  <div class="flex flex-col justify-between items-start w-full">
+                  <div class="flex flex-row justify-between items-start w-full mt-5">
                     <div class="w-1/4">
                       <label class="font-bold">สินเชื่อบ้าน</label>
-                      <div>
-                        <button class="w-full text-left">หน้าหลักสินเชื่อบ้าน</button>
-                        <button class="w-full text-left">สินเชื่อบ้านใหม่</button>
-                        <button class="w-full text-left">สินเชื่อบ้านคือเงิน</button>
-                        <button class="w-full text-left">สินเชื่อบ้านมือสอง</button>
-                        <button class="w-full text-left">สินเชื่อบ้านได้เพิ่ม</button>
-                        <button class="w-full text-left">สินเชื่อเพื่อปลูกสร้างบ้าน</button>
-                        <button class="w-full text-left">สินเชื่อบ้านรีไฟเเเนนซ์</button>
+                      <div class="mt-2 pl-3 space-y-2">
+                        <button @click="goToMainHouse"
+                          class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">หน้าหลักสินเชื่อบ้าน</button>
+                        <button @click="goToNewHouse"
+                          class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">สินเชื่อบ้านใหม่</button>
+                        <button @click="goToHouseIsMoney"
+                          class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">สินเชื่อบ้านคือเงิน</button>
+                        <button @click="goToHouse2"
+                          class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">สินเชื่อบ้านมือสอง</button>
+                        <button @click="goToCreditHasIncreased"
+                          class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">สินเชื่อบ้านได้เพิ่ม</button>
+                        <button @click="goToForHouse"
+                          class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">สินเชื่อเพื่อปลูกสร้างบ้าน</button>
+                        <button @click="goToHouseRefinance"
+                          class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">สินเชื่อบ้านรีไฟเเเนนซ์</button>
                       </div>
                     </div>
-                    <div class="w-1/4"></div>
-                    <div class="w-1/4"></div>
-                    <div class="w-1/4"></div>
+
+                    <div class="w-1/4 ">
+                      <label class="font-bold">สินเชื่อรถ</label>
+                      <div class="mt-2 pl-3 space-y-2">
+                        <button @click="goToMainCar"
+                          class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">หน้าหลักสินเชื่อรถ</button>
+                        <button @click="goToNewCar"
+                          class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">สินเชื่อเช่ารถยนต์ใหม่</button>
+                        <button @click="goToCarIsMoney"
+                          class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">สินเชื่อรถคือเงิน</button>
+                        <button @click="goToCarRefinance"
+                          class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">สินเชื่อรถรีไฟเเนนซ์</button>
+                        <button @click="goToUsedCar"
+                          class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">สินเชื่อรถใช้เเล้ว</button>
+                      </div>
+                    </div>
+                    <div class="w-1/4">
+                      <label class="font-bold">สินเชื่อส่วนบุคคล</label>
+                      <div class="mt-2 space-y-2">
+                        <button
+                          class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">หน้าหลักสินเชื่อส่วนบุคคล</button>
+                        <button class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">....</button>
+                        <button class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">....</button>
+                        <button class="w-full text-left font-normal text-stone-500 hover:text-yellow-400">....</button>
+                      </div>
+                    </div>
+                    <div class="pr-5">
+                      <label class="font-bold">อื่นๆ</label>
+                    </div>
                   </div>
                   <!-- <ul class="space-y-2 text-sm">
                     <li><a href="/mainhouse" class="hover:underline">สินเชื่อบ้าน</a></li>
@@ -263,7 +296,6 @@ const items = ref([
         class: 'pl-8',
         label: 'อื่นๆ',
       },
-
     ]
   },
   {
@@ -337,6 +369,50 @@ const toggleMenu = () => {
   menuOpen.value = !menuOpen.value
 }
 
+
+function goToMainHouse() {
+  router.push('/mainhouse')
+}
+
+function goToMainCar() {
+  router.push('/maincar')
+}
+
+function goToCreditHasIncreased() {
+  router.push('/credithasincreased')
+}
+
+function goToForHouse() {
+  router.push('/forhouse')
+}
+
+function goToHouse2() {
+  router.push('/house2')
+}
+
+function goToHouseIsMoney() {
+  router.push('/houseismoney')
+}
+
+function goToNewHouse() {
+  router.push('/newhouse')
+}
+
+function goToCarIsMoney() {
+  router.push('/carismoney')
+}
+
+function goToCarRefinance() {
+  router.push('/carismoney')
+}
+
+function goToNewCar() {
+  router.push('/newcar')
+}
+
+function goToUsedCar() {
+  router.push('/usedcar')
+}
 
 function goToContact() {
   router.push('/maptossagun')

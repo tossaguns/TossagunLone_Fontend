@@ -1,8 +1,6 @@
 <template>
   <div>
-     <div v-if="isLoading" class="bg-neutral-800 min-h-screen flex justify-center items-center max-w-2xl mx-auto lg:px-0 px-8">
-      <LoadPage class="w-full " />
-    </div>
+     
     <div class="sticky top-0 z-50">
       <Bar />
     </div>
@@ -97,8 +95,8 @@
 import 'intl-tel-input/build/css/intlTelInput.css'
 import Bar from "../components/BarLoneTossagun.vue"
 import axios from 'axios'
-import { ref, onMounted, nextTick } from 'vue'
-import LoadPage from "../components/LoadPage.vue";
+import { ref, onMounted,  } from 'vue'
+
 
 const isLoading = ref(true)
 
@@ -200,10 +198,7 @@ const handleSocialLogin = async (provider) => {
 onMounted(async () => {
   window.scrollTo({ top: 0, behavior: 'auto' })
 
-  await nextTick()
-  setTimeout(() => {
-    isLoading.value = false
-  }, 1000)
+ 
 })
 
 </script>
