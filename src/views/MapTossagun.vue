@@ -1,10 +1,9 @@
 <template>
   <div>
-    
     <div class="sticky top-0 z-50">
       <Bar />
     </div>
-    <div class="bg-neutral-800 min-h-screen flex flex-col">
+    <div class="min-h-screen flex flex-col">
       <div class="max-w-7xl mx-auto ">
         <div class="bg-white py-12">
           <div class="flex flex-col justify-center items-center">
@@ -82,17 +81,14 @@
 </template>
 
 <script setup>
-import Bar from "../components/BarLoneTossagun.vue"
-import Footer from "../components/FooterLoneTossagun.vue"
-import { ref, onMounted,  } from 'vue'
-
+import Bar from "@components/BarHotelTossagun.vue"
+import Footer from "@components/FooterLoneTossagun.vue"
+import { ref, onMounted, } from 'vue'
 
 const isLoading = ref(true)
 
 onMounted(async () => {
   window.scrollTo({ top: 0, behavior: 'auto' })
-
- 
 })
 </script>
 

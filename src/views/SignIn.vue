@@ -1,38 +1,36 @@
 <template>
   <div>
-     
+
     <div class="sticky top-0 z-50">
       <Bar />
     </div>
-    <div class="bg-neutral-800  min-h-screen">
+    <div class="min-h-screen">
       <div class="max-w-7xl mx-auto ">
         <div class="bg-white md:py-20 py-12 md:px-12">
           <div class="flex flex-col md:flex-row md:justify-between items-start">
 
             <div class="lg:w-3/5 md:w-4/6 px-8  w-full">
               <div class="flex flex-col mb-10 text-center">
-                <label class="text-sm font-bold text-yellow-500 pb-5">TOSSAGUN</label>
-                <label class="md:text-2xl  font-bold">เข้าสู่ระบบหรือสร้างเเอคเคาท์</label>
-                <label
-                  class="text-stone-400 md:text-base text-xxs">สามารถเข้าสู่ระบบโดยเเอคเคาท์ที่ท่านลงทะเบียนกับเรา</label>
+                <label class="text-sm font-bold text-amber-400 pb-5">{{ t('Tossagun') }}</label>
+                <label class="md:text-3xl text-xl font-bold">{{ t('LoginTopic') }}</label>
+                <label class="text-stone-400 md:text-xs text-xxs">{{ t('LoginP') }}</label>
               </div>
 
 
-              <div class="flex flex-col w-full lg:px-20 md:px-12 px-4 space-y-3 md:text-base text-sm">
+              <div class="flex flex-col w-full lg:px-20 md:px-12 px-4 space-y-3 md:text-base text-sm py-8">
                 <div>
-                  <label class="text-sm text-stone-400">อีเมล</label>
+                  <label class="text-sm text-stone-400">{{ t('Email') }}</label>
                   <input v-model="email" type="email" class="border w-full rounded-full py-2 px-4"
                     placeholder="you@company.com" />
                 </div>
-                <button class="border w-full rounded-full py-2 px-4 bg-yellow-400 text-white font-semibold"
-                  @click="handleSendOtp">ดำเนิการโดยใช้อีเมล</button>
+                <button class="border w-full rounded-full py-2 px-4 bg-amber-300 text-stone-600 font-semibold"
+                  @click="handleSendOtp">{{ t('EmailLabel') }}</button>
               </div>
 
 
               <div class="flex items-center justify-center w-full pt-12 md:px-12">
                 <hr class="flex-grow border-t border-gray-300" />
-                <span
-                  class="mx-4 md:text-sm text-xxs text-gray-400 whitespace-nowrap">หรือใช้ตัวเลือกใดตัวเลือกหนึ่งในนี้</span>
+                <span class="mx-4 md:text-sm text-xxs text-gray-400 whitespace-nowrap">{{ t('SignInHr') }}</span>
                 <hr class="flex-grow border-t border-gray-300" />
               </div>
 
@@ -51,22 +49,22 @@
 
               <div class="md:text-sm text-xxs my-12 md:px-12 px-4">
                 <div class="flex justify-center items-center">
-                  <label class="text-center">เมื่อเข้าสู่ระบบหรือสร้างเเอคเคาท์จะถือว่าท่านยอมรับ<span
-                      class="text-yellow-500 ">ข้อกำหนดเเละเงื่อนไข</span>เเละ<span
-                      class="text-yellow-500">เเถลงการณ์เกี่ยวกับความเป็นส่วนตัว</span>ของเรา</label>
+                  <label class="text-center">{{ t('Conditions1') }}<span class="text-amber-500 px-2">{{ t('Conditions2')
+                  }}</span>{{ t('Conditions3') }}<span class="text-amber-500 px-2">{{ t('Conditions4')
+                      }}</span></label>
                 </div>
-                <div class="flex flex-col justify-center items-center mt-6">
-                  <label>สงวนลิขสิทธิ์</label>
-                  <label>ลิขสิทธิ์ (2006 - 2025) - TOSSAGUN.com</label>
+                <div class="flex flex-col justify-center items-center mt-6 space-y-3">
+                  <label>{{ t('Copyright1') }}</label>
+                  <label>{{ t('Copyright2') }}</label>
                 </div>
               </div>
             </div>
 
             <div class="lg:w-2/5 md:w-2/6 hidden md:block pr-10">
-              <div class="bg-yellow-400 rounded-3xl h-[580px] flex flex-col">
-                <img src="/img/Toscontact.png" class="w-full object-contain" />
-                <div class="flex-grow flex flex-col justify-end lg:items-center items-end px-2 pb-4 lg:pb-6">
-                  <label class="text-sm py-4 hidden lg:block">ติดตามเราได้ที่</label>
+              <div class="bg-amber-300 rounded-3xl h-[650px] flex flex-col">
+                <img src="/Tossagun/welcom.png" class="w-full object-contain px-4 pt-4" />
+                <div class="flex-grow flex flex-col lg:justify-end justify-center items-center  px-2 pb-4 lg:pb-6">
+                  <label class="text-sm py-4 hidden lg:block">{{ t('ContactLabel') }}</label>
                   <div class="flex lg:flex-row md:flex-col pb-2 lg:space-x-3 space-y-5 lg:space-y-0 px-6">
                     <button class="w-10 h-10 bg-no-repeat bg-center bg-contain"
                       style="background-image: url('/img/Product/facebook.png');"></button>
@@ -93,11 +91,12 @@
 <script setup>
 
 import 'intl-tel-input/build/css/intlTelInput.css'
-import Bar from "../components/BarLoneTossagun.vue"
+import Bar from "@components/BarHotelTossagun.vue"
 import axios from 'axios'
-import { ref, onMounted,  } from 'vue'
+import { ref, onMounted, } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-
+const { t } = useI18n()
 const isLoading = ref(true)
 
 const email = ref('')
@@ -198,7 +197,7 @@ const handleSocialLogin = async (provider) => {
 onMounted(async () => {
   window.scrollTo({ top: 0, behavior: 'auto' })
 
- 
+
 })
 
 </script>

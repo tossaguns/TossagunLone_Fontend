@@ -1,0 +1,62 @@
+{
+  "welcome": "Welcome",
+  "font": "Font",
+  "language": "Language",
+
+  "MainTossagun": "Home",
+
+  "Tossagun": "Tossagun",
+  "LoginTopic": "Login or SignIn",
+  "LoginP": "You can log into the system using the account that you have already registered.",
+  "Email": "email",
+  "EmailLabel": "Proceed using Email",
+
+  "SignInHr": "Or select one of these options",
+
+  "Conditions1": "By signing in or creating an account, you agree with our",
+  "Conditions2": "Terms & conditions ",
+  "Conditions3": "and",
+  "Conditions4": "Privacy statement",
+
+  "Copyright1": "All rights reserved.",
+  "Copyright2": "Copyright (2006 - 2025) - Tossagun.com™",
+
+  "ContactLabel": "You can follow us here!",
+
+  "CompanyDetailFooter": "One store, complete products, all services covered",
+
+  "Company": "Company",
+  "About": "About",
+  "News": "News",
+  "GropCompany": "DNG Group companies",
+  "Collaboration": "In collaboration with Tossagun",
+
+  "SelectHotel": "Select hotel from",
+  "TypeHotel": "Room Type",
+  "ProvinceHotel": "Province",
+  "PromotionHotel": "Promotion",
+  "Recommend": "Recommend",
+
+  "Policies": "Security Policy",
+  "TermsConditions": "Terms and Conditions of Website Use",
+  "PrivacyPolicy": "Privacy Policy",
+  "Cookies": "Cookie Policy",
+  "DataExport": "Data Export Policy",
+  "ServiceAgreement": "Service Agreement",
+
+  "Stay": "Stay",
+  "BookwithSleepGun": "Book with SleepGun",
+  "Report": "Report",
+  "Dashboard": "Dashboard",
+  "Promotion": "Promotion",
+  "ManageRooms": "Manage Rooms",
+  "ManageEmployee": "ManageEmployee",
+  "Profile": "Profile",
+  "Role": "Role",
+  "LogOut": "LogOut",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": ""
+}

@@ -1,13 +1,12 @@
 <template>
-  <div class="flex flex-col min-h-screen bg-neutral-800 noto-sans-thai">
-    <router-view class="flex-grow" />
+  <div class="min-h-screen">
+    <router-view />
   </div>
 </template>
 
 <script setup>
 
-import { ref, onMounted } from 'vue'
-
+import { onMounted } from 'vue'
 
 onMounted(() => {
   const script = document.createElement('script')
@@ -19,19 +18,32 @@ onMounted(() => {
   }
   document.head.appendChild(script)
 })
-
 </script>
 
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Itim&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Thai+Looped:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap");
 
-<style scoped>
-@import url('href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+Thai&display=swap');
+.mitr-regular {
+  font-family: "Mitr", sans-serif;
+}
 
-.noto-sans-thai {
-  font-family: "Noto Sans Thai", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+.league-spartan {
+  font-family: "League Spartan", sans-serif;
+}
+
+.noto-thai {
+  font-family: "Noto Sans Thai Looped", sans-serif;
+}
+
+.prompt-regular {
+  font-family: "Prompt", sans-serif;
+}
+
+.itim-regular {
+  font-family: "Itim", cursive;
 }
 </style>

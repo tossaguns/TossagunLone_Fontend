@@ -1,16 +1,16 @@
 <template>
-  <div class="bg-[#323131]">
+  <div class="bg-stone-700">
     <div
       class="flex flex-col lg:flex-row lg:justify-between lg:items-stretch py-8 justify-center items-center text-white lg:px-12">
       <div class="lg:w-4/12 flex flex-col justify-center items-center px-4 md:px-0">
         <div class="mb-4">
-          <img src="/img/Bar/Tossagun.png" class="w-7" />
+          <img src="/img/Bar/Tossagun.png" class="w-10" />
         </div>
         <div class="flex justify-center items-center space-x-2">
           <label class="text-xs font-bold text-center">DIGITAL NEW GENRATION CO.,LTD</label>
         </div>
         <div class="text-stone-400 flex flex-col items-center mt-2 text-xxs">
-          <label>ร้านเดียว สินค้าครบ จบทุกบริการ</label>
+          <label>{{ t('CompanyDetailFooter') }}</label>
           <label>Digital System To Grocery Store</label>
         </div>
       </div>
@@ -19,10 +19,10 @@
         class="md:w-8/12 mt-12 lg:mt-0 w-full md:pl-8 md:px-0 px-8 flex flex-col md:flex-row md:justify-between items-stretch text-xxs">
 
         <div class="w-full flex flex-col items-center md:items-start">
-          <label class="font-bold">company</label>
+          <label class="font-bold">{{ t('Company')}}</label>
           <div class="flex flex-col items-start md:mt-4 mt-2 md:space-x-0 w-full md:pr-4">
             <button class="text-stone-400 hover:text-stone-50 flex justify-between items-center w-full">
-              <span class="text-left">เกี่ยวกับเรา</span>
+              <span class="text-left">{{ t('About')}}</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="white" class="w-2 h-2 text-white">
@@ -32,7 +32,7 @@
             </button>
             <hr class="border border-stone-600 w-full mb-1" />
             <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
-              <span class="text-left">ข่าวสาร</span>
+              <span class="text-left">{{ t('News')}}</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="white" class="w-2 h-2 text-white">
@@ -42,7 +42,7 @@
             </button>
             <hr class="border border-stone-600 w-full mb-1" />
             <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
-              <span class="text-left">บริษัทในกลุ่ม DNG</span>
+              <span class="text-left">{{ t('GropCompany')}}</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="white" class="w-2 h-2 text-white">
@@ -52,7 +52,7 @@
             </button>
             <hr class="border border-stone-600 w-full mb-1" />
             <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
-              <span class="text-left">ร่วมงานกับ Tossagun</span>
+              <span class="text-left">{{ t('Collaboration')}}</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="white" class="w-2 h-2 text-white">
@@ -65,11 +65,11 @@
         </div>
 
         <div class="w-full flex flex-col items-center md:items-start mt-8 md:mt-0">
-          <label class="font-bold">Product</label>
+          <label class="font-bold">{{ t('SelectHotel') }}</label>
           <div class="flex flex-col items-start md:mt-4 mt-2 md:space-x-0 w-full md:pr-4">
-            <button @click="goToHouse"
+            <button @click="goToTypeHotel"
               class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
-              <span class="text-left">สินเชื่อบ้าน</span>
+              <span class="text-left">{{ t('TypeHotel') }}</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="white" class="w-2 h-2 text-white">
@@ -78,9 +78,9 @@
               </span>
             </button>
             <hr class="border border-stone-600 w-full mb-1" />
-            <button @click="goToCar"
+            <button @click="goToProvinceHotel"
               class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
-              <span class="text-left">สินเชื่อรถ</span>
+              <span class="text-left">{{t('ProvinceHotel')}}</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="white" class="w-2 h-2 text-white">
@@ -90,7 +90,7 @@
             </button>
             <hr class="border border-stone-600 w-full mb-1" />
             <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
-              <span class="text-left">สินเชื่อบุคล</span>
+              <span class="text-left">{{ t('PromotionHotel')}}</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="white" class="w-2 h-2 text-white">
@@ -100,7 +100,7 @@
             </button>
             <hr class="border border-stone-600 w-full mb-1" />
             <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
-              <span class="text-left">บริการอื่นๆ</span>
+              <span class="text-left">{{ t('Recommend')}}</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="white" class="w-2 h-2 text-white">
@@ -113,10 +113,10 @@
         </div>
 
         <div class="w-full flex flex-col items-center md:items-start mt-8 md:mt-0">
-          <label class="font-bold">Policies</label>
+          <label class="font-bold">{{ t('Policies') }}</label>
           <div class="flex flex-col items-start md:mt-4 mt-2 md:space-x-0 w-full md:pr-4">
             <button class="text-stone-400 hover:text-stone-50 flex justify-between items-center w-full">
-              <span class="text-left">ข้อกำหนดเเละการใช้งานเว็บไซต์</span>
+              <span class="text-left">{{ t('TermsConditions') }}</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="white" class="w-2 h-2 text-white">
@@ -126,7 +126,7 @@
             </button>
             <hr class="border border-stone-600 w-full mb-1" />
             <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
-              <span class="text-left">นโยบายความเป็นส่วนตัว</span>
+              <span class="text-left">{{ t('PrivacyPolicy')}}</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="white" class="w-2 h-2 text-white">
@@ -136,7 +136,7 @@
             </button>
             <hr class="border border-stone-600 w-full mb-1" />
             <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
-              <span class="text-left">นโยบายคุกกี้</span>
+              <span class="text-left">{{ t('Cookies') }}</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="white" class="w-2 h-2 text-white">
@@ -146,7 +146,7 @@
             </button>
             <hr class="border border-stone-600 w-full mb-1" />
             <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
-              <span class="text-left">นโยบายการนำข้อมูลออกจากระบบ</span>
+              <span class="text-left">{{ t('DataExport')}}</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="white" class="w-2 h-2 text-white">
@@ -156,7 +156,7 @@
             </button>
             <hr class="border border-stone-600 w-full mb-1" />
             <button class="text-stone-400 hover:text-stone-50  flex justify-between items-center w-full">
-              <span class="text-left">ข้อตกลงการให้บริการ</span>
+              <span class="text-left">{{ t('ServiceAgreement') }}</span>
               <span class="text-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="white" class="w-2 h-2 text-white">
@@ -174,8 +174,9 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref, onMounted, } from 'vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const router = useRouter()
 
 function goToHouse() {

@@ -5,9 +5,9 @@
 // export default defineConfig({
 //   plugins: [vue()],
 // })
-
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import path from "path";
 
 export default defineConfig({
   plugins: [vue()],
@@ -16,6 +16,12 @@ export default defineConfig({
     port: 5173,
   },
   optimizeDeps: {
-    include: ["@primeuix/themes/aura"], // ✅ เพิ่มบรรทัดนี้
+    include: ["@primeuix/themes/aura"],
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+      "@components": path.resolve(__dirname, "./src/components"),
+    },
   },
 });
