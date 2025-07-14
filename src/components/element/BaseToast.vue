@@ -1,6 +1,6 @@
 <template>
   <div class="fixed top-4 right-4 z-50 mt-5">
-    <!-- container ใส่ flex + gap เพื่อเว้นระยะห่าง และ position relative -->
+
     <TransitionGroup name="toast" tag="div" class="flex flex-col gap-y-3 relative">
       <div v-for="toast in toasts" :key="toast.id"
         class="bg-lime-200 bg-opacity-70 border border-lime-500 px-6 py-3 rounded shadow-lg w-[250px]">
@@ -8,6 +8,7 @@
         <div class="text-sm">{{ toast.message }}</div>
       </div>
     </TransitionGroup>
+    
   </div>
 </template>
 

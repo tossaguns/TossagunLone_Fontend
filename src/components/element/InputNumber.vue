@@ -43,7 +43,7 @@ const displayValue = ref('')
 watch(
   () => props.modelValue,
   (newVal) => {
-    const raw = String(newVal).replace(/\D/g, '')
+    const raw = String(newVal).replace(/\D/g, '').replace(/^0+/, '')
     displayValue.value = formatWithCommas(raw)
   },
   { immediate: true }
@@ -59,7 +59,9 @@ function handleKeydown(event) {
 
 function handleInput(event) {
   const rawInput = event.target.value.replace(/,/g, '')
-  const digitsOnly = rawInput.replace(/\D/g, '')
+  let digitsOnly = rawInput.replace(/\D/g, '')
+
+  digitsOnly = digitsOnly.replace(/^0+/, '')
 
   displayValue.value = formatWithCommas(digitsOnly)
   emit('update:modelValue', digitsOnly)

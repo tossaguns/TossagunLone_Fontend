@@ -6,6 +6,7 @@ import MapTossagun from "../views/MapTossagun.vue";
 import SignIn from "../views/SignIn.vue";
 import MainManageRoom from "../views/Partner/Partner/ManageRoom/MainManageRoom.vue";
 import AddRoom from "../views/Partner/Partner/ManageRoom/AddRoom.vue";
+import EditRoom from "../views/Partner/Partner/ManageRoom/EditRoom.vue";
 
 const routes = [
   { path: "/main", component: Main },
@@ -13,6 +14,7 @@ const routes = [
   { path: "/signin", component: SignIn },
   { path: "/mainmanageroom", component: MainManageRoom },
   { path: "/addroom", component: AddRoom },
+  { path: "/editroom", component: EditRoom },
 ];
 
 const router = createRouter({
