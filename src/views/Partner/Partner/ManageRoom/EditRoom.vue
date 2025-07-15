@@ -1,26 +1,26 @@
 <template>
   <TemplatePartner>
     <template #header>
-      <label>จัดการห้องพัก</label>
+      <label>{{ t('ManageRoom') }}</label>
     </template>
 
     <template #content>
       <div class="p-4 max-w-[3000px] mx-auto">
         <div class="flex justify-center md:justify-start py-4 md:py-0">
-          <label class="text-3xl font-semibold text-red-800">เเก้ไขห้องพัก</label>
+          <label class="text-3xl font-semibold text-red-800">{{ t('EditRoom') }}</label>
         </div>
 
         <div class="flex flex-col md:flex-row md:justify-between items-start md:space-x-4 mt-8">
           <div class="md:w-1/2 flex flex-col 2xl:flex-row 2xl:justify-between items-start  2xl:space-x-4 w-full">
 
             <div class="flex flex-col 2xl:justify-between w-full">
-              <label class="text-xl font-semibold pb-2">รายละเอียดห้องพัก</label>
+              <label class="text-xl font-semibold pb-2">{{ t('DetailRoom') }}</label>
 
               <div class="flex flex-col 2xl:flex-row justify-between 2xl:space-x-4 w-full">
 
                 <div class="2xl:w-1/2 w-full space-y-4">
                   <div :ref="el => (inputRefs.NumberRoom = el)">
-                    <FloatInput v-model="NumberRoom" id="NumberRoom" label="หมายเลขห้องพัก"
+                    <FloatInput v-model="NumberRoom" id="NumberRoom" :label="t('RoomNumber')"
                       :class="highlightField === 'NumberRoom' ? 'ring-2 ring-red-400 rounded-md animate-shake' : ''" />
                     <p v-if="errors.NumberRoom" class="text-red-500 text-xs pl-2">{{ errors.NumberRoom }}</p>
                   </div>
@@ -32,8 +32,9 @@
                     </p>
                   </div>
 
+
                   <div :ref="el => (inputRefs.Price = el)">
-                    <InputNumber v-model="Price" id="Price" label="ราคาห้องพัก / บาท"
+                    <InputNumber v-model="Price" id="Price" :label="t('Price_Label')"
                       :class="highlightField === 'Price' ? 'ring-2 ring-red-400 rounded-md animate-shake' : ''" />
                     <p v-if="errors.Price" class="text-red-500 text-xs pl-2">{{ errors.Price }}</p>
                   </div>
@@ -41,13 +42,13 @@
 
                 <div class="2xl:w-1/2 w-full space-y-4  2xl:mt-0 mt-4">
                   <div :ref="el => (inputRefs.Stay = el)">
-                    <InputNumber v-model="Stay" id="Stay" label="จำนวนเข้าพักได้สูงสุด / คน"
+                    <InputNumber v-model="Stay" id="Stay" :label="t('Stay_Label')"
                       :class="highlightField === 'Stay' ? 'ring-2 ring-red-400 rounded-md animate-shake' : ''" />
                     <p v-if="errors.Stay" class="text-red-500 text-xs pl-2">{{ errors.Stay }}</p>
                   </div>
 
                   <div :ref="el => (inputRefs.RoomDetail = el)">
-                    <FloatInputTextarea v-model="RoomDetail" id="RoomDetail" label="รายละเอียดห้องพัก"
+                    <FloatInputTextarea v-model="RoomDetail" id="RoomDetail" :label="t('RoomDetail_Label')"
                       :class="highlightField === 'RoomDetail' ? 'ring-2 ring-red-400 rounded-md animate-shake' : ''" />
                     <p v-if="errors.RoomDetail" class="text-red-500 text-xs pl-2">{{ errors.RoomDetail }}</p>
                   </div>
@@ -55,7 +56,7 @@
               </div>
 
               <div class=" md:mt-8 mt-20 space-y-2">
-                <label class="text-xl font-semibold">เลือกลักษณะห้องพัก</label>
+                <label class="text-xl font-semibold">{{ t('SelectTypeRoom') }}</label>
                 <div class="border rounded-md py-2">
                   <ChooseRoomType v-model="selectedRoom" :options="RoomOptions" groupName="pizza" />
                 </div>
@@ -64,7 +65,7 @@
           </div>
 
           <div class="md:w-1/2 mt-20 md:mt-0 2xl:mt-0 w-full space-y-2">
-            <label class="text-xl font-semibold">เพิ่มรูปภาพ</label>
+            <label class="text-xl font-semibold">{{ t('AddImg') }}</label>
             <UploadImg :key="'UploadImgRoom'" />
           </div>
         </div>
@@ -96,6 +97,9 @@ import ButtonSave from '@/components/element/ButtonSave.vue'
 import ButtonReset from '@/components/element/ButtonReset.vue'
 import ButtonCancel from '@/components/element/ButtonCancel.vue'
 import ChooseRoomType from '@/components/element/ChooseRoomType.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 // Router
 const router = useRouter()

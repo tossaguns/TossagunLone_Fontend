@@ -64,7 +64,7 @@
   "NO_Button": "No",
   "ConfirmCancel_Button": "Confirm Cancel",
   "ConfirmCancelDetail_Button": "Do you want to cancel filling in the information?",
-  "ConfirmReset_Button": "Confirm Reset",
+  "ConfirmReset_Button": "Confirm Reset", 
   "ConfirmResetDetail_Button": "Do you want to reset all data?",
   "ConfirmSave_Button": "Confirm Save",
   "ConfirmSaveDetail_Button": "Do you want to save all data?",
@@ -95,6 +95,8 @@
   "Price_Error": "Please enter room price",
   "Stay_Error": "Please enter maximum occupancy",
   "RoomDetail_Error": "Please enter room details",
+
+  "EditRoom": "EditRoom",
   "": "",
   "": "",
   "": "",

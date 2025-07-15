@@ -32,6 +32,7 @@
                     </p>
                   </div>
 
+
                   <div :ref="el => (inputRefs.Price = el)">
                     <InputNumber v-model="Price" id="Price" :label="t('Price_Label')"
                       :class="highlightField === 'Price' ? 'ring-2 ring-red-400 rounded-md animate-shake' : ''" />
@@ -104,7 +105,11 @@ const RoomOptions = ref([])
 
 const router = useRouter()
 const inputRefs = reactive({})
+
+const RoomTypeGroupedOptions = ref([])
+const TypeRoom = ref([])
 const selectedTypeRoom = ref(null)
+
 const NumberRoom = ref('')
 const Stay = ref('')
 const RoomDetail = ref('')
@@ -134,36 +139,6 @@ function scrollToFirstErrorWithAnimation() {
     })
   }
 }
-
-const TypeRoom = [
-  {
-    label: 'Standard Rooms',
-    code: 'standard',
-    items: [
-      { label: 'Single Room', value: 'single' },
-      { label: 'Double Room', value: 'double' },
-      { label: 'Twin Room', value: 'twin' },
-    ],
-  },
-  {
-    label: 'Deluxe Rooms',
-    code: 'deluxe',
-    items: [
-      { label: 'Deluxe Single', value: 'deluxe_single' },
-      { label: 'Deluxe Double', value: 'deluxe_double' },
-      { label: 'Deluxe Suite', value: 'deluxe_suite' },
-    ],
-  },
-  {
-    label: 'Suites',
-    code: 'suite',
-    items: [
-      { label: 'Junior Suite', value: 'junior_suite' },
-      { label: 'Executive Suite', value: 'executive_suite' },
-      { label: 'Presidential Suite', value: 'presidential_suite' },
-    ],
-  },
-]
 
 watch(NumberRoom, (val) => {
   if (val.trim()) errors.value.NumberRoom = ''
@@ -275,6 +250,7 @@ function validateForm() {
 
 
 onMounted(async () => {
+  // ดึงข้อมูล dropdown ตัวแรก แบบเดิม
   try {
     const res = await fetch('http://localhost:9999/HotelSleepGun/typeRoomHotel/getAll')
     const data = await res.json()
@@ -282,6 +258,23 @@ onMounted(async () => {
     RoomOptions.value = data.map(item => ({
       label: item.name,
       value: item._id
+    }))
+  } catch (e) {
+    console.error('โหลดข้อมูล room type ไม่สำเร็จ:', e)
+  }
+
+
+  try {
+    const res = await fetch('http://localhost:9999/HotelSleepGun/typeRoom/getAll')
+    const data = await res.json()
+
+    TypeRoom.value = data.map(group => ({
+      label: `${group.icon || ''} ${group._id}`,
+      code: group._id,
+      items: group.types.map(type => ({
+        label: type.name,
+        value: type._id
+      }))
     }))
   } catch (e) {
     console.error('โหลดข้อมูล room type ไม่สำเร็จ:', e)

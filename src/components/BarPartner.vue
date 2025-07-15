@@ -300,7 +300,7 @@ function getActiveMenuFromRoute() {
     '/editdetailhotel': 'editproflie',
     '/detailhotel': 'editproflie',
 
-    '/roomlist': 'manageroom',
+    '/mainmanageroom': 'manageroom',
     '/addroom': 'manageroom',
     '/editroom': 'manageroom',
     '/mainhotelroom': 'stayroom',
