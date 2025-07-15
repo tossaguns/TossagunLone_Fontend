@@ -48,7 +48,7 @@
               <td :colspan="columnKeys.length + 1" class="p-0">
                 <transition name="expand" @enter="onEnter" @leave="onLeave">
                   <div v-show="expandedRow === rowIndex" class="overflow-hidden bg-gray-50" ref="detailBox">
-                    <div class="p-4 space-y-4 max-h-[300px] overflow-y-auto">
+                    <div class="p-4 space-y-4">
                       <h3 class="text-lg font-bold text-gray-800">รายละเอียดห้องพัก</h3>
                       <div class="bg-white rounded-md shadow-sm py-2">
 
@@ -270,6 +270,7 @@
 <script setup>
 import { ref, computed, nextTick, reactive, watch } from 'vue'
 import CustomGallery from '@/components/element/Gallery.vue'
+import Confirm from '@/components/element/Confirm.vue'
 
 const rowsPerPage = ref(5)
 const currentPage = ref(1)
@@ -404,37 +405,8 @@ function submitEditForm() {
 }
 
 function handleStatusChange(row, newStatus) {
-  console.log('Status change event triggered:', {
-    row: row,
-    newStatus: newStatus,
-    rowId: row._id,
-    hasStatusOptions: !!props.statusOptions,
-    statusOptionsLength: props.statusOptions?.length || 0
-  })
-
-  // ตรวจสอบว่ามี _id หรือไม่
-  if (!row._id) {
-    console.error('Row does not have _id:', row)
-    alert('ไม่สามารถอัปเดตสถานะได้: ไม่พบ ID ของห้อง')
-    return
-  }
-
-  // ตรวจสอบว่า newStatus ไม่ว่าง
-  if (!newStatus || newStatus === '') {
-    console.error('Invalid status:', newStatus)
-    alert('กรุณาเลือกสถานะ')
-    return
-  }
-
-  // ตรวจสอบว่า statusOptions มีค่าที่เลือก
-  if (!props.statusOptions || !props.statusOptions.includes(newStatus)) {
-    console.error('Invalid status option:', newStatus, 'Available options:', props.statusOptions)
-    alert('สถานะที่เลือกไม่ถูกต้อง')
-    return
-  }
-
-  // ส่ง event ไปยังหน้าแม่
-  emit('update-status', { id: row._id, status: newStatus })
+  // ส่ง event ไป parent เพื่อให้ parent เป็นคน handle confirm
+  emit('confirm-status-change', { row, newStatus })
 }
 
 function deleteRow(row) {
@@ -564,10 +536,10 @@ tbody tr td {
 }
 
 /* Table cell ที่มี dropdown ไม่ควรมี click handler */
-tbody tr td:has(.dropdown-container) {
+/* tbody tr td:has(.dropdown-container) {
   z-index: 60;
   pointer-events: none;
-}
+} */
 
 tbody tr td:has(.dropdown-container) .dropdown-container {
   pointer-events: auto;

@@ -46,4 +46,10 @@ onMounted(() => {
 .itim-regular {
   font-family: "Itim", cursive;
 }
+
+.dropdown-container, .status-select {
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+  position: relative;
+}
 </style>

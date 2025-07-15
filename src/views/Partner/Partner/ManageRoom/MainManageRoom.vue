@@ -23,12 +23,15 @@
                 <TableModelBasic :customers="room" :statusOptions="statusOptions"
                   :visibleColumns="['status', 'roomNumber', 'typeRoom', 'price', 'stayPeople']"
                   :fieldLayout="fieldLayout" @update-status="updateRoomStatus" @update-row="updateRoom"
-                  @delete-row="deleteRoom" />
+                  @delete-row="deleteRoom" @confirm-status-change="onConfirmStatusChange" />
               </div>
             </div>
           </div>
         </div>
       </div>
+      <Confirm :show="showConfirm" :onConfirm="confirmStatusChange" :onCancel="cancelStatusChange">
+        คุณต้องการเปลี่ยนสถานะห้องนี้เป็น "{{ pendingStatusChange.newStatus }}" ใช่หรือไม่?
+      </Confirm>
     </template>
   </TemplatePartner>
 </template>
@@ -39,6 +42,7 @@ import axios from "axios";
 import TableModelBasic from "@/components/table/TableModelBasic.vue";
 import TemplatePartner from "@/components/TemplatePartner.vue";
 import { useI18n } from "vue-i18n";
+import Confirm from '@/components/element/Confirm.vue'
 
 const { t } = useI18n();
 const room = ref([]);
@@ -55,6 +59,27 @@ const fieldLayout = ref([
   { key: "imgrooms", label: "รูป", position: 8 },
   { key: "timestamps", label: "เวลา", position: 9, columnStart: 3 },
 ]);
+
+const showConfirm = ref(false)
+const pendingStatusChange = ref({ row: null, newStatus: null })
+
+function onConfirmStatusChange({ row, newStatus }) {
+  pendingStatusChange.value = { row, newStatus }
+  showConfirm.value = true
+}
+
+function confirmStatusChange() {
+  const { row, newStatus } = pendingStatusChange.value
+  // เรียกฟังก์ชัน updateRoomStatus ที่มีอยู่แล้ว
+  updateRoomStatus({ id: row._id, status: newStatus })
+  showConfirm.value = false
+  pendingStatusChange.value = { row: null, newStatus: null }
+}
+
+function cancelStatusChange() {
+  showConfirm.value = false
+  pendingStatusChange.value = { row: null, newStatus: null }
+}
 
 // โหลดข้อมูลห้องพัก และสถานะที่เลือกได้
 onMounted(async () => {
