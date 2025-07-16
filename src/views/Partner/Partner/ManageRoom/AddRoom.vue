@@ -263,19 +263,21 @@ onMounted(async () => {
     console.error('โหลดข้อมูล room type ไม่สำเร็จ:', e)
   }
 
-
+  // ดึงข้อมูล typeRoom แบบ array ปกติ
   try {
     const res = await fetch('http://localhost:9999/HotelSleepGun/typeRoom/getAll')
     const data = await res.json()
 
-    TypeRoom.value = data.map(group => ({
-      label: `${group.icon || ''} ${group._id}`,
-      code: group._id,
-      items: group.types.map(type => ({
-        label: type.name,
-        value: type._id
-      }))
-    }))
+    TypeRoom.value = [
+      {
+        label: 'ประเภทห้องทั้งหมด',
+        code: 'all',
+        items: data.map(type => ({
+          label: type.name,
+          value: type._id
+        }))
+      }
+    ]
   } catch (e) {
     console.error('โหลดข้อมูล room type ไม่สำเร็จ:', e)
   }

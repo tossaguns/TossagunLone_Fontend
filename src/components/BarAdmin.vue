@@ -24,9 +24,9 @@
       <div class="pt-8 text-stone-700">
 
         <div @click="navigateTo('dashboardforexecutive', 'dashboard')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'dashboard' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            activeMenu === 'dashboard' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -41,10 +41,10 @@
           </div>
         </div>
 
-        <div @click="navigateTo('/mainhotelroom', 'stayroom')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+        <div @click="navigateTo('/mainselecttype', 'selecttype')"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'stayroom' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            activeMenu === 'selecttype' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -53,15 +53,15 @@
             <transition name="fade-slide" mode="out-in" appear>
               <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
                 :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('Stay') }}
+                จัดการตัวเลือก
               </p>
             </transition>
           </div>
         </div>
         <div @click="navigateTo('/mainbookingtossagun', 'reservetossagun')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'reservetossagun' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            activeMenu === 'reservetossagun' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -76,9 +76,9 @@
           </div>
         </div>
         <div @click="navigateTo('/mainreport', 'report')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'report' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            activeMenu === 'report' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -92,10 +92,10 @@
             </transition>
           </div>
         </div>
-        <div @click="navigateTo('/mainpromotion', 'promotion')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+        <div @click="navigateTo('/mainmanagepromotion', 'promotion')"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'promotion' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            activeMenu === 'promotion' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -104,15 +104,15 @@
             <transition name="fade-slide" mode="out-in" appear>
               <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
                 :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('Promotion') }}
+                จัดการโปรโมชัน
               </p>
             </transition>
           </div>
         </div>
-        <div @click="navigateTo('/mainmanageroom', 'manageroom')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+        <div @click="navigateTo('/', 'managehotel')"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'manageroom' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            activeMenu === 'managehotel' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -121,15 +121,15 @@
             <transition name="fade-slide" mode="out-in" appear>
               <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
                 :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('ManageRooms') }}
+                จัดการโรงเเรมในเครือ
               </p>
             </transition>
           </div>
         </div>
         <div @click="navigateTo('/mainemployee', 'manageemployee')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'manageemployee' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            activeMenu === 'manageemployee' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -144,9 +144,9 @@
           </div>
         </div>
         <div @click="navigateTo('/mainprofilecompany', 'editproflie')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'editproflie' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            activeMenu === 'editproflie' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -300,18 +300,20 @@ function getActiveMenuFromRoute() {
     '/editdetailhotel': 'editproflie',
     '/detailhotel': 'editproflie',
 
-    '/mainmanageroom': 'manageroom',
-    '/addroom': 'manageroom',
-    '/editroom': 'manageroom',
-    '/mainhotelroom': 'stayroom',
-    '/maincheckincheckout': 'stayroom',
-    '/checkin': 'stayroom',
-    '/checkout': 'stayroom',
-    '/mainhoteldetailroom': 'stayroom',
+    '/mainmanagehoteladmin': 'managehotel',
+    '/addroom': 'managehotel',
+    '/editroom': 'managehotel',
+    '/mainselecttype': 'selecttype',
+    '/maincheckincheckout': 'selecttype',
+    '/checkin': 'selecttype',
+    '/checkout': 'selecttype',
+    '/mainhoteldetailroom': 'selecttype',
     '/mainbookingtossagun': 'reservetossagun',
     '/maindetailbookingtossagun': 'reservetossagun',
     '/mainreport': 'report',
-    '/mainpromotion': 'promotion',
+    '/mainmanagepromotion': 'promotion',
+    '/addpromotion': 'promotion',
+    '/editpromotion': 'promotion',
   }
 
   return routeMenuMap[currentRoute] || 'dashboard'

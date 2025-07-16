@@ -9,7 +9,7 @@
           <label class="text-3xl font-semibold">รายการห้องพัก</label>
           <div class="mt-12">
             <div class="flex md:justify-end justify-center pr-5 space-x-2">
-              <button class="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-white rounded-md">
+              <button class="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-white rounded-md" @click="goToAddRoom">
                 เพิ่มห้องพัก
               </button>
             </div>
@@ -43,6 +43,7 @@ import TableModelBasic from "@/components/table/TableModelBasic.vue";
 import TemplatePartner from "@/components/TemplatePartner.vue";
 import { useI18n } from "vue-i18n";
 import Confirm from '@/components/element/Confirm.vue'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n();
 const room = ref([]);
@@ -57,7 +58,7 @@ const fieldLayout = ref([
   { key: "roomDetail", label: "รายละเอียด", position: 6 },
   { key: "typeRoomHotel", label: "ลักษณะห้อง", position: 7 },
   { key: "imgrooms", label: "รูป", position: 8 },
-  { key: "timestamps", label: "เวลา", position: 9, columnStart: 3 },
+  { key: "timestamps", label: "เวลา", position: 9 },
 ]);
 
 const showConfirm = ref(false)
@@ -79,6 +80,12 @@ function confirmStatusChange() {
 function cancelStatusChange() {
   showConfirm.value = false
   pendingStatusChange.value = { row: null, newStatus: null }
+}
+
+const router = useRouter()
+
+function goToAddRoom() {
+  router.push('/addroom')
 }
 
 // โหลดข้อมูลห้องพัก และสถานะที่เลือกได้

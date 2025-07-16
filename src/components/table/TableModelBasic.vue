@@ -48,7 +48,7 @@
               <td :colspan="columnKeys.length + 1" class="p-0">
                 <transition name="expand" @enter="onEnter" @leave="onLeave">
                   <div v-show="expandedRow === rowIndex" class="overflow-hidden bg-gray-50" ref="detailBox">
-                    <div class="p-4 space-y-4">
+                    <div class="p-4 space-y-4 max-h-[570px] overflow-y-auto">
                       <h3 class="text-lg font-bold text-gray-800">รายละเอียดห้องพัก</h3>
                       <div class="bg-white rounded-md shadow-sm py-2">
 
@@ -60,7 +60,7 @@
                                 <span class="text-sm text-gray-500">{{ getFieldByPosition(1).label }}</span>
                                 <span class="text-base text-gray-800 font-medium">{{
                                   formatValue(row[getFieldByPosition(1).key])
-                                }}</span>
+                                  }}</span>
                               </div>
                             </div>
 
@@ -70,17 +70,16 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(4).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(4).key])
-                                  }}</span>
+                                    }}</span>
                                 </div>
                               </div>
-
 
                               <div v-if="getFieldByPosition(2)" class="flex flex-col p-3 col-span-1">
                                 <div class="flex justify-center items-center space-x-3">
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(2).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(2).key])
-                                  }}</span>
+                                    }}</span>
                                 </div>
                               </div>
                             </div>
@@ -91,7 +90,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(3).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(3).key])
-                                  }}</span>
+                                    }}</span>
                                 </div>
                               </div>
 
@@ -100,7 +99,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(5).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(5).key])
-                                  }}</span>
+                                    }}</span>
                                 </div>
                               </div>
                             </div>
@@ -110,7 +109,7 @@
                                 <span class="text-sm text-gray-500">{{ getFieldByPosition(6).label }}</span>
                                 <span class="text-base text-gray-800 font-medium">{{
                                   formatValue(row[getFieldByPosition(6).key])
-                                }}</span>
+                                  }}</span>
                               </div>
                             </div>
 
@@ -120,7 +119,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(7).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(7).key])
-                                  }}</span>
+                                    }}</span>
                                 </div>
                               </div>
                             </div>
@@ -136,7 +135,7 @@
                                   <CustomGallery />
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(8).key])
-                                  }}</span>
+                                    }}</span>
                                 </div>
                               </div>
                             </div>
@@ -148,7 +147,7 @@
                             <span class="text-xs pl-6">{{ getFieldByPosition(9).label }}</span>
                             <span class="text-xs font-medium">{{
                               formatValue(row[getFieldByPosition(9).key])
-                            }}</span>
+                              }}</span>
                           </div>
                         </div>
 
@@ -239,6 +238,23 @@
               @click="deleteRow(row)">
               ลบข้อมูล
             </button>
+            <button class="bg-gray-200 text-gray-800 px-3 py-1 rounded"
+              @click="expandedCardIndex = expandedCardIndex === rowIndex ? null : rowIndex">
+              {{ expandedCardIndex === rowIndex ? 'ซ่อนรายละเอียด' : 'ดูรายละเอียด' }}
+            </button>
+          </div>
+
+          <div v-if="expandedCardIndex === rowIndex" class="mt-2 p-3 bg-gray-50 rounded max-h-96 overflow-y-auto">
+            <div>
+              <div v-for="field in fieldLayout" :key="field.key" class="mb-2">
+                <span class="text-gray-500">{{ field.label }}:</span>
+                <span class="text-gray-800">{{ formatValue(row[field.key]) }}</span>
+              </div>
+              <!-- แสดงรูปภาพ -->
+              <div v-if="row.imgrooms" class="mt-4">
+                <CustomGallery :images="row.imgrooms" />
+              </div>
+            </div>
           </div>
         </div>
       </template>
@@ -280,6 +296,8 @@ const emit = defineEmits(['update-row', 'delete-row', 'update-status'])
 
 const showEditModal = ref(false)
 const editForm = reactive({})
+
+const expandedCardIndex = ref(null);
 
 const totalPages = computed(() =>
   Math.ceil(props.customers.length / rowsPerPage.value)
