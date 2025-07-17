@@ -105,11 +105,9 @@ const RoomOptions = ref([])
 
 const router = useRouter()
 const inputRefs = reactive({})
-
 const RoomTypeGroupedOptions = ref([])
 const TypeRoom = ref([])
 const selectedTypeRoom = ref(null)
-
 const NumberRoom = ref('')
 const Stay = ref('')
 const RoomDetail = ref('')
@@ -243,7 +241,6 @@ function validateForm() {
     errors.value.RoomDetail = t('RoomDetail_Error')
     isValid = false
   }
-
 
   return isValid
 }

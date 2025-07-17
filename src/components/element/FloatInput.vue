@@ -1,6 +1,7 @@
 <template>
   <div class="relative w-full">
-    <input :id="id" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" type="text"
+    <input :type="type" :id="id" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)"
+      type="text"
       class="peer w-full border border-gray-300 rounded-md px-3 pt-5 pb-2 text-base placeholder-transparent focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-all"
       placeholder=" " />
     <label :for="id" class="absolute left-3 top-1 text-amber-500 text-xxs transition-all
@@ -17,12 +18,13 @@
 
 <script setup>
 defineProps({
-  id: String,
+  modelValue: String,
   label: String,
-  modelValue: {
+  id: String,
+  type: {
     type: String,
-    required: true,
-  },
+    default: 'text'
+  }
 });
 defineEmits(['update:modelValue']);
 </script>

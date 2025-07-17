@@ -126,7 +126,7 @@
             </transition>
           </div>
         </div>
-        <div @click="navigateTo('/mainemployee', 'manageemployee')"
+        <div @click="navigateTo('/mainmanageemployee', 'manageemployee')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
             activeMenu === 'manageemployee' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
@@ -289,10 +289,9 @@ function getActiveMenuFromRoute() {
 
   const routeMenuMap = {
     '/dashboardforexecutive': 'dashboard',
-    '/mainemployee': 'manageemployee',
+    '/mainmanageemployee': 'manageemployee',
     '/addemployee': 'manageemployee',
-    '/employeelist': 'manageemployee',
-    '/editemployee': 'manageemployee',
+    // '/editemployee/:id': 'manageemployee',
 
     '/editprofilecompany': 'editproflie',
     '/mainprofilecompany': 'editproflie',
