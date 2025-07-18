@@ -67,91 +67,88 @@
           </table>
         </div>
       </div>
-    
-
-      <!-- เนื้อหา Modal Preview -->
-      <div v-if="showPreviewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-        @click.self="showPreviewModal = false">
-        <div class="mx-auto mt2 sm:mt-6 rounded-lg shadow-lg border-2 bg-white relative w-full max-w-[285px]">
-          <!-- ปุ่มกากบาท -->
-          <button class="absolute top-2 right-2 text-gray-400 hover:text-red-600 text-2xl font-bold"
-            @click="showPreviewModal = false" aria-label="ปิด">×</button>
-          <!-- หัวโปรโมชั่น -->
-          <div class="py-4 text-center font-bold text-lg break-all whitespace-pre-wrap text-gray-400">
-            {{ selectedPromotion?.name || 'ชื่อโปรโมชั่น' }}
-          </div>
-          <!-- เนื้อหาข้างใน -->
-          <div>
-            <div class="bg-white px-2 pb-2 sm:pb-6 space-y-2 text-gray-700">
-              <!-- ถ้ามีลดราคา -->
-              <div v-if="selectedPromotion?.wantToReduce === 'yesReduced' && (
-                (selectedPromotion?.discountType === 'reduced' && selectedPromotion?.price && selectedPromotion?.reducedPrice) ||
-                (selectedPromotion?.discountType === 'percent' && selectedPromotion?.price && selectedPromotion?.percentPrice)
-              )" class="text-center mt-2">
-                <div class="flex flex-col justify-center items-center">
-                  <span class="text-xl text-gray-400 line-through mr-2">
-                    {{ selectedPromotion.price }}
-                  </span>
-                  <span class="text-6xl font-bold text-red-600 align-middle">
-                    <!-- ลดราคาบาท -->
-                    <template v-if="selectedPromotion.discountType === 'reduced'">
-                      {{ Number(selectedPromotion.price) - Number(selectedPromotion.reducedPrice) }}
-                    </template>
-                    <!-- ลดราคาคิดเป็น % -->
-                    <template v-else-if="selectedPromotion.discountType === 'percent'">
-                      {{ (Number(selectedPromotion.price) - (Number(selectedPromotion.price) *
-                        Number(selectedPromotion.percentPrice) / 100)).toFixed(2) }}
-                    </template>
-                  </span>
-                </div>
-                <div>
-                  <span class="text-sm font-thin text-gray-400">บาท / คน / บัญชี</span>
-                </div>
-              </div>
-              <!-- ถ้าไม่มีลดราคา -->
-              <div v-else class="text-6xl font-bold text-center text-gray-900">
-                {{ selectedPromotion?.price || '0' }} <br>
-                <span class="text-sm font-thin text-gray-400">บาท / คน / บัญชี</span>
-              </div>
-              <ul class="list-none space-y-1 mt-4">
-                <div class="bg-gray-200 p-3 rounded-md max-h-60 overflow-y-auto">
-                  <li v-for="(line, index) in (selectedPromotion?.detail?.split('\n') || [])" :key="index"
-                    class="flex items-start">
-                    <span class="mr-2">✔</span>
-                    <span class="break-all whitespace-pre-wrap w-0 flex-1 text-gray-700">{{ line }}</span>
-                  </li>
-                </div>
-                <li class="flex px-6 items-center mt-5">
-                  <span class="mr-2 mt-1">📅</span>
-                  <span class="text-sm">เริ่ม: {{ selectedPromotion?.dateStart ? selectedPromotion.dateStart.slice(0,
-                    10)
-                    : '-'
-                  }}</span>
-                </li>
-                <li class="flex px-6 items-center">
-                  <span class="mr-2 mt-1">📅</span>
-                  <span class="text-sm">สิ้นสุด: {{ selectedPromotion?.dateFinish ?
-                    selectedPromotion.dateFinish.slice(0, 10) : '-'
-                  }}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="flex justify-center space-x-4 mt-4 mb-3">
-            <button @click="editPromotion"
-              class="text-white bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-500 shadow-md transition">
-              แก้ไข
-            </button>
-            <button @click="deletePromotion"
-              class="text-white bg-red-600 px-4 py-2 rounded-lg hover:bg-red-500 shadow-md transition">
-              ลบ
-            </button>
-          </div>
-        </div>
-
-      </div>
     </template>
   </TemplateAdmin>
+  <!-- เนื้อหา Modal Preview -->
+  <div v-if="showPreviewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    @click.self="showPreviewModal = false">
+    <div class="py-8 mx-auto mt2 sm:mt-6 rounded-lg shadow-lg border-2 bg-white relative w-full max-w-[285px]">
+      <!-- ปุ่มกากบาท -->
+      <button class="absolute top-2 right-2 text-gray-400 hover:text-red-600 text-2xl font-bold"
+        @click="showPreviewModal = false" aria-label="ปิด">×</button>
+      <!-- หัวโปรโมชั่น -->
+      <div class="py-4 text-center font-bold text-lg break-all whitespace-pre-wrap text-gray-400">
+        {{ selectedPromotion?.name || 'ชื่อโปรโมชั่น' }}
+      </div>
+      <!-- เนื้อหาข้างใน -->
+      <div>
+        <div class="bg-white px-2 pb-2 sm:pb-6 space-y-2 text-gray-700">
+          <!-- ถ้ามีลดราคา -->
+          <div v-if="selectedPromotion?.wantToReduce === 'yesReduced' && (
+            (selectedPromotion?.discountType === 'reduced' && selectedPromotion?.price && selectedPromotion?.reducedPrice) ||
+            (selectedPromotion?.discountType === 'percent' && selectedPromotion?.price && selectedPromotion?.percentPrice)
+          )" class="text-center mt-2">
+            <div class="flex flex-col justify-center items-center">
+              <span class="text-xl text-gray-400 line-through mr-2">
+                {{ selectedPromotion.price }}
+              </span>
+              <span class="text-4xl font-bold text-red-600 align-middle">
+                <!-- ลดราคาบาท -->
+                <template v-if="selectedPromotion.discountType === 'reduced'">
+                  {{ Number(selectedPromotion.price) - Number(selectedPromotion.reducedPrice) }}
+                </template>
+                <!-- ลดราคาคิดเป็น % -->
+                <template v-else-if="selectedPromotion.discountType === 'percent'">
+                  {{ (Number(selectedPromotion.price) - (Number(selectedPromotion.price) *
+                    Number(selectedPromotion.percentPrice) / 100)).toFixed(2) }}
+                </template>
+              </span>
+            </div>
+            <div>
+              <span class="text-sm font-thin text-gray-400">บาท / คน / บัญชี</span>
+            </div>
+          </div>
+          <!-- ถ้าไม่มีลดราคา -->
+          <div v-else class="text-3xl font-bold text-center text-gray-900">
+            {{ selectedPromotion?.price || '0' }} <br>
+            <span class="text-sm font-thin text-gray-400">บาท / คน / บัญชี</span>
+          </div>
+          <ul class="list-none space-y-1 mt-4">
+            <div class="bg-gray-200 p-3 mx-3 my-5 rounded-md max-h-60 overflow-y-auto">
+              <li v-for="(line, index) in (selectedPromotion?.detail?.split('\n') || [])" :key="index"
+                class="flex items-start">
+                <span class="mr-2">✔</span>
+                <span class="break-all whitespace-pre-wrap w-0 flex-1 text-gray-700">{{ line }}</span>
+              </li>
+            </div>
+            <li class="flex px-6 items-center mt-5">
+              <span class="mr-2 mt-1">📅</span>
+              <span class="text-sm">เริ่ม: {{ selectedPromotion?.dateStart ? selectedPromotion.dateStart.slice(0,
+                10)
+                : '-'
+              }}</span>
+            </li>
+            <li class="flex px-6 items-center">
+              <span class="mr-2 mt-1">📅</span>
+              <span class="text-sm">สิ้นสุด: {{ selectedPromotion?.dateFinish ?
+                selectedPromotion.dateFinish.slice(0, 10) : '-'
+              }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="flex justify-center space-x-4 mt-4 mb-3">
+        <button @click="editPromotion"
+          class="text-white bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-500 shadow-md transition">
+          แก้ไข
+        </button>
+        <button @click="deletePromotion"
+          class="text-white bg-red-600 px-4 py-2 rounded-lg hover:bg-red-500 shadow-md transition">
+          ลบ
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -214,7 +211,12 @@ async function deletePromotion() {
 onMounted(async () => {
 
   try {
-    const res = await fetch('http://localhost:9999/HotelSleepGun/promotion/getAll')
+    const token = localStorage.getItem('token')
+    const res = await fetch('http://localhost:9999/HotelSleepGun/promotion/getAll', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
     const data = await res.json()
     promotion.value = data
   } catch (err) {

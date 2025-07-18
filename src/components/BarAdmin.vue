@@ -41,6 +41,24 @@
           </div>
         </div>
 
+        <div @click="navigateTo('/mainmanageapprovepartner', 'manageapprovepartner')"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+          :class="[
+            activeMenu === 'manageapprovepartner' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
+            isCollapsed ? 'px-3' : 'px-3'
+          ]">
+          <div class="flex items-center gap-3 ml-3 transition-all duration-300">
+            <img src="/images/icon/calendartossagun_nav.png" alt="icon"
+              class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
+            <transition name="fade-slide" mode="out-in" appear>
+              <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
+                จัดการคำขอ
+              </p>
+            </transition>
+          </div>
+        </div>
+
         <div @click="navigateTo('/mainselecttype', 'selecttype')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
@@ -58,23 +76,7 @@
             </transition>
           </div>
         </div>
-        <div @click="navigateTo('/mainbookingtossagun', 'reservetossagun')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
-          :class="[
-            activeMenu === 'reservetossagun' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
-            isCollapsed ? 'px-3' : 'px-3'
-          ]">
-          <div class="flex items-center gap-3 ml-3 transition-all duration-300">
-            <img src="/images/icon/calendartossagun_nav.png" alt="icon"
-              class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
-            <transition name="fade-slide" mode="out-in" appear>
-              <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
-                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('BookwithSleepGun') }}
-              </p>
-            </transition>
-          </div>
-        </div>
+
         <div @click="navigateTo('/mainreport', 'report')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
@@ -308,8 +310,10 @@ function getActiveMenuFromRoute() {
     '/checkin': 'selecttype',
     '/checkout': 'selecttype',
     '/mainhoteldetailroom': 'selecttype',
-    '/mainbookingtossagun': 'reservetossagun',
-    '/maindetailbookingtossagun': 'reservetossagun',
+
+    '/mainbookingtossagun': 'manageapprovepartner',
+    '/mainmanageapprovepartner': 'manageapprovepartner',
+
     '/mainreport': 'report',
     '/mainmanagepromotion': 'promotion',
     '/addpromotion': 'promotion',

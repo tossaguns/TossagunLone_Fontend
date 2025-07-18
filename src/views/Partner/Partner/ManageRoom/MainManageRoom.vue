@@ -20,7 +20,7 @@
                 </div>
               </div>
               <div class="w-full mt-2">
-                <TableModelBasic :customers="room" :statusOptions="statusOptions"
+                <TableModelBasic ref="tableRef" :customers="room" :statusOptions="statusOptions"
                   :visibleColumns="['status', 'roomNumber', 'typeRoom', 'price', 'stayPeople']"
                   :fieldLayout="fieldLayout" @update-status="updateRoomStatus" @update-row="updateRoom"
                   @delete-row="deleteRoom" @confirm-status-change="onConfirmStatusChange" />
@@ -48,6 +48,8 @@ import { useRouter } from 'vue-router'
 const { t } = useI18n();
 const room = ref([]);
 const statusOptions = ref([]);
+
+const tableRef = ref(null); // <--- เพิ่ม ref สำหรับ TableModelBasic
 
 const fieldLayout = ref([
   { key: "status", label: "สถานะ", position: 1 },
@@ -79,6 +81,10 @@ function confirmStatusChange() {
 
 function cancelStatusChange() {
   showConfirm.value = false
+  // reset dropdown สถานะกลับเป็นค่าเดิม
+  if (pendingStatusChange.value.row && tableRef.value) {
+    tableRef.value.resetStatusSelection(pendingStatusChange.value.row._id)
+  }
   pendingStatusChange.value = { row: null, newStatus: null }
 }
 
@@ -96,7 +102,10 @@ onMounted(async () => {
 
 async function fetchRooms() {
   try {
-    const res = await axios.get("http://localhost:9999/HotelSleepGun/room/getAll");
+    const token = localStorage.getItem('token');
+    const res = await axios.get("http://localhost:9999/HotelSleepGun/room/getAll", {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
     console.log("Rooms loaded:", res.data);
     room.value = res.data;
   } catch (error) {
@@ -106,7 +115,10 @@ async function fetchRooms() {
 
 async function fetchStatusOptions() {
   try {
-    const res = await axios.get("http://localhost:9999/HotelSleepGun/room/status-options");
+    const token = localStorage.getItem('token');
+    const res = await axios.get("http://localhost:9999/HotelSleepGun/room/status-options", {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
     console.log("Status options loaded:", res.data);
     statusOptions.value = res.data;
   } catch (error) {
@@ -120,26 +132,23 @@ async function updateRoomStatus({ id, status }) {
   console.log("Updating room status:", { id, status });
 
   try {
-    // อัปเดต UI ก่อน (optimistic update)
+    const token = localStorage.getItem('token');
+    // ส่ง PATCH request ไป backend
+    const response = await axios.patch(`http://localhost:9999/HotelSleepGun/room/update/${id}/status`, { status }, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    console.log("Status updated successfully:", response.data);
+
+    // อัปเดต UI หลังบันทึกสำเร็จ
     const idx = room.value.findIndex(r => r._id === id);
     if (idx !== -1) {
       room.value[idx].status = status;
     }
-
-    // ส่ง PATCH request ไป backend
-    const response = await axios.patch(`http://localhost:9999/HotelSleepGun/room/update/${id}/status`, { status });
-    console.log("Status updated successfully:", response.data);
-
-    // อัปเดต UI อีกครั้งด้วยข้อมูลจาก server (ถ้าต้องการ)
-    // await fetchRooms();
+    // (ถ้าต้องการ) await fetchRooms(); // เพื่อ sync กับ backend
 
   } catch (error) {
     console.error("Error updating room status:", error);
-
-    // ถ้าเกิดข้อผิดพลาด ให้คืนค่าเดิม
     await fetchRooms();
-
-    // แสดงข้อความแจ้งเตือน
     alert("เกิดข้อผิดพลาดในการอัปเดตสถานะห้อง");
   }
 }
@@ -149,7 +158,10 @@ async function updateRoom(updatedRoom) {
   console.log("Updating room:", updatedRoom);
   // TODO: ส่ง request ไป backend เพื่ออัปเดตข้อมูลห้อง
   try {
-    const response = await axios.patch(`http://localhost:9999/HotelSleepGun/room/update/${updatedRoom._id}`, updatedRoom);
+    const token = localStorage.getItem('token');
+    const response = await axios.patch(`http://localhost:9999/HotelSleepGun/room/update/${updatedRoom._id}`, updatedRoom, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
     console.log("Room updated successfully:", response.data);
 
     // รีเฟรชข้อมูล
@@ -169,7 +181,10 @@ async function deleteRoom(roomToDelete) {
   }
 
   try {
-    const response = await axios.delete(`http://localhost:9999/HotelSleepGun/room/delete/${roomToDelete._id}`);
+    const token = localStorage.getItem('token');
+    const response = await axios.delete(`http://localhost:9999/HotelSleepGun/room/delete/${roomToDelete._id}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
     console.log("Room deleted successfully:", response.data);
 
     // รีเฟรชข้อมูล

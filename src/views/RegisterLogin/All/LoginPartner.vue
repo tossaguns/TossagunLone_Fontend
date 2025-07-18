@@ -59,22 +59,26 @@ function goBack() {
 const submitForm = async () => {
   errorMessage.value = ''
   try {
-    console.log("✅ Sending login:", username.value, password.value)
-
+    // 1. Login
     const response = await axios.post('http://localhost:9999/HotelSleepGun/partnerLogin/login', {
       username: username.value,
       password: password.value,
     })
-
-    console.log("✅ Response OK:", response.data)
 
     const { token, partner } = response.data
     localStorage.setItem('token', token)
     localStorage.setItem('partnerId', partner._id)
     localStorage.setItem('partner', JSON.stringify(partner))
 
-    console.log("✅ Redirecting to /maincompany")
-    router.push('/maincompany')
+    // 2. ตรวจสอบ isProfileComplete
+    const partnerRes = await axios.get(`http://localhost:9999/HotelSleepGun/partner/get/${partner._id}`)
+    const partnerData = partnerRes.data
+
+    if (!partnerData.isProfileComplete) {
+      router.push('/importantdata')
+    } else {
+      router.push('/logincompany')
+    }
   } catch (error) {
     console.error("❌ Login failed:", error)
     if (error.response) {
@@ -84,5 +88,4 @@ const submitForm = async () => {
     }
   }
 }
-
 </script>

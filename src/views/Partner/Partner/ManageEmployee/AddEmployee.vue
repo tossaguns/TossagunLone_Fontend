@@ -10,8 +10,6 @@
           <label class="text-3xl font-semibold">เพิ่มรายชื่อพนักงาน</label>
         </div>
 
-
-
         <div class="flex flex-col 2xl:flex-row 2xl:justify-between 2xl:items-start mt-12">
           <div class="2xl:w-1/3 mb-12 flex flex-col justify-center items-center">
             <label>รูปพนักงาน</label>
@@ -160,6 +158,9 @@ const statusByPartner = ref('')
 const employeeImage = ref(null)
 const imagePreview = ref(null)
 const fileInput = ref(null)
+
+
+
 
 function triggerFileInput() {
   fileInput.value && fileInput.value.click()
@@ -311,14 +312,18 @@ async function confirmSave() {
     formData.append('imageIden', employeeImage.value);
   }
   try {
+    const token = localStorage.getItem('token');
     const res = await fetch('http://localhost:9999/HotelSleepGun/employee/create', {
       method: 'POST',
       body: formData,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
     const data = await res.json();
     if (res.ok) {
       alert('สร้างพนักงานสำเร็จ');
-      handleReset();
+      router.push('/mainmanageemployee');
     } else {
       alert(data.message || 'เกิดข้อผิดพลาดในการสร้างพนักงาน');
     }

@@ -632,41 +632,20 @@
 
 
       <div>
-        <div id="map" style="height: 400px;"></div>
-        <div class="text-xs flex justify-center space-x-4">
-          <p>Latitude: {{ latitude }}</p>
-          <p>Longitude: {{ longitude }}</p>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="relative mt-8">
-        <div class="relative">
-          <p class="my-1">UserName</p><!--username-->
-          <input v-model="username" placeholder="Username" class="border w-full py-2 px-3 mb-4 rounded-md" />
-          <p class="my-1">Password</p><!--password-->
-          <div class="relative w-full mb-4 ">
-            <input v-model="password" :type="showPassword ? 'text' : 'password'" placeholder="Password"
-              class="border w-full py-2 px-3 pr-10 rounded-md" />
-            <button type="button" @click="togglePassword"
-              class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-              <span v-if="showPassword">🙉</span>
-              <span v-else>🙈</span>
-            </button>
+        <div class="flex flex-col md:space-x-4 mt-4 w-full">
+          <div>
+            <label>Latitude</label>
+            <input v-model="latitude" type="text" class="border rounded px-2 py-1" placeholder="กรอกละติจูด" />
           </div>
-
+          <div>
+            <label>Longitude</label>
+            <input v-model="longitude" type="text" class="border rounded px-2 py-1" placeholder="กรอกลองจิจูด" />
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="flex justify-center space-x-3 mt-20">
-      <button @click="submitForm"
-        class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-500">สมัครสมาชิกพาร์ทเนอร์</button>
-      <button class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-500">กลับหน้าหลัก</button>
-    </div>
   </div>
-
 
 
 
@@ -819,31 +798,31 @@ const longitude = ref(null)
 
 
 // ======= โหลด Google Map และจับตำแหน่ง =======
-onMounted(async () => {
-  fetchHotelTypes();
-
-  const defaultLat = 13.7563
-  const defaultLng = 100.5018
-
-  const map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: defaultLat, lng: defaultLng },
-    zoom: 13
-  })
-
-  let marker = new google.maps.Marker({
-    position: { lat: defaultLat, lng: defaultLng },
-    map: map,
-    draggable: true
-  })
-
-  latitude.value = defaultLat
-  longitude.value = defaultLng
-
-  marker.addListener('dragend', (e) => {
-    latitude.value = e.latLng.lat()
-    longitude.value = e.latLng.lng()
-  })
-})
+// onMounted(async () => {
+//   fetchHotelTypes();
+//
+//   const defaultLat = 13.7563
+//   const defaultLng = 100.5018
+//
+//   const map = new google.maps.Map(document.getElementById('map'), {
+//     center: { lat: defaultLat, lng: defaultLng },
+//     zoom: 13
+//   })
+//
+//   let marker = new google.maps.Marker({
+//     position: { lat: defaultLat, lng: defaultLng },
+//     map: map,
+//     draggable: true
+//   })
+//
+//   latitude.value = defaultLat
+//   longitude.value = defaultLng
+//
+//   marker.addListener('dragend', (e) => {
+//     latitude.value = e.latLng.lat()
+//     longitude.value = e.latLng.lng()
+//   })
+// })
 
 async function fetchHotelTypes() {
   try {

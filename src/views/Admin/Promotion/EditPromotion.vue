@@ -9,7 +9,7 @@
 
         <div class="md:rounded-b-lg px-4 pt-4 max-w-7xl mx-auto">
           <p class="text-2xl font-bold text-center py-4">
-            เพิ่มโปรโมชั่น
+            เเก้ไขโปรโมชั่น
           </p>
 
           <div class="flex flex-col xl:flex-row justify-center lg:space-x-5 item-center">
@@ -213,7 +213,12 @@ const error = ref('')
 onMounted(async () => {
   try {
     const id = route.params.id
-    const res = await fetch(`http://localhost:9999/HotelSleepGun/promotion/get/${id}`)
+    const token = localStorage.getItem('token')
+    const res = await fetch(`http://localhost:9999/HotelSleepGun/promotion/get/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
     if (!res.ok) throw new Error('ไม่พบข้อมูลโปรโมชั่น')
     const data = await res.json()
     promotion.value = data
@@ -241,14 +246,18 @@ async function updatePromotion() {
     if (hasEndDate.value !== 'yes') {
       promotion.value.dateFinish = ''
     }
+    const token = localStorage.getItem('token')
     const res = await fetch(`http://localhost:9999/HotelSleepGun/promotion/update/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify(promotion.value)
     })
     if (!res.ok) throw new Error('อัปเดตโปรโมชั่นไม่สำเร็จ')
     alert('อัปเดตโปรโมชั่นสำเร็จ')
-    router.push('/mainpromotion')
+    router.push('/mainmanagepromotion')
   } catch (e) {
     alert(e.message)
   }

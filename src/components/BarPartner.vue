@@ -143,10 +143,10 @@
             </transition>
           </div>
         </div>
-        <div @click="navigateTo('/mainprofilecompany', 'editproflie')"
+        <div @click="navigateTo('/mainprofile', 'proflie')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'editproflie' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            activeMenu === 'proflie' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -293,11 +293,12 @@ function getActiveMenuFromRoute() {
     '/addemployee': 'manageemployee',
     // '/editemployee/:id': 'manageemployee',
 
-    '/editprofilecompany': 'editproflie',
-    '/mainprofilecompany': 'editproflie',
-    '/profilecompany': 'editproflie',
-    '/editdetailhotel': 'editproflie',
-    '/detailhotel': 'editproflie',
+    '/editprofile': 'proflie',
+    '/addprofile': 'proflie',
+    '/mainprofile': 'proflie',
+    '/profilecompany': 'proflie',
+    '/editdetailhotel': 'proflie',
+    '/detailhotel': 'proflie',
 
     '/mainmanageroom': 'manageroom',
     '/addroom': 'manageroom',

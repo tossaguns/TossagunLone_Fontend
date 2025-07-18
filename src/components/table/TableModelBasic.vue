@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 bg-white shadow rounded-md w-full overflow-x-auto">
+  <div class="p-4 bg-white border shadow rounded-md w-full overflow-x-auto">
     <!-- ตารางสำหรับหน้าจอใหญ่ -->
     <div class="min-w-[640px] hidden lg:block">
       <table class="w-full text-sm text-left border border-gray-300 table-auto">
@@ -18,13 +18,13 @@
                 @click="key === 'status' ? null : handleExpand(rowIndex)">
                 <!-- แสดงค่าอื่นตามปกติ -->
                 <template v-if="key !== 'status'">
-                  {{ formatValue(row[key]) }}
+                  {{ formatValue(row[key], key) }}
                 </template>
 
                 <!-- ถ้าเป็น status ให้แสดง select dropdown แก้ไขได้ -->
                 <template v-else>
                   <div class="dropdown-container">
-                    <select class="status-select" :value="row.status"
+                    <select class="status-select" :value="selectedStatusMap[row._id] ?? row.status"
                       @change="(e) => handleStatusChange(row, e.target.value)" @click.stop.prevent @mousedown.stop
                       :disabled="!props.statusOptions || props.statusOptions.length === 0">
                       <option v-for="opt in props.statusOptions" :key="opt" :value="opt">
@@ -59,8 +59,8 @@
                               <div class="flex justify-center items-center space-x-3">
                                 <span class="text-sm text-gray-500">{{ getFieldByPosition(1).label }}</span>
                                 <span class="text-base text-gray-800 font-medium">{{
-                                  formatValue(row[getFieldByPosition(1).key])
-                                  }}</span>
+                                  formatValue(row[getFieldByPosition(1).key], getFieldByPosition(1).key)
+                                }}</span>
                               </div>
                             </div>
 
@@ -69,8 +69,8 @@
                                 <div class="flex justify-center items-center space-x-3">
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(4).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
-                                    formatValue(row[getFieldByPosition(4).key])
-                                    }}</span>
+                                    formatValue(row[getFieldByPosition(4).key], getFieldByPosition(4).key)
+                                  }}</span>
                                 </div>
                               </div>
 
@@ -78,8 +78,8 @@
                                 <div class="flex justify-center items-center space-x-3">
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(2).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
-                                    formatValue(row[getFieldByPosition(2).key])
-                                    }}</span>
+                                    formatValue(row[getFieldByPosition(2).key], getFieldByPosition(2).key)
+                                  }}</span>
                                 </div>
                               </div>
                             </div>
@@ -89,8 +89,8 @@
                                 <div class="flex justify-center items-center space-x-3">
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(3).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
-                                    formatValue(row[getFieldByPosition(3).key])
-                                    }}</span>
+                                    formatValue(row[getFieldByPosition(3).key], getFieldByPosition(3).key)
+                                  }}</span>
                                 </div>
                               </div>
 
@@ -98,8 +98,8 @@
                                 <div class="flex justify-center items-center space-x-3">
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(5).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
-                                    formatValue(row[getFieldByPosition(5).key])
-                                    }}</span>
+                                    formatValue(row[getFieldByPosition(5).key], getFieldByPosition(5).key)
+                                  }}</span>
                                 </div>
                               </div>
                             </div>
@@ -108,8 +108,8 @@
                               <div class="flex justify-center items-center space-x-3">
                                 <span class="text-sm text-gray-500">{{ getFieldByPosition(6).label }}</span>
                                 <span class="text-base text-gray-800 font-medium">{{
-                                  formatValue(row[getFieldByPosition(6).key])
-                                  }}</span>
+                                  formatValue(row[getFieldByPosition(6).key], getFieldByPosition(6).key)
+                                }}</span>
                               </div>
                             </div>
 
@@ -118,8 +118,8 @@
                                 <div class="flex justify-start items-center space-x-3">
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(7).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
-                                    formatValue(row[getFieldByPosition(7).key])
-                                    }}</span>
+                                    formatValue(row[getFieldByPosition(7).key], getFieldByPosition(7).key)
+                                  }}</span>
                                 </div>
                               </div>
                             </div>
@@ -134,8 +134,8 @@
                                   <span class="text-sm text-gray-500"></span>
                                   <CustomGallery />
                                   <span class="text-base text-gray-800 font-medium">{{
-                                    formatValue(row[getFieldByPosition(8).key])
-                                    }}</span>
+                                    formatValue(row[getFieldByPosition(8).key], getFieldByPosition(8).key)
+                                  }}</span>
                                 </div>
                               </div>
                             </div>
@@ -146,8 +146,8 @@
                           <div class="flex justify-center items-center space-x-3">
                             <span class="text-xs pl-6">{{ getFieldByPosition(9).label }}</span>
                             <span class="text-xs font-medium">{{
-                              formatValue(row[getFieldByPosition(9).key])
-                              }}</span>
+                              formatValue(row[getFieldByPosition(9).key], getFieldByPosition(9).key)
+                            }}</span>
                           </div>
                         </div>
 
@@ -210,7 +210,7 @@
                 <!-- แสดง dropdown สำหรับ status ใน mobile view ด้วย -->
                 <template v-if="key === 'status'">
                   <div class="dropdown-container">
-                    <select class="status-select" :value="row.status"
+                    <select class="status-select" :value="selectedStatusMap[row._id] ?? row.status"
                       @change="(e) => handleStatusChange(row, e.target.value)" @click.stop.prevent @mousedown.stop
                       :disabled="!props.statusOptions || props.statusOptions.length === 0">
                       <option v-for="opt in props.statusOptions" :key="opt" :value="opt">
@@ -220,7 +220,7 @@
                   </div>
                 </template>
                 <template v-else>
-                  {{ formatValue(row[key]) }}
+                  {{ formatValue(row[key], key) }}
                 </template>
               </div>
             </div>
@@ -248,7 +248,7 @@
             <div>
               <div v-for="field in fieldLayout" :key="field.key" class="mb-2">
                 <span class="text-gray-500">{{ field.label }}:</span>
-                <span class="text-gray-800">{{ formatValue(row[field.key]) }}</span>
+                <span class="text-gray-800">{{ formatValue(row[field.key], field.key) }}</span>
               </div>
               <!-- แสดงรูปภาพ -->
               <div v-if="row.imgrooms" class="mt-4">
@@ -284,7 +284,7 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, reactive, watch } from 'vue'
+import { ref, computed, nextTick, reactive, watch, defineExpose } from 'vue'
 import CustomGallery from '@/components/element/Gallery.vue'
 import Confirm from '@/components/element/Confirm.vue'
 
@@ -298,6 +298,7 @@ const showEditModal = ref(false)
 const editForm = reactive({})
 
 const expandedCardIndex = ref(null);
+const selectedStatusMap = ref({})
 
 const totalPages = computed(() =>
   Math.ceil(props.customers.length / rowsPerPage.value)
@@ -332,6 +333,24 @@ watch(() => props.customers, (newVal) => {
   console.log('customers changed:', newVal)
 }, { immediate: true })
 
+// Sync selectedStatusMap กับ customers ทุกครั้งที่ customers เปลี่ยน
+watch(() => props.customers, (newVal) => {
+  const map = {}
+  newVal.forEach(row => {
+    map[row._id] = row.status
+  })
+  selectedStatusMap.value = map
+}, { immediate: true })
+
+// ฟังก์ชันให้ parent เรียก reset ค่า dropdown กลับเป็นค่าเดิม
+function resetStatusSelection(rowId) {
+  if (props.customers) {
+    const row = props.customers.find(r => r._id === rowId)
+    if (row) selectedStatusMap.value[rowId] = row.status
+  }
+}
+defineExpose({ resetStatusSelection })
+
 const paginatedCustomers = computed(() => {
   const start = (currentPage.value - 1) * rowsPerPage.value
   return props.customers.slice(start, start + rowsPerPage.value)
@@ -347,9 +366,24 @@ const columnLabels = computed(() =>
 
 const columnKeys = computed(() => props.visibleColumns ?? [])
 
-function formatValue(val) {
-  if (val === null || val === undefined) return ''
-  return typeof val === 'object' ? JSON.stringify(val) : val
+function formatValue(value, key) {
+  if (key === 'roomNumber') {
+    console.log('roomNumber value:', value);
+  }
+  if (key === 'status') {
+    console.log('status value:', value);
+  }
+  if (key === 'roomDetail') {
+    console.log('roomDetail value:', value);
+  }
+  // กรณี typeRoom เป็น object หรือมี name
+  if (key === 'typeRoom' && value && typeof value === 'object' && value.name) {
+    return value.name;
+  }
+  if (key === 'typeRoom' && typeof value === 'string') {
+    return '-';
+  }
+  return value ?? '';
 }
 
 function getFieldByPosition(pos) {
@@ -423,7 +457,7 @@ function submitEditForm() {
 }
 
 function handleStatusChange(row, newStatus) {
-  // ส่ง event ไป parent เพื่อให้ parent เป็นคน handle confirm
+  selectedStatusMap.value[row._id] = newStatus
   emit('confirm-status-change', { row, newStatus })
 }
 

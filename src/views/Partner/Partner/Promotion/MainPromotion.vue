@@ -645,7 +645,12 @@ watch(toggleMobilePromo, (newValue) => {
 
 onMounted(async () => {
   try {
-    const res = await fetch('http://localhost:9999/HotelSleepGun/promotion/getAll')
+    const token = localStorage.getItem('token')
+    const res = await fetch('http://localhost:9999/HotelSleepGun/promotion/getAll', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
     const data = await res.json()
     allPromotions.value = data
   } catch (e) {

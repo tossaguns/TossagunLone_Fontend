@@ -160,8 +160,7 @@ function handleSave() {
     scrollToFirstErrorWithAnimation()
     return
   }
-
-  showConfirmSave.value = true
+  confirmSave(); // เรียกตรงนี้เลย
 }
 
 function handleReset() {
@@ -191,17 +190,45 @@ function handleCancel() {
 const showConfirmSave = ref(false)
 
 function confirmSave() {
-  console.log('✅ บันทึกสำเร็จ! ส่ง API ได้เลย')
-  console.log({
-    numberRoom: NumberRoom.value,
-    selectedTypeRoom: selectedTypeRoom.value,
-    price: Price.value,
-    stay: Stay.value,
-    roomDetail: RoomDetail.value,
-    selectedRoom: selectedRoom.value
-  })
+  // สร้าง FormData
+  const formData = new FormData();
+  formData.append('roomNumber', NumberRoom.value);
+  formData.append('typeRoom', selectedTypeRoom.value);
+  formData.append('price', Price.value);
+  formData.append('stayPeople', Stay.value);
+  formData.append('roomDetail', RoomDetail.value);
+  // เพิ่ม field อื่นๆ ตามที่ backend ต้องการ เช่น typeRoomHotel, imgrooms ฯลฯ
 
-  showConfirmSave.value = false
+  // TODO: เพิ่มไฟล์รูปภาพถ้ามี (ดูจาก UploadImg component)
+
+  const token = localStorage.getItem('token');
+  fetch('http://localhost:9999/HotelSleepGun/room/create', {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (e) {
+        data = {};
+      }
+      console.log('API response:', res.status, data);
+      if (res.ok) {
+        alert('บันทึกข้อมูลห้องสำเร็จ');
+        router.push('/mainmanageroom');
+      } else {
+        alert(data.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูลห้อง');
+      }
+    })
+    .catch((err) => {
+      console.error('API error:', err);
+      alert('เกิดข้อผิดพลาดในการเชื่อมต่อ API');
+    });
+  showConfirmSave.value = false;
 }
 
 

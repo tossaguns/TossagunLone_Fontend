@@ -160,8 +160,13 @@ const showPassword = ref(false)
 onMounted(async () => {
   if (!employeeId) return
   try {
-    const res = await fetch(`http://localhost:9999/HotelSleepGun/employee/get${employeeId}`)
-    const data = await res.json()
+    const token = localStorage.getItem('token');
+    const res = await fetch(`http://localhost:9999/HotelSleepGun/employee/get${employeeId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    const data = await res.json();
     firstname.value = data.firstname || ''
     lastname.value = data.lastname || ''
     nickname.value = data.nickname || ''
@@ -324,9 +329,13 @@ async function confirmSave() {
     formData.append('imageIden', employeeImage.value);
   }
   try {
+    const token = localStorage.getItem('token');
     const res = await fetch(`http://localhost:9999/HotelSleepGun/employee/update${employeeId}`, {
-      method: 'PUT', // หรือ 'POST' ถ้า backend รับ POST
+      method: 'PUT',
       body: formData,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
     const data = await res.json();
     if (res.ok) {

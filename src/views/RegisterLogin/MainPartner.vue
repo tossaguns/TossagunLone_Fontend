@@ -28,7 +28,7 @@
             </div>
             <div v-else class="border rounded-lg shadow-lg flex flex-col justify-center py-8">
               <label class="text-xl font-bold text-center">ลงชื่อเข้าใช้งานพาร์ทเนอร์</label>
-              <SigninPartner />
+              <LoginPartner />
             </div>
           </div>
         </div>
@@ -41,7 +41,7 @@
 <script setup>
 import Bar from "@components/BarHotelTossagun.vue";
 import RegisterPartner from "@/views/RegisterLogin/All/RegisterPartner.vue";
-import SigninPartner from "@/views/RegisterLogin/All/SigninPartner.vue";
+import LoginPartner from "@/views/RegisterLogin/All/LoginPartner.vue";
 import Footer from "@components/FooterLoneTossagun.vue";
 import { ref, onMounted, } from 'vue'
 
