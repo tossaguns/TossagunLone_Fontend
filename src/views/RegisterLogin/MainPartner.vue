@@ -32,7 +32,6 @@
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     </div>
   </div>
@@ -42,7 +41,6 @@
 import Bar from "@components/BarHotelTossagun.vue";
 import RegisterPartner from "@/views/RegisterLogin/All/RegisterPartner.vue";
 import LoginPartner from "@/views/RegisterLogin/All/LoginPartner.vue";
-import Footer from "@components/FooterLoneTossagun.vue";
 import { ref, onMounted, } from 'vue'
 
 const activeTab = ref('register')

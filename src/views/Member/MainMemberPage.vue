@@ -32,16 +32,17 @@
               </div>
             </div>
 
-            <div>
-              <div class="flex justify-between items-center px-20 mx-20 bg-amber-50 py-8 rounded-xl mt-6  shadow">
-                <div class="flex items-center space-x-3">
-                  <img src="/imgHotel/gift.png" class="h-16" />
-                  <label class="text-xl text-stone-500">กรุณาเข้าสู่ระบบเพื่อรับสิทธิพิเศษ</label>
+
+            <div class="mb-4">
+              <!-- หน้าถูกใจ -->
+              <div class="p-4">
+                <div class="flex justify-between">
+                  <h2 class="md:text-xl px-6 font-bold">ถูกใจ</h2>
+
                 </div>
-                <button class="bg-stone-400 text-white py-2 px-6 rounded-lg hover:bg-stone-300">เข้าสู่ระบบ</button>
+                <ProductCarouselHart :products="products" />
               </div>
             </div>
-
 
             <div class="mb-4">
               <!-- หน้าโปรโมชั่น Hotel -->
@@ -50,7 +51,7 @@
                   <h2 class="md:text-xl px-6 font-bold">ที่พักราคาโปรโมชั่น</h2>
                   <label class="underline underline-offset-4 text-stone-400 hover:text-stone-500">ดูเพิ่มเติม</label>
                 </div>
-                <ProductCarousel :products="products" />
+                <ProductCarouselHart :products="products" />
               </div>
             </div>
 
@@ -61,7 +62,7 @@
                   <h2 class="md:text-xl px-6 font-bold">ที่พักแนะนำ</h2>
                   <label class="underline underline-offset-4 text-stone-400 hover:text-stone-500">ดูเพิ่มเติม</label>
                 </div>
-                <ProductCarousel :products="products" />
+                <ProductCarouselHart :products="products" />
               </div>
             </div>
 
@@ -90,12 +91,12 @@
 </template>
 
 <script setup>
-import Bar from "@components/BarHotelTossagun.vue";
+import Bar from "@components/BarMember.vue";
 import CalendarRangePicker from "@/components/element/CalendarRangePicker.vue";
 import InputNumber from "@/components/element/InputNumber.vue";
 import SearchInput from "@/components/element/SearchInput.vue";
 import Footer from "@components/FooterLoneTossagun.vue";
-import ProductCarousel from '@/components/element/ProductCarousel.vue';
+import ProductCarouselHart from '@/components/element/ProductCarouselHart.vue';
 import ProductCarouselImg from '@/components/element/ProductCarouselImg.vue';
 import { ref, onMounted } from 'vue';
 import { ProductService } from '@/service/ProductService';

@@ -194,7 +194,7 @@ const loading = ref(true)
 
 
 function navigateBackToMainProfileCompany() {
-  router.push('/addprofile')
+  router.push('/profile')
 }
 
 // --- ข้อมูลฟอร์ม ---
@@ -402,7 +402,7 @@ async function saveProfile() {
     )
     if (res.status === 200) {
       alert('บันทึกข้อมูลเรียบร้อยแล้ว!')
-      router.push('/addprofile') // <-- เพิ่ม redirect
+      router.push('/profile') // <-- เพิ่ม redirect
     } else {
       alert('ไม่สามารถบันทึกข้อมูลได้')
     }

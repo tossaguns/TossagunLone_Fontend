@@ -41,6 +41,7 @@
                 </div>
 
                 <div class="2xl:w-1/2 w-full space-y-4  2xl:mt-0 mt-4">
+                  
                   <div :ref="el => (inputRefs.Stay = el)">
                     <InputNumber v-model="Stay" id="Stay" :label="t('Stay_Label')"
                       :class="highlightField === 'Stay' ? 'ring-2 ring-red-400 rounded-md animate-shake' : ''" />

@@ -15,10 +15,10 @@ import AddEmployee from "../views/Partner/Partner/ManageEmployee/AddEmployee.vue
 import EditEmployee from "../views/Partner/Partner/ManageEmployee/EditEmployee.vue";
 import MainManageEmployee from "../views/Partner/Partner/ManageEmployee/MainManageEmployee.vue";
 import MainProfile from "../views/Partner/Partner/Profile/MainProfile.vue";
-import AddProfile from "../views/Partner/Partner/Profile/AddProfile.vue";
+import Profile from "../views/Partner/Partner/Profile/Profile.vue";
 import EditProfile from "../views/Partner/Partner/Profile/EditProfile.vue";
 import ImportantData from "../views/Partner/Partner/AfterLogin/ImportantData.vue";
-import AddDetailHotel from "../views/Partner/Partner/Profile/AddDetailHotel.vue";
+import DetailHotel from "../views/Partner/Partner/Profile/DetailHotel.vue";
 import EditDetailHotel from "../views/Partner/Partner/Profile/EditDetailHotel.vue";
 //Admin
 import MainManageHotelAdmin from "../views/Admin/ManageHotel/MainManageHotelAdmin.vue";
@@ -27,12 +27,17 @@ import MainManagePromotion from "../views/Admin/Promotion/MainManagePromotion.vu
 import AddPromotion from "../views/Admin/Promotion/AddPromotion.vue";
 import EditPromotion from "../views/Admin/Promotion/EditPromotion.vue";
 import MainManageApprovePartner from "../views/Admin/ManageApprovePartner/MainManageApprovePartner.vue";
+// Employee
+import ProfileEmployee from "../views/Partner/Employee/ProfileEmployee.vue";
+//member
+import MainMemberPage from "../views/Member/MainMemberPage.vue";
+import DataMember from "../views/Member/Payment/DataMember.vue";
 
 
 
 
 const routes = [
-  { path: "/main", component: Main },
+  { path: "/", component: Main },
   { path: "/maptossagun", component: MapTossagun },
   { path: "/signin", component: SignIn },
   { path: "/mainpartner", component: RegisterPartner },
@@ -46,10 +51,10 @@ const routes = [
   { path: "/editemployee/:id", component: EditEmployee },
   { path: "/mainmanageemployee", component: MainManageEmployee },
   { path: "/mainprofile", component: MainProfile },
-  { path: "/addprofile", component: AddProfile },
+  { path: "/profile", component: Profile },
   { path: "/editprofile", component: EditProfile },
   { path: "/importantdata", component: ImportantData },
-  { path: "/adddetailhotel", component: AddDetailHotel },
+  { path: "/detailhotel", component: DetailHotel },
   { path: "/editdetailhotel", component: EditDetailHotel },
   //Admin
   { path: "/mainmanagehoteladmin", component: MainManageHotelAdmin },
@@ -58,6 +63,11 @@ const routes = [
   { path: "/addpromotion", component: AddPromotion },
   { path: "/editpromotion/:id", component: EditPromotion },
   { path: "/mainmanageapprovepartner", component: MainManageApprovePartner },
+  //Employee
+  { path: "/profileemployee", component: ProfileEmployee },
+  //Member
+  { path: "/mainmemberpage", component: MainMemberPage },
+  { path: "/datamember", component: DataMember},
 ];
 
 const router = createRouter({

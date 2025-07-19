@@ -111,7 +111,7 @@
                 </div>
               </div>
               <div class="flex justify-center mt-14 space-x-4">
-                <button @click="navigateBackToMainProfileCompany"
+                <button @click="goToMainProfile"
                   class="bg-red-600 hover:bg-red-500 py-2 transition px-4 text-white font-bold rounded-lg">ย้อนกลับ</button>
                 <button @click="goToEditProfileCompany"
                   class="bg-green-600 hover:bg-green-500 py-2 transition px-4 text-white font-bold rounded-lg">แก้ไข</button>
@@ -139,6 +139,11 @@ const route = useRoute()
 function goToEditProfileCompany() {
   router.push('/editprofile')
 }
+
+function goToMainProfile() {
+  router.push('/mainprofile')
+}
+
 
 const companyName = ref('')
 const companyPhone = ref('')

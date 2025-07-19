@@ -114,10 +114,14 @@
               <FontAndLangSelector />
             </div>
             <div class="flex lg:justify-end">
+
+
               <button @click="goToSignin"
                 class="bg-yellow-400 hover:bg-yellow-500 py-2 px-4 rounded-full text-sm font-semibold text-black">
                 เข้าสู่ระบบ
               </button>
+
+              
             </div>
           </div>
         </div>

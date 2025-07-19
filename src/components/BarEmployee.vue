@@ -22,80 +22,11 @@
 
 
       <div class="pt-8 text-stone-700">
-
-        <div @click="navigateTo('dashboardforexecutive', 'dashboard')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+        
+        <div @click="navigateTo('/manageroomemployee', 'manageroom')"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-stone-500 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'dashboard' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
-            isCollapsed ? 'px-3' : 'px-3'
-          ]">
-          <div class="flex items-center gap-3 ml-3 transition-all duration-300">
-            <img src="/images/icon/dashboard_nav.png" alt="icon"
-              class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
-            <transition name="fade-slide" mode="out-in" appear>
-              <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
-                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('Dashboard') }}
-              </p>
-            </transition>
-          </div>
-        </div>
-
-        <div @click="navigateTo('/mainhotelroom', 'stayroom')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
-          :class="[
-            activeMenu === 'stayroom' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
-            isCollapsed ? 'px-3' : 'px-3'
-          ]">
-          <div class="flex items-center gap-3 ml-3 transition-all duration-300">
-            <img src="/images/icon/calendar_nav.png" alt="icon"
-              class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
-            <transition name="fade-slide" mode="out-in" appear>
-              <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
-                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('Stay') }}
-              </p>
-            </transition>
-          </div>
-        </div>
-        <div @click="navigateTo('/mainbookingtossagun', 'reservetossagun')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
-          :class="[
-            activeMenu === 'reservetossagun' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
-            isCollapsed ? 'px-3' : 'px-3'
-          ]">
-          <div class="flex items-center gap-3 ml-3 transition-all duration-300">
-            <img src="/images/icon/calendartossagun_nav.png" alt="icon"
-              class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
-            <transition name="fade-slide" mode="out-in" appear>
-              <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
-                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('BookwithSleepGun') }}
-              </p>
-            </transition>
-          </div>
-        </div>
-        <div @click="navigateTo('/mainreport', 'report')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
-          :class="[
-            activeMenu === 'report' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
-            isCollapsed ? 'px-3' : 'px-3'
-          ]">
-          <div class="flex items-center gap-3 ml-3 transition-all duration-300">
-            <img src="/images/icon/receipt_nav.png" alt="icon"
-              class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
-            <transition name="fade-slide" mode="out-in" appear>
-              <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
-                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('Report') }}
-              </p>
-            </transition>
-          </div>
-        </div>
-        <div @click="navigateTo('/mainpromotion', 'promotion')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
-          :class="[
-            activeMenu === 'promotion' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            activeMenu === 'manageroom' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -104,15 +35,15 @@
             <transition name="fade-slide" mode="out-in" appear>
               <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
                 :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('Promotion') }}
+                จัดการสถานะห้องพัก
               </p>
             </transition>
           </div>
         </div>
         <div @click="navigateTo('/mainmanageroom', 'manageroom')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-stone-500 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'manageroom' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            activeMenu === 'manageroom' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -121,15 +52,15 @@
             <transition name="fade-slide" mode="out-in" appear>
               <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
                 :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('ManageRooms') }}
+                Check-in
               </p>
             </transition>
           </div>
         </div>
         <div @click="navigateTo('/mainmanageemployee', 'manageemployee')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-stone-500 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'manageemployee' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            activeMenu === 'manageemployee' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -138,15 +69,15 @@
             <transition name="fade-slide" mode="out-in" appear>
               <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
                 :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('ManageEmployee') }}
+                check-out
               </p>
             </transition>
           </div>
         </div>
         <div @click="navigateTo('/mainprofile', 'proflie')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-stone-500 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'proflie' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            activeMenu === 'proflie' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -166,13 +97,13 @@
 
 
         <div class="flex flex-col justify-center mt-6 space-x-2 text-sm">
-          <p class="text-center text-stone-400">
+          <p class="text-center text-stone-500">
             {{ t('Role') }}
-            <span class=" text-lg text-amber-500 font-bold">{{
+            <span class=" text-lg text-stone-500 font-bold">{{
               partner.role }}</span>
           </p>
           <div v-show="!isCollapsed"
-            class="text-center mt-1 transition-transform duration-300 group-hover:scale-110 text-stone-500 bg-amber-100 py-1 rounded-lg mx-4">
+            class="text-center mt-1 transition-transform duration-300 group-hover:scale-110 text-stone-500 bg-stone-100 py-1 rounded-lg mx-4">
             <div class="flex space-x-2 justify-center">
               <p>{{ partner.firstname }}</p>
               <p> {{ partner.lastname }}</p>

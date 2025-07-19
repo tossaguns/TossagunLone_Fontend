@@ -53,11 +53,11 @@ const loading = ref(true)
 
 
 function goToDetailHotel() {
-  router.push('/adddetailhotel')
+  router.push('/detailhotel')
 }
 
 function goToDataCompany() {
-  router.push('/addprofile')
+  router.push('/profile')
 }
 
 

@@ -7,11 +7,31 @@
       <div class="p-4 max-w-[3000px] mx-auto">
 
 
+        <!-- <template>
+  <TemplateAdmin>
+    <template #header>
+      <label>จัดการโรงเเรมในเครือ</label>
+    </template>
+<template #content>
+      <div class="p-4 max-w-[3000px] mx-auto">
+
+      </div>
+    </template>
+</TemplateAdmin>
+</template>
+
+<script setup>
+import TemplateAdmin from "@/components/TemplateAdmin.vue";
+
+
+</script> -->
+
+
         <!-- ปฏิทินเลือกวันที่พัก ใน member -->
         <CalendarRangePicker />
 
         <!-- เลือกวันหยุดสำหรับ partner -->
-        <MultiDatePicker  />
+        <MultiDatePicker />
 
         <!-- คัสตอมตัวมาร์ เลขโทรศัพท์ เลขบัตรประชาชน -->
         <CustomInputMask v-model="myId" :mask="'999-999999-99999-99'" />
