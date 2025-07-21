@@ -116,12 +116,12 @@
             <div class="flex lg:justify-end">
 
 
-              <button @click="goToSignin"
-                class="bg-yellow-400 hover:bg-yellow-500 py-2 px-4 rounded-full text-sm font-semibold text-black">
-                เข้าสู่ระบบ
-              </button>
+              <div @click="goToProfile">
+                <Profile />
 
-              
+              </div>
+
+
             </div>
           </div>
         </div>
@@ -146,8 +146,23 @@
           <transition name="slide">
             <div v-if="menuOpen" class="fixed top-0 right-0 h-full w-64 bg-white z-50  shadow-lg p-4 overflow-y-auto">
               <div class="flex justify-end mb-2">
-                <button @click="toggleMenu" class="text-xl font-bold">&times;</button>
+                <button @click="toggleMenu" class="text-xl font-bold">x</button>
               </div>
+
+              <div @click="goToProfile" class="flex justify-center">
+                <Profile />
+              </div>
+
+              <div class="mt-6 flex flex-col items-start pl-4 space-y-2 font-bold">
+                <button class="text-stone-600 hover:text-yellow-400">โปรไฟล์</button>
+                <div class="flex flex-col items-start pl-4 space-y-2 font-thin ">
+                  <button class="text-stone-600 hover:text-yellow-400">ข้อมูลส่วนตัว</button>
+                  <button class="text-stone-600 hover:text-yellow-400">ถูกใจ</button>
+                  <button class="text-stone-600 hover:text-yellow-400">ประวัติการทำรายการ</button>
+                  <button class="text-stone-600 hover:text-yellow-400">รีวิว</button>
+                </div>
+              </div>
+
               <Button type="button" text @click="toggleAll" />
               <PanelMenu v-model:expandedKeys="expandedKeys" :model="items" class="w-full" unstyled :pt="{
                 root: { class: 'space-y-3' },
@@ -157,12 +172,10 @@
 
               <div class="mt-8 flex flex-col justify-center items-center space-y-8">
                 <FontAndLangSelector />
-
-                <button @click="goToSignin"
-                  class="bg-yellow-400 hover:bg-yellow-500 py-2 px-4 rounded-full text-sm font-semibold text-black">
-                  เข้าสู่ระบบ
-                </button>
               </div>
+
+
+
 
             </div>
           </transition>
@@ -178,6 +191,7 @@ import { useRouter } from 'vue-router'
 import PanelMenu from 'primevue/panelmenu'
 import Button from 'primevue/button'
 import FontAndLangSelector from '@components/FontAndLangSelector.vue'
+import Profile from '@components/element/Profile.vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -439,11 +453,11 @@ function goToUsedCar() {
 function goToContact() {
   router.push('/maptossagun')
 }
-function goToSignin() {
-  router.push('/signin')
-}
 function goToMain() {
   router.push('/main')
+}
+function goToProfile() {
+  router.push('/dataprofilemember')
 }
 </script>
 

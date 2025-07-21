@@ -1,7 +1,7 @@
 <template>
-  <div class="flex max-w-4xl mx-auto gap-4 border rounded-md shadow-sm p-4">
+  <div class="flex max-w-4xl mx-auto gap-4 border rounded-md shadow-sm md:p-4 p-2">
     <!-- Thumbnail ด้านซ้าย -->
-    <div class="flex flex-col gap-2 w-24 max-h-[200px] overflow-y-auto pr-1">
+    <div class="flex flex-col gap-2 md:w-24 w-16 lg:h-[300px] md:h-[300px] h-[190px] overflow-y-auto pr-1 ">
       <img v-for="(img, index) in images" :key="index" :src="img.thumbnailImageSrc" :alt="img.alt"
         @click="currentIndex = index"
         class="h-24 w-24 object-cover cursor-pointer border-2 rounded-md transition-all duration-200" :class="{
@@ -12,7 +12,7 @@
     <!-- ภาพใหญ่ด้านขวา -->
     <div class="flex-1 flex items-center justify-center">
       <img v-if="images[currentIndex]" :src="images[currentIndex].itemImageSrc" :alt="images[currentIndex].alt"
-        class="w-full max-h-[500px] object-contain rounded-md shadow" />
+        class="w-[800px] max-h-[310px] object-cover rounded-md shadow" />
     </div>
   </div>
 </template>
@@ -25,54 +25,29 @@ const currentIndex = ref(0)
 onMounted(() => {
   images.value = [
     {
-      itemImageSrc: '/img/Car/NewCar.png',
-      thumbnailImageSrc: '/img/Car/NewCar.png',
+      itemImageSrc: '/imgHotel/sea.jpg',
+      thumbnailImageSrc: 'imgHotel/sea.jpg',
       alt: 'ภาพที่ 1'
     },
     {
-      itemImageSrc: '/img/Car/MainCar.png',
-      thumbnailImageSrc: '/img/Car/MainCar.png',
+      itemImageSrc: '/imgHotel/imgprovince/Bangkok.jpg',
+      thumbnailImageSrc: '/imgHotel/imgprovince/Bangkok.jpg',
       alt: 'ภาพที่ 2'
     },
     {
-      itemImageSrc: '/img/Car/UsedCar.png',
-      thumbnailImageSrc: '/img/Car/UsedCar.png',
+      itemImageSrc: '/imgHotel/imgprovince/ChiangMai.jpg',
+      thumbnailImageSrc: '/imgHotel/imgprovince/ChiangMai.jpg',
       alt: 'ภาพที่ 3'
     },
     {
-      itemImageSrc: '/img/Car/MainCar.png',
-      thumbnailImageSrc: '/img/Car/MainCar.png',
+      itemImageSrc: '/imgHotel/imgprovince/Chonburi.jpg',
+      thumbnailImageSrc: '/imgHotel/imgprovince/Chonburi.jpg',
       alt: 'ภาพที่ 4'
     },
     {
-      itemImageSrc: '/img/Car/MainCar.png',
-      thumbnailImageSrc: '/img/Car/MainCar.png',
+      itemImageSrc: '/imgHotel/imgprovince/Phuket.jpg',
+      thumbnailImageSrc: '/imgHotel/imgprovince/Phuket.jpg',
       alt: 'ภาพที่ 5'
-    },
-    {
-      itemImageSrc: '/img/Car/MainCar.png',
-      thumbnailImageSrc: '/img/Car/MainCar.png',
-      alt: 'ภาพที่ 6'
-    },
-    {
-      itemImageSrc: '/img/Car/MainCar.png',
-      thumbnailImageSrc: '/img/Car/MainCar.png',
-      alt: 'ภาพที่ 7'
-    },
-    {
-      itemImageSrc: '/img/Car/MainCar.png',
-      thumbnailImageSrc: '/img/Car/MainCar.png',
-      alt: 'ภาพที่ 8'
-    },
-    {
-      itemImageSrc: '/img/Car/MainCar.png',
-      thumbnailImageSrc: '/img/Car/MainCar.png',
-      alt: 'ภาพที่ 9'
-    },
-    {
-      itemImageSrc: '/img/Car/MainCar.png',
-      thumbnailImageSrc: '/img/Car/MainCar.png',
-      alt: 'ภาพที่ 10'
     },
   ]
 })

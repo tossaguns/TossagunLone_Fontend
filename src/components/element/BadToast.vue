@@ -1,4 +1,4 @@
-// BadToast.vue
+
 <template>
   <div class="fixed top-4 right-4 z-50 mt-5">
     <TransitionGroup name="toast" tag="div" class="flex flex-col gap-y-3 relative">

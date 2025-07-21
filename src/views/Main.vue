@@ -38,7 +38,7 @@
                   <img src="/imgHotel/gift.png" class="h-16" />
                   <label class="text-xl text-stone-500">กรุณาเข้าสู่ระบบเพื่อรับสิทธิพิเศษ</label>
                 </div>
-                <button class="bg-stone-400 text-white py-2 px-6 rounded-lg hover:bg-stone-300">เข้าสู่ระบบ</button>
+                <button class="bg-yellow-400 text-white py-2 px-6 rounded-lg hover:bg-yellow-300">เข้าสู่ระบบ</button>
               </div>
             </div>
 

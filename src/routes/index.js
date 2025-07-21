@@ -32,6 +32,13 @@ import ProfileEmployee from "../views/Partner/Employee/ProfileEmployee.vue";
 //member
 import MainMemberPage from "../views/Member/MainMemberPage.vue";
 import DataMember from "../views/Member/Payment/DataMember.vue";
+import DataProfileMember from "../views/Member/Profile/DataProfileMember.vue";
+import HistoryByeMember from "../views/Member/Profile/HistoryByeMember.vue";
+import PaymentMember from "../views/Member/Profile/PaymentMember.vue";
+import ReviewMember from "../views/Member/Profile/ReviewMember.vue";
+import CollectionMember from "../views/Member/Profile/CollectionMember.vue";
+import DetailHotelMember from "../views/Member/DetailHotelMember.vue";
+
 
 
 
@@ -68,6 +75,13 @@ const routes = [
   //Member
   { path: "/mainmemberpage", component: MainMemberPage },
   { path: "/datamember", component: DataMember},
+
+  { path: "/dataprofilemember", component: DataProfileMember},
+  { path: "/historybyemember", component: HistoryByeMember},
+  { path: "/paymentmember", component: PaymentMember},
+  { path: "/reviewmember", component: ReviewMember},
+  { path: "/collectionmember", component: CollectionMember},
+  { path: "/detailhotelmember", component: DetailHotelMember},
 ];
 
 const router = createRouter({

@@ -1,7 +1,7 @@
 <template>
   <TemplateEmployee>
     <template #header>
-      <label>จัดการl5kotshv'ryd</label>
+      <label>โปรไฟล์พนักงาน</label>
     </template>
     <template #content>
       <div class="p-4 max-w-[3000px] mx-auto">

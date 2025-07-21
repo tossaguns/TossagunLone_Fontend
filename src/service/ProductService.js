@@ -8,6 +8,7 @@ export const ProductService = {
         price: 65,
         category: 'Accessories',
         inventoryStatus: 'แนะนำ',
+        detail: 'gs9eo8rutygo',
       },
       {
         id: '1001',
@@ -24,6 +25,7 @@ export const ProductService = {
         price: 29,
         category: 'Clothing',
         inventoryStatus: 'ลดราคา',
+        detail: 'gs9eo8rutygofyiholrfyiruytikyflhuงบยยรีชลoบีงตขยน่วงp',
       },
       {
         id: '1003',

@@ -14,42 +14,45 @@
               <!-- <input v-model="form.name" type="text" placeholder="ชื่อ" class="border p-2 w-full mb-4" />
               <input v-model="form.email" type="email" placeholder="อีเมล" class="border p-2 w-full" /> -->
 
-              <div class="flex flex-col md:flex-row md:justify-between items-center">
-
-                <div class="md:w-1/2 flex justify-center px-2">
-                  <img src="/imgHotel/sea.jpg" class="h-[310px] w-[550px] object-cover rounded-lg" />
-                </div>
-
-                <div class="md:w-1/2 space-y-3 w-full md:mt-0 mt-3">
-                  <div class=" border rounded-lg lg:px-20 px-6 py-4 md:mx-2">
-                    <div class="flex justify-between items-center">
-                      <div>
-                        <label class="text-xl font-bold">ราคารวม</label>
-                      </div>
-                      <div class="flex flex-col">
-                        <label class="text-red-600 line-through">ราคาเดิม{{ }}</label>
-                        <label class="text-2xl font-bold">ราคาที่ลดเเล้ว{{ }}</label>
-                        <label class="text-xs tetx-stone-400">รวมภาษีเเละค่าธรรมเนียมเเล้ว</label>
-                      </div>
-                    </div>
+              <div>
+                <div class="text-red-500 text-xl">(ต้องการให้คิดราคาหลายๆห้องรวมกันได้) เดี๋ยวค่อยกลับมาทำ
+                  ตอนนี้คิดราคาได้ทีละห้องไปก่อน</div>
+                <div class="flex flex-col md:flex-row md:justify-between items-center">
+                  <div class="md:w-1/2 flex justify-center px-2">
+                    <img src="/imgHotel/sea.jpg" class="h-[310px] w-[550px] object-cover rounded-lg" />
                   </div>
 
-                  <div class="border rounded-lg py-4 lg:px-12 px-6 md:mx-2">
-                    <div class="space-x-3 text-sm">
-                      <label>ประเภทห้องพัก{{ }}</label>
-                      <label>* * * * * (มีกี่รีวิว){{ }}{{ }}</label>
+                  <div class="md:w-1/2 space-y-3 w-full md:mt-0 mt-3">
+                    <div class=" border rounded-lg lg:px-20 px-6 py-4 md:mx-2">
+                      <div class="flex justify-between items-center">
+                        <div>
+                          <label class="text-xl font-bold">ราคารวม</label>
+                        </div>
+                        <div class="flex flex-col">
+                          <label class="text-red-600 line-through">ราคาเดิม{{ }}</label>
+                          <label class="text-2xl font-bold">ราคาที่ลดเเล้ว{{ }}</label>
+                          <label class="text-xs tetx-stone-400">รวมภาษีเเละค่าธรรมเนียมเเล้ว</label>
+                        </div>
+                      </div>
                     </div>
 
-                    <div class="my-2">
-                      <label class="text-xl font-bold">ชื่อโรงเเรม {{ }}</label>
-                    </div>
+                    <div class="border rounded-lg py-4 lg:px-12 px-6 md:mx-2">
+                      <div class="space-x-3 text-sm">
+                        <label>ประเภทห้องพัก{{ }}</label>
+                        <label>* * * * * (มีกี่รีวิว){{ }}{{ }}</label>
+                      </div>
 
-                    <div class="text-sm flex flex-col pl-4">
-                      <label>บ้านเลขที่ : {{ }}</label>
-                      <label>ตำบล : {{ }}</label>
-                      <label>อำเภอ : {{ }}</label>
-                      <label>จังหวัด : {{ }}</label>
-                      <label>รหัสไปรษณีย์ : {{ }}</label>
+                      <div class="my-2">
+                        <label class="text-xl font-bold">ชื่อโรงเเรม {{ }}</label>
+                      </div>
+
+                      <div class="text-sm flex flex-col pl-4">
+                        <label>บ้านเลขที่ : {{ }}</label>
+                        <label>ตำบล : {{ }}</label>
+                        <label>อำเภอ : {{ }}</label>
+                        <label>จังหวัด : {{ }}</label>
+                        <label>รหัสไปรษณีย์ : {{ }}</label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -58,7 +61,8 @@
 
 
 
-              <div class="flex flex-col md:flex-row md:justify-between items-start md:px-2 md:mt-5 mt-3 md:space-x-3 space-y-3 md:space-y-0">
+              <div
+                class="flex flex-col md:flex-row md:justify-between items-start md:px-2 md:mt-5 mt-3 md:space-x-3 space-y-3 md:space-y-0">
                 <div class="md:w-1/2 border rounded-lg px-4 pt-4 pb-11 w-full">
                   <div>
                     <label class="font-bold">สรุปราคาส่วนลดเเละโค้ดโปรโมชั่น</label>
@@ -105,12 +109,12 @@
                         <div class="space-x-4">
                           <label>เช็คอิน :</label>
                           <label>14.00-22.00{{ }}</label>
-                          <label>วันจันท์ ที่ 12 กันยายน 2564{{ }}</label>
+                          <label>วันที่ 12 กันยายน 2564{{ }}</label>
                         </div>
                         <div class="space-x-4">
                           <label>เช็คเอ้าท์ :</label>
                           <label>09.00-12.00{{ }}</label>
-                          <label>วันพุธ ที่ 14 กันยายน 2564{{ }}</label>
+                          <label>วันที่ 14 กันยายน 2564{{ }}</label>
                         </div>
                       </div>
                     </div>

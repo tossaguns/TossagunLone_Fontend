@@ -11,11 +11,11 @@
         </button>
 
         <div class="overflow-hidden">
-          <div class="flex transition-transform duration-300"
+          <div class="flex transition-transform duration-300 items-stretch"
             :style="{ transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)` }">
             <div v-for="(item, index) in products" :key="index"
-              class="flex-none w-full sm:w-1/2 lg:w-1/3 p-2 box-border">
-              <div class="border rounded md:p-4 p-2">
+              class="flex-none w-full sm:w-1/2 lg:w-1/3 p-2 box-border h-full">
+              <div class="border rounded md:p-4 p-2 flex flex-col h-full">
                 <div class="relative mb-4">
                   <img :src="'https://primefaces.org/cdn/primevue/images/product/' + item.image" :alt="item.name"
                     class="w-full md:h-40 h-32 object-cover rounded" />
@@ -30,14 +30,17 @@
                       style="font-size: 1.2rem;"></i>
                   </button>
                 </div>
-                <div class="mb-2 font-medium">{{ item.name }}</div>
+                <div class="mb-2 font-medium truncate w-full">{{ item.name }}</div>
                 <div class="flex justify-between items-center">
-                  <div class="font-semibold text-xl">${{ item.price }}</div>
+                  <div class="font-semibold text-xl">THB {{ item.price }}</div>
                   <div class="flex gap-2">
                     <button class="text-gray-600 hover:text-black">
                       <i class="pi pi-shopping-cart"></i>
                     </button>
                   </div>
+                </div>
+                <div class="flex-1 flex items-end">
+                  <div class="text-stone-400 truncate w-full">{{ item.detail }}</div>
                 </div>
               </div>
             </div>
