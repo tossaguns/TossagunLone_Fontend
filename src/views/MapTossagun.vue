@@ -4,7 +4,7 @@
       <Bar />
     </div>
     <div class="min-h-screen flex flex-col">
-      <div class="max-w-7xl mx-auto ">
+      <div class="max-w-[3000px] mx-auto ">
         <div class="bg-white py-12">
           <div class="flex flex-col justify-center items-center">
             <label class="text-sm font-bold text-yellow-500 mb-3">ติดต่อเรา</label>
@@ -74,9 +74,10 @@
             </div>
           </div>
         </div>
-        <Footer />
+
       </div>
     </div>
+    <Footer />
   </div>
 </template>
 

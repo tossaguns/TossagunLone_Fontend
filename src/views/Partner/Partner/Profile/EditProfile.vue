@@ -185,6 +185,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import TemplatePartner from "@/components/TemplatePartner.vue";
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -299,35 +300,51 @@ async function fetchPartnerData() {
   }
 }
 
-// รีเซ็ตข้อมูลกลับเป็นค่าตั้งต้น
+// รีเซ็ตข้อมูลกลับเป็นค่าที่โหลดจาก backend (initialData)
 function resetForm() {
-  companyName.value = initialData.companyName
-  companyPhone.value = initialData.companyPhone
-  companyEmail.value = initialData.companyEmail
-  companyTaxId.value = initialData.companyTaxId
-  bankNumber.value = initialData.bankNumber
-  bankName.value = initialData.bankName
-  nameSignature.value = initialData.nameSignature
-  companyAddress.value = initialData.companyAddress
-  companySubdistrict.value = initialData.companySubdistrict
-  companyDistrict.value = initialData.companyDistrict
-  companyProvince.value = initialData.companyProvince
-  companyPostcode.value = initialData.companyPostcode
-  hotelLatitude.value = initialData.hotelLatitude
-  hotelLongitude.value = initialData.hotelLongitude
-  address.value = initialData.address
-  subdistrict.value = initialData.subdistrict
-  district.value = initialData.district
-  province.value = initialData.province
-  postcode.value = initialData.postcode
-  email.value = initialData.email
-  phone.value = initialData.phone
-  logoPreview.value = initialData.logoPreview
-  signaturePreview.value = initialData.signaturePreview
-  bankPreview.value = initialData.bankPreview
-  logoFile.value = null
-  signatureFile.value = null
-  bankFile.value = null
+  Swal.fire({
+    title: 'ยืนยันการรีเซ็ตข้อมูล?',
+    text: 'คุณต้องการรีเซ็ตข้อมูลกลับเป็นค่าที่บันทึกไว้ล่าสุดใช่หรือไม่',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'ตกลง',
+    cancelButtonText: 'ยกเลิก'
+  }).then((result) => {
+    if (!result.isConfirmed) return;
+    companyName.value = initialData.companyName
+    companyPhone.value = initialData.companyPhone
+    companyEmail.value = initialData.companyEmail
+    companyTaxId.value = initialData.companyTaxId
+    bankNumber.value = initialData.bankNumber
+    bankName.value = initialData.bankName
+    nameSignature.value = initialData.nameSignature
+    companyAddress.value = initialData.companyAddress
+    companySubdistrict.value = initialData.companySubdistrict
+    companyDistrict.value = initialData.companyDistrict
+    companyProvince.value = initialData.companyProvince
+    companyPostcode.value = initialData.companyPostcode
+    hotelLatitude.value = initialData.hotelLatitude
+    hotelLongitude.value = initialData.hotelLongitude
+    address.value = initialData.address
+    subdistrict.value = initialData.subdistrict
+    district.value = initialData.district
+    province.value = initialData.province
+    postcode.value = initialData.postcode
+    email.value = initialData.email
+    phone.value = initialData.phone
+    logoPreview.value = initialData.logoPreview
+    signaturePreview.value = initialData.signaturePreview
+    bankPreview.value = initialData.bankPreview
+    logoFile.value = null
+    signatureFile.value = null
+    bankFile.value = null
+    Swal.fire({
+      icon: 'info',
+      title: 'รีเซ็ตข้อมูลเรียบร้อย',
+      showConfirmButton: false,
+      timer: 1200
+    })
+  })
 }
 
 // อัปโหลดไฟล์
@@ -370,6 +387,15 @@ function removeBank() {
 
 // บันทึกข้อมูล (อัปเดต)
 async function saveProfile() {
+  const result = await Swal.fire({
+    title: 'ยืนยันการบันทึกข้อมูล?',
+    text: 'คุณต้องการบันทึกข้อมูลนี้ใช่หรือไม่',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'ตกลง',
+    cancelButtonText: 'ยกเลิก'
+  })
+  if (!result.isConfirmed) return;
   try {
     const formData = new FormData()
     formData.append('companyEmail', companyEmail.value || '')
@@ -379,7 +405,6 @@ async function saveProfile() {
     formData.append('bankNumber', bankNumber.value || '')
     formData.append('companyTaxId', companyTaxId.value || '')
     formData.append('isProfileComplete', 'true')
-    // เพิ่มฟิลด์ที่ backend ต้องการ
     formData.append('companyAddress', companyAddress.value || '')
     formData.append('companySubdistrict', companySubdistrict.value || '')
     formData.append('companyDistrict', companyDistrict.value || '')
@@ -392,7 +417,10 @@ async function saveProfile() {
     if (bankFile.value) formData.append('imageBank', bankFile.value)
     const partnerId = localStorage.getItem('partnerId')
     if (!partnerId) {
-      alert('ไม่พบข้อมูลผู้ใช้ กรุณา login ใหม่')
+      Swal.fire({
+        icon: 'error',
+        title: 'ไม่พบข้อมูลผู้ใช้ กรุณา login ใหม่',
+      })
       return
     }
     const res = await axios.put(
@@ -401,14 +429,25 @@ async function saveProfile() {
       { headers: { 'Content-Type': 'multipart/form-data' } }
     )
     if (res.status === 200) {
-      alert('บันทึกข้อมูลเรียบร้อยแล้ว!')
-      router.push('/profile') // <-- เพิ่ม redirect
+      Swal.fire({
+        icon: 'success',
+        title: 'บันทึกข้อมูลเรียบร้อยแล้ว!',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      router.push('/profile')
     } else {
-      alert('ไม่สามารถบันทึกข้อมูลได้')
+      Swal.fire({
+        icon: 'error',
+        title: 'ไม่สามารถบันทึกข้อมูลได้',
+      })
     }
   } catch (err) {
     console.error('อัปเดตผิดพลาด', err)
-    alert('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้')
+    Swal.fire({
+      icon: 'error',
+      title: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้',
+    })
   }
 }
 

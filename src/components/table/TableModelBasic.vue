@@ -17,15 +17,10 @@
               <td v-for="key in columnKeys" :key="key" class="py-2 px-4 align-top border-b border-gray-200"
                 @click="key === 'status' ? null : handleExpand(rowIndex)">
                 <!-- แสดงค่าอื่นตามปกติ -->
-                <template v-if="key !== 'status'">
-                  {{ formatValue(row[key], key) }}
-                </template>
-
-                <!-- ถ้าเป็น status ให้แสดง select dropdown แก้ไขได้ -->
-                <template v-else>
+                <template v-if="key === 'status'">
                   <div class="dropdown-container">
-                    <select class="status-select" :value="selectedStatusMap[row._id] ?? row.status"
-                      @change="(e) => handleStatusChange(row, e.target.value)" @click.stop.prevent @mousedown.stop
+                    <select class="status-select" :value="pendingStatusMap[row._id] ?? row.status"
+                      @change="(e) => onStatusSelect(row, e.target.value)" @click.stop.prevent @mousedown.stop
                       :disabled="!props.statusOptions || props.statusOptions.length === 0">
                       <option v-for="opt in props.statusOptions" :key="opt" :value="opt">
                         {{ opt }}
@@ -33,9 +28,29 @@
                     </select>
                   </div>
                 </template>
+                <template v-else-if="key === 'statusRoom' || key === 'statuRoom'">
+                  <div class="dropdown-container">
+                    <select class="status-select" :value="pendingStatusRoomMap[row._id] ?? row[key]"
+                      @change="(e) => onStatusRoomSelect(row, e.target.value)" @click.stop.prevent @mousedown.stop
+                      :disabled="!props.statusRoomOptions || props.statusRoomOptions.length === 0">
+                      <option v-for="opt in props.statusRoomOptions" :key="opt" :value="opt">
+                        {{ opt }}
+                      </option>
+                    </select>
+                  </div>
+                </template>
+                <template v-else-if="key === 'typeRoom'">
+                  {{ row.typeRoomName }}
+                </template>
+                <template v-else-if="key === 'imgrooms'">
+                  <CustomGallery :images="row.imgrooms" />
+                </template>
+                <template v-else>
+                  {{ formatValue(row[key], key) }}
+                </template>
               </td>
-              <td class="py-2 px-4 cursor-pointer border-b border-gray-200" @click="handleExpand(rowIndex)"
-                title="ขยาย / ย่อ รายละเอียด">
+              <td v-if="!props.hideEditDelete" class="py-2 px-4 cursor-pointer border-b border-gray-200"
+                @click="handleExpand(rowIndex)" title="ขยาย / ย่อ รายละเอียด">
                 <svg :class="{ 'rotate-90': expandedRow === rowIndex }"
                   class="w-5 h-5 transform transition-transform duration-200" fill="none" stroke="currentColor"
                   stroke-width="2" viewBox="0 0 24 24">
@@ -55,12 +70,23 @@
                         <div
                           class="flex flex-col 2xl:flex-row 2xl:justify-between justify-center 2xl:items-start items-center w-full">
                           <div class="2xl:w-1/2 flex flex-col justify-start items-start p-4">
-                            <div v-if="getFieldByPosition(1)" class="flex flex-col p-3 col-span-1">
-                              <div class="flex justify-center items-center space-x-3">
-                                <span class="text-sm text-gray-500">{{ getFieldByPosition(1).label }}</span>
-                                <span class="text-base text-gray-800 font-medium">{{
-                                  formatValue(row[getFieldByPosition(1).key], getFieldByPosition(1).key)
-                                }}</span>
+                            <div class="flex">
+                              <div v-if="getFieldByPosition(1)" class="flex flex-col p-3 col-span-1">
+                                <div class="flex justify-center items-center space-x-3">
+                                  <span class="text-sm text-gray-500">{{ getFieldByPosition(1).label }}</span>
+                                  <span class="text-base text-gray-800 font-medium">{{
+                                    formatValue(row[getFieldByPosition(1).key], getFieldByPosition(1).key)
+                                    }}</span>
+                                </div>
+                              </div>
+
+                              <div v-if="getFieldByPosition(10)" class="flex flex-col p-3 col-span-1">
+                                <div class="flex justify-center items-center space-x-3">
+                                  <span class="text-sm text-gray-500">{{ getFieldByPosition(10).label }}</span>
+                                  <span class="text-base text-gray-800 font-medium">{{
+                                    formatValue(row[getFieldByPosition(10).key], getFieldByPosition(10).key)
+                                    }}</span>
+                                </div>
                               </div>
                             </div>
 
@@ -70,7 +96,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(4).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(4).key], getFieldByPosition(4).key)
-                                  }}</span>
+                                    }}</span>
                                 </div>
                               </div>
 
@@ -79,7 +105,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(2).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(2).key], getFieldByPosition(2).key)
-                                  }}</span>
+                                    }}</span>
                                 </div>
                               </div>
                             </div>
@@ -90,7 +116,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(3).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(3).key], getFieldByPosition(3).key)
-                                  }}</span>
+                                    }}</span>
                                 </div>
                               </div>
 
@@ -99,7 +125,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(5).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(5).key], getFieldByPosition(5).key)
-                                  }}</span>
+                                    }}</span>
                                 </div>
                               </div>
                             </div>
@@ -109,7 +135,7 @@
                                 <span class="text-sm text-gray-500">{{ getFieldByPosition(6).label }}</span>
                                 <span class="text-base text-gray-800 font-medium">{{
                                   formatValue(row[getFieldByPosition(6).key], getFieldByPosition(6).key)
-                                }}</span>
+                                  }}</span>
                               </div>
                             </div>
 
@@ -119,7 +145,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(7).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(7).key], getFieldByPosition(7).key)
-                                  }}</span>
+                                    }}</span>
                                 </div>
                               </div>
                             </div>
@@ -135,7 +161,7 @@
                                   <CustomGallery />
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(8).key], getFieldByPosition(8).key)
-                                  }}</span>
+                                    }}</span>
                                 </div>
                               </div>
                             </div>
@@ -147,13 +173,13 @@
                             <span class="text-xs pl-6">{{ getFieldByPosition(9).label }}</span>
                             <span class="text-xs font-medium">{{
                               formatValue(row[getFieldByPosition(9).key], getFieldByPosition(9).key)
-                            }}</span>
+                              }}</span>
                           </div>
                         </div>
 
                       </div>
 
-                      <div class="py-4 flex space-x-2 justify-center">
+                      <div class="py-4 flex space-x-2 justify-center" v-if="!props.hideEditDelete">
                         <button
                           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition-shadow duration-200"
                           @click="editRow(row)">
@@ -207,17 +233,33 @@
             <div v-for="key in columnKeys" :key="key" class="flex justify-between border-b pb-1">
               <div class="text-gray-600 font-semibold">{{ columnLabels[key] || key }}</div>
               <div class="text-gray-800 break-words">
-                <!-- แสดง dropdown สำหรับ status ใน mobile view ด้วย -->
                 <template v-if="key === 'status'">
                   <div class="dropdown-container">
-                    <select class="status-select" :value="selectedStatusMap[row._id] ?? row.status"
-                      @change="(e) => handleStatusChange(row, e.target.value)" @click.stop.prevent @mousedown.stop
+                    <select class="status-select" :value="pendingStatusMap[row._id] ?? row.status"
+                      @change="(e) => onStatusSelect(row, e.target.value)" @click.stop.prevent @mousedown.stop
                       :disabled="!props.statusOptions || props.statusOptions.length === 0">
                       <option v-for="opt in props.statusOptions" :key="opt" :value="opt">
                         {{ opt }}
                       </option>
                     </select>
                   </div>
+                </template>
+                <template v-else-if="key === 'statusRoom' || key === 'statuRoom'">
+                  <div class="dropdown-container">
+                    <select class="status-select" :value="pendingStatusRoomMap[row._id] ?? row[key]"
+                      @change="(e) => onStatusRoomSelect(row, e.target.value)" @click.stop.prevent @mousedown.stop
+                      :disabled="!props.statusRoomOptions || props.statusRoomOptions.length === 0">
+                      <option v-for="opt in props.statusRoomOptions" :key="opt" :value="opt">
+                        {{ opt }}
+                      </option>
+                    </select>
+                  </div>
+                </template>
+                <template v-else-if="key === 'typeRoom'">
+                  {{ row.typeRoomName }}
+                </template>
+                <template v-else-if="key === 'imgrooms'">
+                  <CustomGallery :images="row.imgrooms" />
                 </template>
                 <template v-else>
                   {{ formatValue(row[key], key) }}
@@ -228,16 +270,18 @@
 
           <!-- ปุ่มในการ์ด (mobile) -->
           <div class="pt-4 flex space-x-2">
-            <button
-              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow flex-1 transition-shadow duration-200"
-              @click="editRow(row)">
-              แก้ไขข้อมูล
-            </button>
-            <button
-              class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow flex-1 transition-shadow duration-200"
-              @click="deleteRow(row)">
-              ลบข้อมูล
-            </button>
+            <template v-if="!props.hideEditDelete">
+              <button
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow flex-1 transition-shadow duration-200"
+                @click="editRow(row)">
+                แก้ไขข้อมูล
+              </button>
+              <button
+                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow flex-1 transition-shadow duration-200"
+                @click="deleteRow(row)">
+                ลบข้อมูล
+              </button>
+            </template>
             <button class="bg-gray-200 text-gray-800 px-3 py-1 rounded"
               @click="expandedCardIndex = expandedCardIndex === rowIndex ? null : rowIndex">
               {{ expandedCardIndex === rowIndex ? 'ซ่อนรายละเอียด' : 'ดูรายละเอียด' }}
@@ -292,17 +336,14 @@ const rowsPerPage = ref(5)
 const currentPage = ref(1)
 const expandedRow = ref(null)
 const isAnimating = ref(false)
-const emit = defineEmits(['update-row', 'delete-row', 'update-status'])
+const emit = defineEmits(['update-row', 'delete-row', 'update-status', 'confirm-status-change', 'confirm-status-room-change'])
 
 const showEditModal = ref(false)
 const editForm = reactive({})
 
 const expandedCardIndex = ref(null);
-const selectedStatusMap = ref({})
-
-const totalPages = computed(() =>
-  Math.ceil(props.customers.length / rowsPerPage.value)
-)
+const pendingStatusMap = ref({})
+const pendingStatusRoomMap = ref({})
 
 const props = defineProps({
   customers: {
@@ -310,6 +351,10 @@ const props = defineProps({
     default: () => []
   },
   statusOptions: {
+    type: Array,
+    default: () => []
+  },
+  statusRoomOptions: {
     type: Array,
     default: () => []
   },
@@ -321,6 +366,10 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
+  hideEditDelete: {
+    type: Boolean,
+    default: false
+  }
 })
 
 // Watch statusOptions เพื่อ debug
@@ -333,28 +382,52 @@ watch(() => props.customers, (newVal) => {
   console.log('customers changed:', newVal)
 }, { immediate: true })
 
-// Sync selectedStatusMap กับ customers ทุกครั้งที่ customers เปลี่ยน
+// Sync selectedStatusMap และ selectedStatusRoomMap กับ customers ทุกครั้งที่ customers เปลี่ยน
 watch(() => props.customers, (newVal) => {
-  const map = {}
-  newVal.forEach(row => {
-    map[row._id] = row.status
-  })
-  selectedStatusMap.value = map
+  // ลบ logic ที่เกี่ยวกับ pendingStatusMap, selectedStatusMap, resetPendingStatus, applyPendingStatus ออกทั้งหมด
 }, { immediate: true })
 
 // ฟังก์ชันให้ parent เรียก reset ค่า dropdown กลับเป็นค่าเดิม
 function resetStatusSelection(rowId) {
   if (props.customers) {
     const row = props.customers.find(r => r._id === rowId)
-    if (row) selectedStatusMap.value[rowId] = row.status
+    if (row) {
+      // ลบ logic ที่เกี่ยวกับ pendingStatusMap, selectedStatusMap, resetPendingStatus, applyPendingStatus ออกทั้งหมด
+    }
   }
 }
-defineExpose({ resetStatusSelection })
+function collapseDetail() {
+  expandedRow.value = null;
+  expandedCardIndex.value = null;
+}
+// ลบ logic ที่เกี่ยวกับ pendingStatusMap, selectedStatusMap, resetPendingStatus, applyPendingStatus ออกทั้งหมด
+
+function onStatusSelect(row, newStatus) {
+  pendingStatusMap.value[row._id] = newStatus
+  emit('confirm-status-change', { row, newStatus })
+}
+function onStatusRoomSelect(row, newStatusRoom) {
+  pendingStatusRoomMap.value[row._id] = newStatusRoom
+  emit('confirm-status-room-change', { row, newStatusRoom })
+}
+function resetPendingStatus(rowId) {
+  pendingStatusMap.value[rowId] = undefined
+  pendingStatusRoomMap.value[rowId] = undefined
+}
+function applyPendingStatus(rowId) {
+  pendingStatusMap.value[rowId] = undefined
+  pendingStatusRoomMap.value[rowId] = undefined
+}
+defineExpose({ resetPendingStatus, applyPendingStatus, collapseDetail })
 
 const paginatedCustomers = computed(() => {
   const start = (currentPage.value - 1) * rowsPerPage.value
   return props.customers.slice(start, start + rowsPerPage.value)
 })
+
+const totalPages = computed(() => {
+  return Math.ceil(props.customers.length / rowsPerPage.value) || 1;
+});
 
 const sortedFields = computed(() => {
   return [...props.fieldLayout].sort((a, b) => a.position - b.position)
@@ -382,6 +455,10 @@ function formatValue(value, key) {
   }
   if (key === 'typeRoom' && typeof value === 'string') {
     return '-';
+  }
+  // กรณี typeRoomHotel เป็น array ของ object ให้ return เฉพาะ name join ด้วย ,
+  if (key === 'typeRoomHotel' && Array.isArray(value)) {
+    return value.map(v => v.name).join(', ');
   }
   return value ?? '';
 }
@@ -437,12 +514,7 @@ function onLeave(el) {
 }
 
 function editRow(row) {
-  // เปิด modal แก้ไขข้อมูล พร้อมโหลดข้อมูลลง form
-  Object.keys(editForm).forEach(k => delete editForm[k]) // เคลียร์ก่อน
-  sortedFields.value.forEach(field => {
-    editForm[field.key] = row[field.key] ?? ''
-  })
-  showEditModal.value = true
+  emit('edit-row', row)
 }
 
 function closeEditModal() {
@@ -457,8 +529,11 @@ function submitEditForm() {
 }
 
 function handleStatusChange(row, newStatus) {
-  selectedStatusMap.value[row._id] = newStatus
-  emit('confirm-status-change', { row, newStatus })
+  // ลบ logic ที่เกี่ยวกับ pendingStatusMap, selectedStatusMap, resetPendingStatus, applyPendingStatus ออกทั้งหมด
+}
+
+function handleStatusRoomChange(row, newStatusRoom) {
+  // ลบ logic ที่เกี่ยวกับ pendingStatusMap, selectedStatusMap, resetPendingStatus, applyPendingStatus ออกทั้งหมด
 }
 
 function deleteRow(row) {

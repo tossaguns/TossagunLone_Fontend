@@ -454,7 +454,7 @@ function goToContact() {
   router.push('/maptossagun')
 }
 function goToMain() {
-  router.push('/main')
+  router.push('/')
 }
 function goToProfile() {
   router.push('/dataprofilemember')

@@ -5,12 +5,14 @@
     <form @submit.prevent="handleLogin">
       <div class="mb-4">
         <label class="block mb-1">Username</label>
-        <input type="text" v-model="form.username" class="w-full border px-3 py-2 rounded" required />
+        <input type="text" v-model="form.username" class="w-full border px-3 py-2 rounded" required
+          autocomplete="username" />
       </div>
 
       <div class="mb-4">
         <label class="block mb-1">Password</label>
-        <input type="password" v-model="form.password" class="w-full border px-3 py-2 rounded" required />
+        <input type="password" v-model="form.password" class="w-full border px-3 py-2 rounded" required
+          autocomplete="current-password" />
       </div>
 
       <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
@@ -39,10 +41,16 @@ const handleLogin = async () => {
   error.value = "";
   try {
     const res = await axios.post("http://localhost:9999/HotelSleepGun/auth/login", form);
-    const { token, role } = res.data;
+    const { token, role, user, partner } = res.data;
 
     localStorage.setItem("token", token);
     localStorage.setItem("role", role);
+    // เก็บ user หรือ partner ใน localStorage ด้วย key 'user'
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else if (partner) {
+      localStorage.setItem("user", JSON.stringify(partner));
+    }
 
     // route ไปตามสิทธิ์
     if (role === "adminPartner") {

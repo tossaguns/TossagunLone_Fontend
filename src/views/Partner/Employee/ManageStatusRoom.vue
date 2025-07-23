@@ -1,34 +1,19 @@
 <template>
-  <TemplatePartner>
+  <TemplateEmployee>
     <template #header>
-      <label>จัดการห้องพัก</label>
+      <label>จัดการสถานะห้อง</label>
     </template>
     <template #content>
-      <div class="p-4 max-w-[3000px] mx-auto">
-        <div class="flex flex-col justify-center md:justify-start py-4 md:py-0">
-          <label class="text-3xl font-semibold">รายการห้องพัก</label>
-          <div class="mt-12">
-            <div class="flex md:justify-end justify-center pr-5 space-x-2">
-              <button class="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-white rounded-md" @click="goToAddRoom">
-                เพิ่มห้องพัก
-              </button>
-            </div>
-            <div class="mt-6">
-              <div class="flex flex-col justify-center md:justify-start items-center md:items-start my-4">
-                <div>
-                  <label>จำนวนห้องพักปัจจุบัน : {{ room.length }}</label>
-                </div>
-              </div>
-              <div class="w-full mt-2">
-                <TableModelBasic ref="tableRef" :customers="room" :statusOptions="statusOptions"
-                  :statusRoomOptions="statusRoomOptions"
-                  :visibleColumns="['status', 'statuRoom', 'roomNumber', 'typeRoom', 'price', 'stayPeople']"
-                  :fieldLayout="fieldLayout" @update-status="updateRoomStatus" @update-row="updateRoom"
-                  @delete-row="deleteRoom" @confirm-status-change="onConfirmStatusChange"
-                  @confirm-status-room-change="onConfirmStatusRoomChange" @edit-row="goToEditRoom" />
-              </div>
-            </div>
-          </div>
+      <div class="p-4 max-w-[3000px] mx-auto text-stone-600">
+        <div class="mt-4 mb-2">
+          <label class="text-xl font-bold">จัดการสถานะห้องพัก</label>
+        </div>
+        <div>
+          <TableModelBasic ref="tableRef" :customers="room" :statusOptions="statusOptions"
+            :statusRoomOptions="statusRoomOptions"
+            :visibleColumns="['status', 'statuRoom', 'roomNumber', 'typeRoom', 'price', 'stayPeople']"
+            :fieldLayout="fieldLayout" :hideEditDelete="true" @confirm-status-change="onConfirmStatusChange"
+            @confirm-status-room-change="onConfirmStatusRoomChange" />
         </div>
       </div>
       <Confirm :show="showConfirm" :onConfirm="confirmStatusChange" :onCancel="cancelStatusChange">
@@ -38,23 +23,21 @@
         คุณต้องการเปลี่ยนสถานะห้องนี้เป็น "{{ pendingStatusRoomChange.newStatusRoom }}" ใช่หรือไม่?
       </Confirm>
     </template>
-  </TemplatePartner>
+  </TemplateEmployee>
 </template>
 
-
 <script setup>
-import TemplatePartner from "@/components/TemplatePartner.vue";
+import TemplateEmployee from "@/components/TemplateEmployee.vue";
 import TableModelBasic from "@/components/table/TableModelBasic.vue";
+import { ref, onMounted, onUnmounted } from 'vue';
 import Confirm from "@/components/element/Confirm.vue";
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 const room = ref([]);
 const statusOptions = ref([]);
 const statusRoomOptions = ref(["เปิดใช้งาน", "ปิดทำการ"]);
 
-const tableRef = ref(null); // <--- เพิ่ม ref สำหรับ TableModelBasic
+const tableRef = ref(null);
 
 const fieldLayout = ref([
   { key: "status", label: "สถานะ", position: 1 },
@@ -123,16 +106,6 @@ function cancelStatusRoomChange() {
   pendingStatusRoomChange.value = { row: null, newStatusRoom: null }
 }
 
-const router = useRouter()
-
-function goToAddRoom() {
-  router.push('/addroom')
-}
-
-function goToEditRoom(row) {
-  router.push(`/editroom/${row._id}`)
-}
-
 // โหลดข้อมูลห้องพัก และสถานะที่เลือกได้
 onMounted(async () => {
   await fetchStatusOptions(); // โหลด status options ก่อน
@@ -157,13 +130,13 @@ async function fetchRooms() {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     console.log("Rooms loaded:", res.data); // debug ดูข้อมูลที่ backend ส่งมา
+    // แปลงข้อมูล imgrooms เป็น array ของ object ที่ Gallery.vue ใช้ได้
     room.value = res.data.map(r => ({
       ...r,
       typeRoomName: r.typeRoom?.name || '-',
-      // map typeRoomHotel เป็น array ของ object { name }
-      typeRoomHotel: Array.isArray(r.typeRoomHotel)
-        ? r.typeRoomHotel.map(h => typeof h === 'object' ? h : { name: h })
-        : [],
+      typeRoomHotelName: Array.isArray(r.typeRoomHotel) && r.typeRoomHotel.length > 0
+        ? r.typeRoomHotel.map(h => typeof h === 'object' ? h.name : h).join(', ')
+        : '-',
       imgrooms: (r.imgrooms || []).map(filename => ({
         itemImageSrc: `http://localhost:9999/uploads/room/${filename}`,
         thumbnailImageSrc: `http://localhost:9999/uploads/room/${filename}`,
@@ -199,6 +172,7 @@ async function updateRoomStatus({ id, status }) {
     const response = await axios.patch(`http://localhost:9999/HotelSleepGun/room/update/${id}/status`, { status }, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
+    localStorage.setItem('rooms-updated', Date.now())
     console.log("Status updated successfully:", response.data);
 
     // อัปเดต UI หลังบันทึกสำเร็จ
@@ -206,7 +180,6 @@ async function updateRoomStatus({ id, status }) {
     if (idx !== -1) {
       room.value[idx].status = status;
     }
-    localStorage.setItem('rooms-updated', Date.now())
     // (ถ้าต้องการ) await fetchRooms(); // เพื่อ sync กับ backend
 
   } catch (error) {
@@ -222,62 +195,16 @@ async function updateRoomStatusRoom({ id, statusRoom }) {
     const response = await axios.patch(`http://localhost:9999/HotelSleepGun/room/update/${id}/status-room`, { statusRoom }, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
+    localStorage.setItem('rooms-updated', Date.now())
     // อัปเดต UI
     const idx = room.value.findIndex(r => r._id === id);
     if (idx !== -1) {
       room.value[idx].statuRoom = statusRoom;
     }
-    localStorage.setItem('rooms-updated', Date.now())
   } catch (error) {
     await fetchRooms();
     alert("เกิดข้อผิดพลาดในการอัปเดตสถานะห้อง");
   }
 }
 
-// เพิ่มฟังก์ชันสำหรับจัดการการอัปเดตข้อมูลห้อง
-async function updateRoom(updatedRoom) {
-  console.log("Updating room:", updatedRoom);
-  // TODO: ส่ง request ไป backend เพื่ออัปเดตข้อมูลห้อง
-  try {
-    const token = localStorage.getItem('token');
-    const response = await axios.patch(`http://localhost:9999/HotelSleepGun/room/update/${updatedRoom._id}`, updatedRoom, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    console.log("Room updated successfully:", response.data);
-
-    // รีเฟรชข้อมูล
-    await fetchRooms();
-  } catch (error) {
-    console.error("Error updating room:", error);
-    alert("เกิดข้อผิดพลาดในการอัปเดตข้อมูลห้อง");
-  }
-}
-
-// เพิ่มฟังก์ชันสำหรับจัดการการลบห้อง
-async function deleteRoom(roomToDelete) {
-  console.log("Deleting room:", roomToDelete);
-
-  if (!confirm("คุณแน่ใจหรือไม่ว่าต้องการลบห้องนี้?")) {
-    return;
-  }
-
-  try {
-    const token = localStorage.getItem('token');
-    // เปลี่ยน endpoint ให้ตรงกับ backend
-    const response = await axios.delete(`http://localhost:9999/HotelSleepGun/room/Delete${roomToDelete._id}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    console.log("Room deleted successfully:", response.data);
-
-    // รีเฟรชข้อมูล
-    await fetchRooms();
-    // ปิดรายละเอียด (collapse) แถวที่ถูกลบ
-    if (tableRef.value && typeof tableRef.value.collapseDetail === 'function') {
-      tableRef.value.collapseDetail();
-    }
-  } catch (error) {
-    console.error("Error deleting room:", error);
-    alert("เกิดข้อผิดพลาดในการลบห้อง");
-  }
-}
 </script>

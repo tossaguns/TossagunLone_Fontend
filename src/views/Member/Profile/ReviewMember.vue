@@ -35,30 +35,38 @@
                 <div class="mt-4 space-y-3">
                   <div v-for="(img, idx) in hotelsToReview" :key="idx" class="p-4 border 
                 rounded-md ">
-                  <div class="flex justify-start items-center ">
-                    <h2 class="text-xl font-bold pr-4">ให้คะแนน</h2>
-                    <Rating v-model="ratingsToReview[idx]" />
-                  </div>
-                  <p class="text-gray-700">คะแนนที่เลือก: {{ ratingsToReview[idx] }}</p>
-
-                  <div class="flex flex-col md:flex-row md:justify-between md:items-start mt-6">
-                    <div class="flex justify-center items-center">
-                      <img :src="img" class="h-40 rounded-lg" />
+                    <div class="flex justify-start items-center ">
+                      <h2 class="text-xl font-bold pr-4">ให้คะแนน</h2>
+                      <Rating v-model="ratingsToReview[idx]" />
                     </div>
+                    <p class="text-gray-700">คะแนนที่เลือก: {{ ratingsToReview[idx] }}</p>
 
-                    <div class="md:w-3/4 w-full md:pl-6 mt-4 md:mt-0">
-                      <div class="flex flex-col">
-                        <label class="pb-2">เนื้อหาการใช้บริการ : </label>
-                        <textarea rows="3" v-model="detailsToReview[idx]" class="border pt-2 px-4 
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-start mt-6">
+                      <div class="flex justify-center items-center">
+                        <img :src="img" class="h-40 rounded-lg" />
+                      </div>
+
+                      <div class="md:w-3/4 w-full md:pl-6 mt-4 md:mt-0">
+                        <div class="flex flex-col">
+                          <label class="pb-2">เนื้อหาการใช้บริการ : </label>
+                          <textarea rows="3" v-model="detailsToReview[idx]" class="border pt-2 px-4 
                         rounded-lg" placeholder="เขียนรีวิวการใช้บริการที่พัก....." />
-                      </div>
-                      <div class="flex justify-end mt-2">
-                        <button class="bg-red-400 py-2 px-4 text-white rounded-md"
-                          @click="submitReviewBlock(idx)">ตกลง</button>
+                        </div>
+                        <div class="flex justify-end items-center mt-2 space-x-2">
+                          <div>
+                            <button :class="[
+                              'border rounded-lg px-4 py-2',
+                              anonymousReview[idx] ? 'bg-stone-400 text-white border-stone-400' : 'text-stone-400 border-stone-400'
+                            ]" @click="toggleAnonymous(idx)">
+                              ไม่ต้องเปิดเผยตัวตน
+                            </button>
+                          </div>
+                          <button class="bg-red-500 py-2 px-4 text-white rounded-md"
+                            @click="submitReviewBlock(idx)">ตกลง</button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
                 </div>
               </div>
 
@@ -141,6 +149,11 @@ const reviews = ref([
 // สำหรับแต่ละโรงแรมที่ยังไม่ได้รีวิว เก็บ state แยก
 const ratingsToReview = ref([0, 0, 0])
 const detailsToReview = ref(['', '', ''])
+const anonymousReview = ref([])
+
+function toggleAnonymous(idx) {
+  anonymousReview.value[idx] = !anonymousReview.value[idx]
+}
 
 function submitReviewBlock(idx) {
   if (!detailsToReview.value[idx] || ratingsToReview.value[idx] === 0) return;

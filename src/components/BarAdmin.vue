@@ -77,23 +77,7 @@
           </div>
         </div>
 
-        <div @click="navigateTo('/mainreport', 'report')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
-          :class="[
-            activeMenu === 'report' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
-            isCollapsed ? 'px-3' : 'px-3'
-          ]">
-          <div class="flex items-center gap-3 ml-3 transition-all duration-300">
-            <img src="/images/icon/receipt_nav.png" alt="icon"
-              class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
-            <transition name="fade-slide" mode="out-in" appear>
-              <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
-                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('Report') }}
-              </p>
-            </transition>
-          </div>
-        </div>
+      
         <div @click="navigateTo('/mainmanagepromotion', 'promotion')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
@@ -111,6 +95,7 @@
             </transition>
           </div>
         </div>
+
         <div @click="navigateTo('/', 'managehotel')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
@@ -128,40 +113,25 @@
             </transition>
           </div>
         </div>
-        <div @click="navigateTo('/mainemployee', 'manageemployee')"
+
+        <div @click="navigateTo('/managemember', 'managemember')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'manageemployee' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
+            activeMenu === 'managehotel' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
-            <img src="/images/icon/people_nav.png" alt="icon"
+            <img src="/images/icon/employee_navAdmin.png" alt="icon"
               class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
             <transition name="fade-slide" mode="out-in" appear>
               <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
                 :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('ManageEmployee') }}
+                จัดการเมมเบอร์
               </p>
             </transition>
           </div>
         </div>
-        <div @click="navigateTo('/mainprofilecompany', 'editproflie')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
-          :class="[
-            activeMenu === 'editproflie' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
-            isCollapsed ? 'px-3' : 'px-3'
-          ]">
-          <div class="flex items-center gap-3 ml-3 transition-all duration-300">
-            <img src="/images/icon/profile.png" alt="icon"
-              class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
-            <transition name="fade-slide" mode="out-in" appear>
-              <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
-                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('Profile') }}
-              </p>
-            </transition>
-          </div>
-        </div>
+        
         <div v-show="!isCollapsed" class="mt-12">
           <FontAndLangSelector />
         </div>

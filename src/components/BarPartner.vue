@@ -75,23 +75,7 @@
             </transition>
           </div>
         </div>
-        <div @click="navigateTo('/mainreport', 'report')"
-          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
-          :class="[
-            activeMenu === 'report' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
-            isCollapsed ? 'px-3' : 'px-3'
-          ]">
-          <div class="flex items-center gap-3 ml-3 transition-all duration-300">
-            <img src="/images/icon/receipt_nav.png" alt="icon"
-              class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
-            <transition name="fade-slide" mode="out-in" appear>
-              <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
-                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                {{ t('Report') }}
-              </p>
-            </transition>
-          </div>
-        </div>
+       
         <div @click="navigateTo('/mainpromotion', 'promotion')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
@@ -126,6 +110,25 @@
             </transition>
           </div>
         </div>
+
+        <div @click="navigateTo('/managehotel', 'managehotel')"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+          :class="[
+            activeMenu === 'managehotel' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            isCollapsed ? 'px-3' : 'px-3'
+          ]">
+          <div class="flex items-center gap-3 ml-3 transition-all duration-300">
+            <img src="/images/icon/company_nav.png" alt="icon"
+              class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
+            <transition name="fade-slide" mode="out-in" appear>
+              <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
+                {{ t('Managehotel') }}
+              </p>
+            </transition>
+          </div>
+        </div>
+
         <div @click="navigateTo('/mainmanageemployee', 'manageemployee')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
@@ -143,7 +146,7 @@
             </transition>
           </div>
         </div>
-        <div @click="navigateTo('/mainprofile', 'proflie')"
+        <div @click="navigateTo('/profile', 'proflie')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
             activeMenu === 'proflie' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
@@ -295,10 +298,9 @@ function getActiveMenuFromRoute() {
 
     '/editprofile': 'proflie',
     '/profile': 'proflie',
-    '/mainprofile': 'proflie',
-    '/profilecompany': 'proflie',
-    '/editdetailhotel': 'proflie',
-    '/detailhotel': 'proflie',
+    
+
+    '/managehotel': 'managehotel',
 
     '/mainmanageroom': 'manageroom',
     '/addroom': 'manageroom',

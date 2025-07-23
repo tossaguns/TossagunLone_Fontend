@@ -1,20 +1,17 @@
 <template>
   <div class="relative w-full max-w-xs">
     <!-- Input -->
-    <input
-      type="text"
-      class="w-full border rounded px-3 py-2 cursor-pointer"
-      :value="displayValue"
-      readonly
-      @click="togglePopup"
-    />
+    <input type="text" class="w-full border rounded px-3 py-2 cursor-pointer" :value="displayValue" readonly
+      @click="togglePopup" />
 
     <!-- Popup -->
-    <div v-if="showPopup" class="absolute z-50 bg-white shadow-md border mt-1 p-4 w-[320px]">
+    <div v-if="showPopup"
+      class="absolute z-50 bg-white shadow-md border mt-1 p-4 w-[320px] max-w-[90vw] right-0 sm:left-0 sm:right-auto">
       <!-- Year View -->
       <div v-if="mode === 'year'" class="grid grid-cols-3 gap-2 mb-4">
         <div v-for="year in years" :key="year" @click="handleYearClick(year)"
-          :class="{'bg-blue-200': selectedYear === year}" class="text-center py-1 rounded hover:bg-blue-100 cursor-pointer">
+          :class="{ 'bg-blue-200': selectedYear === year }"
+          class="text-center py-1 rounded hover:bg-blue-100 cursor-pointer">
           {{ year }}
         </div>
       </div>
@@ -22,12 +19,13 @@
       <!-- Month View -->
       <div v-else-if="mode === 'month'" class="grid grid-cols-3 gap-2 mb-4">
         <div v-for="(month, index) in monthNames" :key="index" @click="handleMonthClick(index)"
-          :class="{'bg-blue-200': selectedMonth === index}" class="text-center py-1 rounded hover:bg-blue-100 cursor-pointer">
+          :class="{ 'bg-blue-200': selectedMonth === index }"
+          class="text-center py-1 rounded hover:bg-blue-100 cursor-pointer">
           {{ month }}
         </div>
       </div>
 
-      <!-- Date View (Range Picker 2 Months) -->
+      <!-- Date View -->
       <div v-else-if="mode === 'date'" class="flex flex-col gap-2">
         <div class="flex justify-between mb-2">
           <button @click="prevMonth" class="px-2 py-1 text-sm bg-gray-100 rounded hover:bg-gray-200">←</button>
@@ -38,13 +36,11 @@
         <div class="flex gap-2">
           <div v-for="month in [currentMonth1, currentMonth2]" :key="month.toISOString()" class="w-1/2">
             <div class="grid grid-cols-7 text-xs text-center font-semibold mb-1">
-              <span v-for="d in ['Su','Mo','Tu','We','Th','Fr','Sa']" :key="d">{{ d }}</span>
+              <span v-for="d in ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']" :key="d">{{ d }}</span>
             </div>
             <div class="grid grid-cols-7 text-center text-sm">
-              <span v-for="day in getDaysOfMonth(month)" :key="day.date"
-                @click="selectDate(day.date)"
-                :class="dayClass(day.date)"
-                class="py-1 rounded hover:bg-blue-100 cursor-pointer">
+              <span v-for="day in getDaysOfMonth(month)" :key="day.date" @click="selectDate(day.date)"
+                :class="dayClass(day.date)" class="py-1 rounded hover:bg-blue-100 cursor-pointer">
                 {{ day.label }}
               </span>
             </div>
@@ -132,12 +128,10 @@ const getDaysOfMonth = (date) => {
   const days = []
   const startWeekday = firstDay.getDay()
 
-  // Fill empty days
   for (let i = 0; i < startWeekday; i++) {
     days.push({ label: '', date: null })
   }
 
-  // Actual days
   for (let d = 1; d <= lastDay.getDate(); d++) {
     const dt = new Date(year, month, d)
     days.push({ label: d, date: dt })

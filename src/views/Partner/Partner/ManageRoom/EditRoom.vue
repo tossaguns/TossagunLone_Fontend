@@ -55,10 +55,11 @@
                 </div>
               </div>
 
+
               <div class=" md:mt-8 mt-20 space-y-2">
                 <label class="text-xl font-semibold">{{ t('SelectTypeRoom') }}</label>
                 <div class="border rounded-md py-2">
-                  <ChooseRoomType v-model="selectedRoom" :options="RoomOptions" groupName="pizza" />
+                  <ChooseRoomType v-model="selectedTypeRoomHotel" :options="RoomOptions" groupName="pizza" />
                 </div>
               </div>
             </div>
@@ -100,94 +101,33 @@ import ChooseRoomType from '@/components/element/ChooseRoomType.vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-
-// Router
 const router = useRouter()
 const route = useRoute()
-const roomId = route.params.roomId
+const roomId = route.params.roomId || route.params.id
 
-// ฟอร์ม
 const NumberRoom = ref('')
 const selectedTypeRoom = ref(null)
-const Price = ref(null)
-const Stay = ref(null)
+const Price = ref('')
+const Stay = ref('')
 const RoomDetail = ref('')
-const selectedRoom = ref([])
-
-// รีเซ็ตกลับค่าเดิม
-const initialData = ref({
-  NumberRoom: '',
-  selectedTypeRoom: null,
-  Price: null,
-  Stay: null,
-  RoomDetail: '',
-  selectedRoom: []
-})
-
-// ตัวเลือก Room type
+const selectedTypeRoomHotel = ref([])
 const RoomOptions = ref([])
-
-// Error state
+const TypeRoom = ref([])
+const inputRefs = reactive({})
 const errors = ref({
   NumberRoom: '',
   selectedTypeRoom: '',
   Price: '',
   Stay: '',
-  RoomDetail: ''
+  RoomDetail: '',
+  selectedTypeRoomHotel: '',
 })
-
-// อ้างอิง input เพื่อ scroll
-const inputRefs = reactive({})
 const highlightField = ref('')
+const initialData = ref({})
 
-// ป็อปอัปยืนยันบันทึก
-const showConfirmSave = ref(false)
-
-// ตรวจสอบความถูกต้องของฟอร์ม
-function validateForm() {
-  let isValid = true
-
-  errors.value = {
-    NumberRoom: '',
-    selectedTypeRoom: '',
-    Price: '',
-    Stay: '',
-    RoomDetail: ''
-  }
-
-  if (!NumberRoom.value.trim()) {
-    errors.value.NumberRoom = 'กรุณากรอกหมายเลขห้องพัก'
-    isValid = false
-  }
-
-  if (!selectedTypeRoom.value) {
-    errors.value.selectedTypeRoom = 'กรุณาเลือกประเภทห้องพัก'
-    isValid = false
-  }
-
-  if (!Price.value) {
-    errors.value.Price = 'กรุณากรอกราคาห้องพัก'
-    isValid = false
-  }
-
-  if (!Stay.value) {
-    errors.value.Stay = 'กรุณากรอกจำนวนเข้าพักสูงสุด'
-    isValid = false
-  }
-
-  if (!RoomDetail.value.trim()) {
-    errors.value.RoomDetail = 'กรุณากรอกรายละเอียดห้องพัก'
-    isValid = false
-  }
-
-  return isValid
-}
-
-// แสดง error พร้อม scroll
 function scrollToFirstErrorWithAnimation() {
-  const firstErrorKey = Object.keys(errors.value).find(key => errors.value[key])
+  const firstErrorKey = Object.keys(errors.value).find((key) => errors.value[key])
   const el = inputRefs[firstErrorKey]
-
   if (el) {
     nextTick(() => {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -199,116 +139,152 @@ function scrollToFirstErrorWithAnimation() {
   }
 }
 
-// กดปุ่ม "บันทึก"
-function handleSave() {
-  if (!validateForm()) {
-    scrollToFirstErrorWithAnimation()
-    return
-  }
-  showConfirmSave.value = true
-}
+watch(NumberRoom, (val) => { if (val.trim()) errors.value.NumberRoom = '' })
+watch(selectedTypeRoom, (val) => { if (val) errors.value.selectedTypeRoom = '' })
+watch(Price, (val) => { if (val) errors.value.Price = '' })
+watch(Stay, (val) => { if (val) errors.value.Stay = '' })
+watch(RoomDetail, (val) => { if (val.trim()) errors.value.RoomDetail = '' })
 
-// ยืนยันบันทึก
-async function confirmSave() {
-  try {
-    const payload = {
-      NumberRoom: NumberRoom.value,
-      selectedTypeRoom: selectedTypeRoom.value,
-      Price: Price.value,
-      Stay: Stay.value,
-      RoomDetail: RoomDetail.value,
-      selectedRoom: selectedRoom.value
-    }
-
-    const res = await fetch(`http://localhost:9999/HotelSleepGun/room/update/${roomId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-
-    if (!res.ok) throw new Error('การบันทึกไม่สำเร็จ')
-
-    console.log('✅ แก้ไขห้องพักสำเร็จ')
-    router.back()
-  } catch (err) {
-    console.error('❌ บันทึกไม่สำเร็จ:', err)
-  } finally {
-    showConfirmSave.value = false
-  }
-}
-
-// รีเซ็ตค่าเป็นข้อมูลเดิม
-function handleReset() {
-  NumberRoom.value = initialData.value.NumberRoom
-  selectedTypeRoom.value = initialData.value.selectedTypeRoom
-  Price.value = initialData.value.Price
-  Stay.value = initialData.value.Stay
-  RoomDetail.value = initialData.value.RoomDetail
-  selectedRoom.value = initialData.value.selectedRoom
-
+function validateForm() {
+  let isValid = true
   errors.value = {
     NumberRoom: '',
     selectedTypeRoom: '',
     Price: '',
     Stay: '',
-    RoomDetail: ''
+    RoomDetail: '',
+    selectedTypeRoomHotel: '',
   }
+  if (!NumberRoom.value.trim()) {
+    errors.value.NumberRoom = t('NumberRoom_Error')
+    isValid = false
+  }
+  if (!selectedTypeRoom.value) {
+    errors.value.selectedTypeRoom = t('selectedTypeRoom_Error')
+    isValid = false
+  }
+  if (!Price.value) {
+    errors.value.Price = t('Price_Error')
+    isValid = false
+  }
+  if (!Stay.value) {
+    errors.value.Stay = t('Stay_Error')
+    isValid = false
+  }
+  if (!RoomDetail.value.trim()) {
+    errors.value.RoomDetail = t('RoomDetail_Error')
+    isValid = false
+  }
+  if (!selectedTypeRoomHotel.value.length) {
+    errors.value.selectedTypeRoomHotel = 'กรุณาเลือกลักษณะห้องอย่างน้อย 1 รายการ'
+    isValid = false
+  }
+  return isValid
+}
 
+function handleReset() {
+  NumberRoom.value = initialData.value.roomNumber || ''
+  selectedTypeRoom.value = initialData.value.typeRoom || null
+  Price.value = initialData.value.price || ''
+  Stay.value = initialData.value.stayPeople || ''
+  RoomDetail.value = initialData.value.roomDetail || ''
+  selectedTypeRoomHotel.value = Array.isArray(initialData.value.typeRoomHotel) ? initialData.value.typeRoomHotel.map(h => typeof h === 'object' ? h._id : h) : []
+  errors.value = {
+    NumberRoom: '',
+    selectedTypeRoom: '',
+    Price: '',
+    Stay: '',
+    RoomDetail: '',
+    selectedTypeRoomHotel: '',
+  }
   highlightField.value = ''
 }
 
-// ย้อนกลับ
 function handleCancel() {
   router.back()
 }
-// // โหลดข้อมูลเดิม
-// onMounted(async () => {
-//   try {
-//     const res = await fetch(`http://localhost:9999/HotelSleepGun/room/getOne/${roomId}`)
-//     const data = await res.json()
 
-//     NumberRoom.value = data.NumberRoom
-//     selectedTypeRoom.value = data.selectedTypeRoom
-//     Price.value = data.Price
-//     Stay.value = data.Stay
-//     RoomDetail.value = data.RoomDetail
-//     selectedRoom.value = data.selectedRoom || []
+function handleSave() {
+  const isValid = validateForm()
+  if (!isValid) {
+    scrollToFirstErrorWithAnimation()
+    return
+  }
+  confirmSave()
+}
 
-//     initialData.value = {
-//       NumberRoom: data.NumberRoom,
-//       selectedTypeRoom: data.selectedTypeRoom,
-//       Price: data.Price,
-//       Stay: data.Stay,
-//       RoomDetail: data.RoomDetail,
-//       selectedRoom: data.selectedRoom || []
-//     }
+async function confirmSave() {
+  const formData = new FormData()
+  formData.append('roomNumber', NumberRoom.value)
+  formData.append('typeRoom', selectedTypeRoom.value)
+  formData.append('price', Price.value)
+  formData.append('stayPeople', Stay.value)
+  formData.append('roomDetail', RoomDetail.value)
+  selectedTypeRoomHotel.value.forEach(id => formData.append('typeRoomHotel', id))
+  // TODO: เพิ่มไฟล์รูปภาพถ้ามี (ดูจาก UploadImg component)
+  const token = localStorage.getItem('token')
+  try {
+    const res = await fetch(`http://localhost:9999/HotelSleepGun/room/update${roomId}`, {
+      method: 'PUT',
+      body: formData,
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    let data
+    try { data = await res.json() } catch (e) { data = {} }
+    if (res.ok) {
+      alert('บันทึกข้อมูลห้องสำเร็จ')
+      router.push('/mainmanageroom')
+    } else {
+      alert('เกิดข้อผิดพลาด: ' + (data.message || JSON.stringify(data)))
+      console.error('เกิดข้อผิดพลาด:', data)
+    }
+  } catch (err) {
+    alert('เกิดข้อผิดพลาดในการเชื่อมต่อ API: ' + err)
+    console.error('API error:', err)
+  }
+}
 
-//     const roomTypeRes = await fetch('http://localhost:9999/HotelSleepGun/typeRoomHotel/getAll')
-//     const roomTypeData = await roomTypeRes.json()
-
-//     RoomOptions.value = roomTypeData.map(item => ({
-//       label: item.name,
-//       value: item._id
-//     }))
-//   } catch (err) {
-//     console.error('❌ โหลดข้อมูลห้องพักไม่สำเร็จ:', err)
-//   }
-// })
-// เคลียร์ error เมื่อผู้ใช้กรอก
-watch(NumberRoom, val => {
-  if (val.trim()) errors.value.NumberRoom = ''
-})
-watch(selectedTypeRoom, val => {
-  if (val) errors.value.selectedTypeRoom = ''
-})
-watch(Price, val => {
-  if (val) errors.value.Price = ''
-})
-watch(Stay, val => {
-  if (val) errors.value.Stay = ''
-})
-watch(RoomDetail, val => {
-  if (val.trim()) errors.value.RoomDetail = ''
+onMounted(async () => {
+  // โหลดข้อมูลห้องเดิม
+  const token = localStorage.getItem('token')
+  try {
+    const res = await fetch(`http://localhost:9999/HotelSleepGun/room/get${roomId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    const data = await res.json()
+    NumberRoom.value = data.roomNumber || ''
+    selectedTypeRoom.value = data.typeRoom?._id || data.typeRoom || null
+    Price.value = data.price || ''
+    Stay.value = data.stayPeople || ''
+    RoomDetail.value = data.roomDetail || ''
+    selectedTypeRoomHotel.value = Array.isArray(data.typeRoomHotel) ? data.typeRoomHotel.map(h => typeof h === 'object' ? h._id : h) : []
+    initialData.value = { ...data }
+  } catch (e) {
+    alert('โหลดข้อมูลห้องไม่สำเร็จ')
+    console.error('โหลดข้อมูลห้องไม่สำเร็จ:', e)
+  }
+  // โหลด options typeRoomHotel
+  try {
+    const res = await fetch('http://localhost:9999/HotelSleepGun/typeRoomHotel/getAll')
+    const data = await res.json()
+    RoomOptions.value = data.map(item => ({ label: item.name, value: item._id }))
+  } catch (e) {
+    console.error('โหลดข้อมูล room type ไม่สำเร็จ:', e)
+  }
+  // โหลด options typeRoom
+  try {
+    const res = await fetch('http://localhost:9999/HotelSleepGun/typeRoom/getAll')
+    const data = await res.json()
+    TypeRoom.value = [
+      {
+        label: 'ประเภทห้องทั้งหมด',
+        code: 'all',
+        items: data.map(type => ({ label: type.name, value: type._id }))
+      }
+    ]
+  } catch (e) {
+    console.error('โหลดข้อมูล room type ไม่สำเร็จ:', e)
+  }
 })
 
 </script>

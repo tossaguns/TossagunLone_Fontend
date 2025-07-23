@@ -26,7 +26,8 @@
                   </div>
 
                   <div :ref="el => (inputRefs.selectedTypeRoom = el)">
-                    <Dropdown v-model="selectedTypeRoom" :groupedCities="TypeRoom" id="selectedTypeRoom"
+                    <Dropdown v-model="selectedTypeRoom" :options="TypeRoom[0]?.items || []" id="selectedTypeRoom"
+                      placeholder="เลือกประเภทห้อง"
                       :class="highlightField === 'selectedTypeRoom' ? 'ring-2 ring-red-400 rounded-md animate-shake' : ''" />
                     <p v-if="errors.selectedTypeRoom" class="text-red-500 text-xs pl-2">{{ errors.selectedTypeRoom }}
                     </p>
@@ -41,7 +42,7 @@
                 </div>
 
                 <div class="2xl:w-1/2 w-full space-y-4  2xl:mt-0 mt-4">
-                  
+
                   <div :ref="el => (inputRefs.Stay = el)">
                     <InputNumber v-model="Stay" id="Stay" :label="t('Stay_Label')"
                       :class="highlightField === 'Stay' ? 'ring-2 ring-red-400 rounded-md animate-shake' : ''" />
@@ -59,7 +60,7 @@
               <div class=" md:mt-8 mt-20 space-y-2">
                 <label class="text-xl font-semibold">{{ t('SelectTypeRoom') }}</label>
                 <div class="border rounded-md py-2">
-                  <ChooseRoomType v-model="selectedRoom" :options="RoomOptions" groupName="pizza" />
+                  <ChooseRoomType v-model="selectedTypeRoomHotel" :options="RoomOptions" groupName="pizza" />
                 </div>
               </div>
             </div>
@@ -72,9 +73,9 @@
         </div>
 
         <div class="flex justify-center items-center mb-12 mt-20 space-x-2">
-          <ButtonCancel @confirm="handleCancel" />
-          <ButtonReset @confirm="handleReset" />
-          <ButtonSave @confirm="handleSave" />
+          <ButtonCancel @click="handleCancel" />
+          <ButtonReset @click="handleReset" />
+          <ButtonSave @click="handleSave" />
         </div>
       </div>
 
@@ -98,6 +99,7 @@ import ChooseRoomType from "@/components/element/ChooseRoomType.vue";
 import { watch } from 'vue'
 import { nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
+import Swal from 'sweetalert2'
 
 const { t } = useI18n()
 
@@ -123,6 +125,8 @@ const errors = ref({
 })
 
 const highlightField = ref('')
+const typeRoomHotelOptions = ref([])
+const selectedTypeRoomHotel = ref([])
 
 function scrollToFirstErrorWithAnimation() {
   const firstErrorKey = Object.keys(errors.value).find((key) => errors.value[key])
@@ -155,23 +159,41 @@ watch(RoomDetail, (val) => {
   if (val.trim()) errors.value.RoomDetail = ''
 })
 
-function handleSave() {
+async function handleSave() {
   const isValid = validateForm()
   if (!isValid) {
     scrollToFirstErrorWithAnimation()
     return
   }
-  confirmSave(); // เรียกตรงนี้เลย
+  const result = await Swal.fire({
+    title: 'ยืนยันการบันทึกข้อมูล?',
+    text: 'คุณต้องการบันทึกข้อมูลนี้ใช่หรือไม่',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'ตกลง',
+    cancelButtonText: 'ยกเลิก'
+  })
+  if (!result.isConfirmed) return;
+  confirmSave();
 }
 
-function handleReset() {
+async function handleReset() {
+  const result = await Swal.fire({
+    title: 'ยืนยันการรีเซ็ตข้อมูล?',
+    text: 'คุณต้องการรีเซ็ตข้อมูลกลับเป็นค่าว่างใช่หรือไม่',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'ตกลง',
+    cancelButtonText: 'ยกเลิก'
+  })
+  if (!result.isConfirmed) return;
   NumberRoom.value = ''
   selectedTypeRoom.value = null
   Price.value = null
   Stay.value = null
   RoomDetail.value = ''
   selectedRoom.value = []
-
+  selectedTypeRoomHotel.value = []
   errors.value = {
     NumberRoom: '',
     selectedTypeRoom: '',
@@ -179,8 +201,13 @@ function handleReset() {
     Stay: '',
     RoomDetail: '',
   }
-
   highlightField.value = ''
+  Swal.fire({
+    icon: 'info',
+    title: 'รีเซ็ตข้อมูลเรียบร้อย',
+    showConfirmButton: false,
+    timer: 1200
+  })
 }
 
 function handleCancel() {
@@ -191,6 +218,7 @@ function handleCancel() {
 const showConfirmSave = ref(false)
 
 function confirmSave() {
+  console.log('confirmSave called');
   // สร้าง FormData
   const formData = new FormData();
   formData.append('roomNumber', NumberRoom.value);
@@ -198,11 +226,18 @@ function confirmSave() {
   formData.append('price', Price.value);
   formData.append('stayPeople', Stay.value);
   formData.append('roomDetail', RoomDetail.value);
-  // เพิ่ม field อื่นๆ ตามที่ backend ต้องการ เช่น typeRoomHotel, imgrooms ฯลฯ
+  // แนบ typeRoomHotel เป็น array
+  selectedTypeRoomHotel.value.forEach(id => formData.append('typeRoomHotel', id));
+  // เพิ่ม field อื่นๆ ตามที่ backend ต้องการ เช่น imgrooms ฯลฯ
 
   // TODO: เพิ่มไฟล์รูปภาพถ้ามี (ดูจาก UploadImg component)
 
   const token = localStorage.getItem('token');
+  console.log('token:', token);
+  // Debug: log ข้อมูล formData ที่จะส่งไป backend
+  for (let pair of formData.entries()) {
+    console.log(pair[0] + ':', pair[1]);
+  }
   fetch('http://localhost:9999/HotelSleepGun/room/create', {
     method: 'POST',
     body: formData,
@@ -218,18 +253,19 @@ function confirmSave() {
         data = {};
       }
       console.log('API response:', res.status, data);
+      showConfirmSave.value = false;
       if (res.ok) {
-        alert('บันทึกข้อมูลห้องสำเร็จ');
         router.push('/mainmanageroom');
       } else {
-        alert(data.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูลห้อง');
+        alert('เกิดข้อผิดพลาด: ' + (data.message || JSON.stringify(data)));
+        console.error('เกิดข้อผิดพลาด:', data);
       }
     })
     .catch((err) => {
       console.error('API error:', err);
-      alert('เกิดข้อผิดพลาดในการเชื่อมต่อ API');
+      showConfirmSave.value = false;
+      alert('เกิดข้อผิดพลาดในการเชื่อมต่อ API: ' + err);
     });
-  showConfirmSave.value = false;
 }
 
 
@@ -270,6 +306,17 @@ function validateForm() {
     isValid = false
   }
 
+  if (!selectedTypeRoomHotel.value.length) {
+    errors.value.selectedTypeRoomHotel = 'กรุณาเลือกลักษณะห้องอย่างน้อย 1 รายการ'
+    isValid = false
+  }
+
+
+
+  console.log('validateForm errors:', JSON.parse(JSON.stringify(errors.value)), 'isValid:', isValid);
+
+
+
   return isValid
 }
 
@@ -305,6 +352,18 @@ onMounted(async () => {
     ]
   } catch (e) {
     console.error('โหลดข้อมูล room type ไม่สำเร็จ:', e)
+  }
+
+  // ดึงข้อมูล typeRoomHotel ทั้งหมด
+  try {
+    const res = await fetch('http://localhost:9999/HotelSleepGun/typeRoomHotel/getAll')
+    const data = await res.json()
+    typeRoomHotelOptions.value = data.map(item => ({
+      label: item.name,
+      value: item._id
+    }))
+  } catch (e) {
+    console.error('โหลดข้อมูล typeRoomHotel ไม่สำเร็จ:', e)
   }
 })
 </script>

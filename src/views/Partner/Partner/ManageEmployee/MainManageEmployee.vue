@@ -108,6 +108,7 @@ import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import TemplatePartner from "@/components/TemplatePartner.vue";
+import Swal from 'sweetalert2'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -147,7 +148,15 @@ function editEmployee(id) {
 }
 
 async function deleteEmployee(id) {
-  if (!confirm('คุณต้องการลบพนักงานคนนี้ใช่หรือไม่?')) return
+  const result = await Swal.fire({
+    title: 'ยืนยันการลบพนักงาน?',
+    text: 'คุณต้องการลบพนักงานคนนี้ใช่หรือไม่?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'ตกลง',
+    cancelButtonText: 'ยกเลิก'
+  })
+  if (!result.isConfirmed) return
   try {
     const token = localStorage.getItem('token')
     const res = await fetch(`http://localhost:9999/HotelSleepGun/employee/delete${id}`, {
@@ -158,13 +167,24 @@ async function deleteEmployee(id) {
     })
     const data = await res.json()
     if (res.ok) {
-      alert('ลบพนักงานสำเร็จ')
+      await Swal.fire({
+        icon: 'success',
+        title: 'ลบพนักงานสำเร็จ',
+        showConfirmButton: false,
+        timer: 1200
+      })
       fetchEmployees()
     } else {
-      alert(data.message || 'เกิดข้อผิดพลาดในการลบพนักงาน')
+      Swal.fire({
+        icon: 'error',
+        title: data.message || 'เกิดข้อผิดพลาดในการลบพนักงาน',
+      })
     }
   } catch (err) {
-    alert('เกิดข้อผิดพลาดในการเชื่อมต่อ API')
+    Swal.fire({
+      icon: 'error',
+      title: 'เกิดข้อผิดพลาดในการเชื่อมต่อ API',
+    })
   }
 }
 </script>

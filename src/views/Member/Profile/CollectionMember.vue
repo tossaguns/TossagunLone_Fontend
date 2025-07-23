@@ -12,11 +12,9 @@
           </div>
 
           <div class="md:pl-6 mt-12">
-            <label class="text-lg font-semibold">รายการที่ถูกใจ</label>
-            <div class="border rounded-lg mt-6 p-4">
-
-              <div class="p-6">
-                <h1 class="text-2xl font-bold mb-4">สินค้าแนะนำ</h1>
+            <label class="text-lg font-semibold px-4">รายการที่ถูกใจ</label>
+            <div class="mt-6 p-2">
+              <div class="py-6">
                 <Collection :products="productList" />
               </div>
 

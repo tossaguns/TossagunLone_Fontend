@@ -116,9 +116,13 @@
       </div>
 
       <div class="flex justify-center items-center mb-12 mt-20 space-x-2">
-        <ButtonCancel @confirm="handleCancel" />
-        <ButtonReset @confirm="handleReset" />
-        <ButtonSave @confirm="handleSave" />
+        <ButtonCancel @click="handleCancel" />
+        <ButtonReset @click="handleReset" />
+        <ButtonSave @click="handleSave" />
+
+        <button></button>
+        <button></button>
+        
       </div>
 
     </template>
@@ -134,6 +138,7 @@ import ButtonSave from "@/components/element/ButtonSave.vue";
 import ButtonReset from "@/components/element/ButtonReset.vue";
 import ButtonCancel from "@/components/element/ButtonCancel.vue";
 import { useI18n } from 'vue-i18n'
+import Swal from 'sweetalert2'
 
 const { t } = useI18n()
 
@@ -156,6 +161,7 @@ const employeeImage = ref(null)
 const imagePreview = ref(null)
 const fileInput = ref(null)
 const showPassword = ref(false)
+const originalData = ref({})
 
 onMounted(async () => {
   if (!employeeId) return
@@ -177,10 +183,24 @@ onMounted(async () => {
     phone.value = data.phone || ''
     statusByPartner.value = data.statusByPartner || ''
     username.value = data.username || ''
-    // ดึง password จาก API ถ้ามี (ไม่ควรทำใน production แต่ตามคำขอ)
     password.value = data.password || ''
     if (data.imageIden) {
       imagePreview.value = '/' + data.imageIden.replace(/\\/g, '/')
+    }
+    // เก็บค่า originalData สำหรับรีเซ็ต
+    originalData.value = {
+      firstname: data.firstname || '',
+      lastname: data.lastname || '',
+      nickname: data.nickname || '',
+      sex: data.sex || '',
+      employeeCode: data.employeeCode || '',
+      positionEmployee: data.positionEmployee || '',
+      email: data.email || '',
+      phone: data.phone || '',
+      statusByPartner: data.statusByPartner || '',
+      username: data.username || '',
+      password: data.password || '',
+      imagePreview: data.imageIden ? '/' + data.imageIden.replace(/\\/g, '/') : null
     }
   } catch (e) {
     alert('ไม่พบข้อมูลพนักงาน')
@@ -284,28 +304,55 @@ watch(statusByPartner, (val) => { if (val) errors.value.statusByPartner = '' })
 watch(username, (val) => { if (val.trim()) errors.value.username = '' })
 watch(password, (val) => { if (val.trim()) errors.value.password = '' })
 
-function handleSave() {
+async function handleSave() {
   const isValid = validateForm()
   if (!isValid) {
     scrollToFirstErrorWithAnimation()
     return
   }
-  confirmSave()
+  const result = await Swal.fire({
+    title: 'ยืนยันการบันทึกข้อมูล?',
+    text: 'คุณต้องการบันทึกข้อมูลนี้ใช่หรือไม่',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'ตกลง',
+    cancelButtonText: 'ยกเลิก'
+  })
+  if (!result.isConfirmed) return;
+  await confirmSave()
 }
 
-function handleReset() {
-  firstname.value = ''
-  lastname.value = ''
-  nickname.value = ''
-  employeeCode.value = ''
-  positionEmployee.value = ''
-  email.value = ''
-  phone.value = ''
-  username.value = ''
-  password.value = ''
-  sex.value = ''
-  statusByPartner.value = ''
+async function handleReset() {
+  const result = await Swal.fire({
+    title: 'ยืนยันการรีเซ็ตข้อมูล?',
+    text: 'คุณต้องการรีเซ็ตข้อมูลกลับเป็นค่าที่บันทึกไว้ใช่หรือไม่',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'ตกลง',
+    cancelButtonText: 'ยกเลิก'
+  })
+  if (!result.isConfirmed) return;
+  // รีเซ็ตกลับเป็นค่าที่โหลดมาจาก backend
+  firstname.value = originalData.value.firstname
+  lastname.value = originalData.value.lastname
+  nickname.value = originalData.value.nickname
+  employeeCode.value = originalData.value.employeeCode
+  positionEmployee.value = originalData.value.positionEmployee
+  email.value = originalData.value.email
+  phone.value = originalData.value.phone
+  username.value = originalData.value.username
+  password.value = originalData.value.password
+  sex.value = originalData.value.sex
+  statusByPartner.value = originalData.value.statusByPartner
+  imagePreview.value = originalData.value.imagePreview
+  employeeImage.value = null
   highlightField.value = ''
+  Swal.fire({
+    icon: 'info',
+    title: 'รีเซ็ตข้อมูลเรียบร้อย',
+    showConfirmButton: false,
+    timer: 1200
+  })
 }
 
 function handleCancel() {
@@ -339,13 +386,24 @@ async function confirmSave() {
     });
     const data = await res.json();
     if (res.ok) {
-      alert('แก้ไขพนักงานสำเร็จ');
+      Swal.fire({
+        icon: 'success',
+        title: 'แก้ไขพนักงานสำเร็จ',
+        showConfirmButton: false,
+        timer: 1200
+      })
       router.back();
     } else {
-      alert(data.message || 'เกิดข้อผิดพลาดในการแก้ไขพนักงาน');
+      Swal.fire({
+        icon: 'error',
+        title: data.message || 'เกิดข้อผิดพลาดในการแก้ไขพนักงาน',
+      })
     }
   } catch (err) {
-    alert('เกิดข้อผิดพลาดในการเชื่อมต่อ API');
+    Swal.fire({
+      icon: 'error',
+      title: 'เกิดข้อผิดพลาดในการเชื่อมต่อ API',
+    })
   }
 }
 </script>

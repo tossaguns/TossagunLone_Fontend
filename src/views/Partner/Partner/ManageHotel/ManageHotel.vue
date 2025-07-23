@@ -1,12 +1,21 @@
 <template>
   <TemplatePartner>
     <template #header>
-      <label>โปรไฟล์บริษัท</label>
+      <label>จัดการที่พัก</label>
     </template>
 
     <template #content>
       <div class="p-4 max-w-[3000px] mx-auto">
         <div>
+          <div
+            :class="['p-4 rounded-lg my-6 flex justify-between items-center', manageHotelSleepGun === 'open' ? 'bg-yellow-200' : 'bg-stone-200']">
+            <div class="w-1/2 flex justify-end pr-4 ">
+              <label class="text-lg font-bold">จัดการโรงเเรมใน SleepGun ทั้งหมด</label>
+            </div>
+            <div class="w-1/2 flex justify-start pl-4">
+              <div class="bg-white border rounded-md px-3 py-1 w-24 text-center text-lg shadow">{{ manageHotelSleepGun }}</div>
+            </div>
+          </div>
           <div>
             <p class="font-bold">1. ระยะเวลาในการเข้าพัก</p>
             <div class="max-w-3xl mx-auto mt-3 space-y-2">
@@ -168,9 +177,7 @@
         </div>
 
         <div class="flex justify-center mt-8 mb-6 space-x-3">
-          <button @click="goToMainProfile"
-            class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600">ย้อนกลับ</button>
-          <button @click="goToEditDetailHotel"
+          <button @click="goToManageHotel"
             class="bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-gray-500">เเก้ไข</button>
         </div>
       </div>
@@ -215,6 +222,8 @@ const hasExtraBedText = computed(() => {
   return hasExtraBed.value === 'yes' ? 'มี' : 'ไม่มี'
 })
 
+const manageHotelSleepGun = ref('open')
+
 // Load about hotel data
 async function loadAboutHotelData() {
   try {
@@ -238,6 +247,7 @@ async function loadAboutHotelData() {
         AboutRoomHotel.value = data.AboutRoomHotel || ''
         AboutHotelFor.value = data.AboutHotelFor || ''
         AboutFoodHotel.value = data.AboutFoodHotel || ''
+        manageHotelSleepGun.value = data.manageHotelSleepGun || 'open'
 
         // Populate selected items - handle arrays
         selectedFacilities.value = data.typeFacilityHotel ?
@@ -257,15 +267,12 @@ async function loadAboutHotelData() {
   }
 }
 
-function goToEditDetailHotel() {
-  router.push('/editdetailhotel')
-}
-
-function goToMainProfile() {
-  router.push('/mainprofile')
+function goToManageHotel() {
+  router.push('/editmanagehotel')
 }
 
 onMounted(async () => {
   await loadAboutHotelData()
+  // ลบ fetch ด้วย id ออก
 })
 </script>

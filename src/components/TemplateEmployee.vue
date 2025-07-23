@@ -9,7 +9,7 @@
           :class="containerClass">
 
           <div class="text-stone-700">
-            <div class="bg-stone-500 h-10 flex items-center pl-8">
+            <div class="bg-stone-700 h-10 flex items-center pl-8">
               <div class="text-white font-semibold">
                 <slot name="header" />
               </div>

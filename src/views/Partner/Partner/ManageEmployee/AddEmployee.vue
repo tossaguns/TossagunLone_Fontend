@@ -122,9 +122,9 @@
       </div>
 
       <div class="flex justify-center items-center mb-12 mt-20 space-x-2">
-        <ButtonCancel @confirm="handleCancel" />
-        <ButtonReset @confirm="handleReset" />
-        <ButtonSave @confirm="handleSave" />
+        <ButtonCancel @click="handleCancel" />
+        <ButtonReset @click="handleReset" />
+        <ButtonSave @click="handleSave" />
       </div>
 
     </template>
@@ -140,6 +140,7 @@ import ButtonSave from "@/components/element/ButtonSave.vue";
 import ButtonReset from "@/components/element/ButtonReset.vue";
 import ButtonCancel from "@/components/element/ButtonCancel.vue";
 import { useI18n } from 'vue-i18n'
+import Swal from 'sweetalert2'
 
 const { t } = useI18n()
 
@@ -259,16 +260,34 @@ watch(statusByPartner, (val) => { if (val) errors.value.statusByPartner = '' })
 watch(username, (val) => { if (val.trim()) errors.value.username = '' })
 watch(password, (val) => { if (val.trim()) errors.value.password = '' })
 
-function handleSave() {
+async function handleSave() {
   const isValid = validateForm()
   if (!isValid) {
     scrollToFirstErrorWithAnimation()
     return
   }
+  const result = await Swal.fire({
+    title: 'ยืนยันการบันทึกข้อมูล?',
+    text: 'คุณต้องการบันทึกข้อมูลนี้ใช่หรือไม่',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'ตกลง',
+    cancelButtonText: 'ยกเลิก'
+  })
+  if (!result.isConfirmed) return;
   confirmSave()
 }
 
-function handleReset() {
+async function handleReset() {
+  const result = await Swal.fire({
+    title: 'ยืนยันการรีเซ็ตข้อมูล?',
+    text: 'คุณต้องการรีเซ็ตข้อมูลกลับเป็นค่าว่างใช่หรือไม่',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'ตกลง',
+    cancelButtonText: 'ยกเลิก'
+  })
+  if (!result.isConfirmed) return;
   firstname.value = ''
   lastname.value = ''
   nickname.value = ''
@@ -280,6 +299,8 @@ function handleReset() {
   password.value = ''
   sex.value = ''
   statusByPartner.value = ''
+  imagePreview.value = null
+  employeeImage.value = null
   errors.value = {
     sex: '',
     statusByPartner: '',
@@ -289,6 +310,12 @@ function handleReset() {
     phone: '',
   }
   highlightField.value = ''
+  Swal.fire({
+    icon: 'info',
+    title: 'รีเซ็ตข้อมูลเรียบร้อย',
+    showConfirmButton: false,
+    timer: 1200
+  })
 }
 
 function handleCancel() {
@@ -322,13 +349,24 @@ async function confirmSave() {
     });
     const data = await res.json();
     if (res.ok) {
-      alert('สร้างพนักงานสำเร็จ');
+      Swal.fire({
+        icon: 'success',
+        title: 'สร้างพนักงานสำเร็จ',
+        showConfirmButton: false,
+        timer: 1500
+      })
       router.push('/mainmanageemployee');
     } else {
-      alert(data.message || 'เกิดข้อผิดพลาดในการสร้างพนักงาน');
+      Swal.fire({
+        icon: 'error',
+        title: data.message || 'เกิดข้อผิดพลาดในการสร้างพนักงาน',
+      })
     }
   } catch (err) {
-    alert('เกิดข้อผิดพลาดในการเชื่อมต่อ API');
+    Swal.fire({
+      icon: 'error',
+      title: 'เกิดข้อผิดพลาดในการเชื่อมต่อ API',
+    })
   }
 }
 </script>

@@ -1,11 +1,24 @@
 <template>
   <TemplatePartner>
     <template #header>
-      <label>โปรไฟล์บริษัท</label>
+      <label>จัดการที่พัก</label>
     </template>
 
     <template #content>
       <div class="p-4 max-w-[3000px] mx-auto">
+
+        <div
+          :class="['p-4 rounded-lg my-6 flex justify-between items-center', manageHotelSleepGun === 'open' ? 'bg-yellow-200' : 'bg-stone-200']">
+          <div class="w-1/2 flex justify-end pr-4 ">
+            <label class="text-lg font-bold">จัดการโรงเเรมใน SleepGun ทั้งหมด</label>
+          </div>
+          <div class="w-1/2 flex justify-start pl-4">
+            <select v-model="manageHotelSleepGun" class="border rounded p-2 w-24">
+              <option value="open">เปิด</option>
+              <option value="close">ปิด</option>
+            </select>
+          </div>
+        </div>
 
         <div>
           <p class="font-bold">1. ระยะเวลาในการเข้าพัก</p>
@@ -295,10 +308,14 @@ import { useRouter, useRoute } from 'vue-router'
 import TemplatePartner from "@/components/TemplatePartner.vue";
 import InputNumber from "@/components/element/InputNumber.vue";
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const { t } = useI18n()
 const router = useRouter()
+const route = useRoute()
+const id = route.params.id
 
+const manageHotelSleepGun = ref('open')
 
 const hasExtraBed = ref(null)
 const extraBed = ref({ child: '', normal: '' })
@@ -332,9 +349,10 @@ const selectedRoomHotel = ref([])
 const selectedHotelFor = ref([])
 const selectedFoodHotel = ref([])
 
+const initialData = ref(null)
 
 function goToMainProfile() {
-  router.push("/mainprofile")
+  router.push("/managehotel")
 }
 
 
@@ -415,6 +433,7 @@ async function loadExistingAboutHotel() {
         AboutRoomHotel.value = existingData.AboutRoomHotel || ''
         AboutHotelFor.value = existingData.AboutHotelFor || ''
         AboutFoodHotel.value = existingData.AboutFoodHotel || ''
+        manageHotelSleepGun.value = existingData.manageHotelSleepGun || 'open'
 
         console.log('Populated form data:', {
           checkInForm: checkInForm.value,
@@ -435,6 +454,8 @@ async function loadExistingAboutHotel() {
           existingData.typeHotelFor.map(item => item._id || item) : []
         selectedFoodHotel.value = existingData.typeFoodHotel ?
           existingData.typeFoodHotel.map(item => item._id || item) : []
+        // Save snapshot for reset
+        initialData.value = JSON.parse(JSON.stringify(existingData))
       } else {
         console.log('No existing data found for partner:', partnerId)
       }
@@ -448,6 +469,15 @@ async function loadExistingAboutHotel() {
 
 // Save about hotel data
 async function saveAboutHotel() {
+  const result = await Swal.fire({
+    title: 'ยืนยันการบันทึกข้อมูล?',
+    text: 'คุณต้องการบันทึกข้อมูลนี้ใช่หรือไม่',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'ตกลง',
+    cancelButtonText: 'ยกเลิก'
+  })
+  if (!result.isConfirmed) return;
   try {
     const partnerId = localStorage.getItem('partnerId') // Adjust based on your auth system
 
@@ -465,6 +495,7 @@ async function saveAboutHotel() {
       AboutRoomHotel: AboutRoomHotel.value,
       AboutHotelFor: AboutHotelFor.value,
       AboutFoodHotel: AboutFoodHotel.value,
+      manageHotelSleepGun: manageHotelSleepGun.value,
       typeFacilityHotel: selectedFacilities.value.length > 0 ? selectedFacilities.value : [],
       typeHotelLocation: selectedHotelLocation.value.length > 0 ? selectedHotelLocation.value : [],
       typeRoomHotel: selectedRoomHotel.value.length > 0 ? selectedRoomHotel.value : [],
@@ -487,33 +518,88 @@ async function saveAboutHotel() {
       isDataExists.value = true
     }
 
-    alert('บันทึกข้อมูลสำเร็จ')
-    router.push("/detailhotel")
+    Swal.fire({
+      icon: 'success',
+      title: 'บันทึกข้อมูลสำเร็จ',
+      showConfirmButton: false,
+      timer: 1500
+    })
+    router.push("/managehotel")
   } catch (e) {
-    console.error('saveAboutHotel error', e)
-    alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล')
+    Swal.fire({
+      icon: 'error',
+      title: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล',
+      text: e.message || '',
+    })
   }
 }
 
 // Reset form
-function resetForm() {
-  hasExtraBed.value = null
-  extraBed.value = { child: '', normal: '' }
-  checkInForm.value = ''
-  checkInTo.value = ''
-  checkOutForm.value = ''
-  checkOutTo.value = ''
-  VerifyIden_checkIn.value = ''
-  AboutFacilityHotel.value = ''
-  AboutHotelLocation.value = ''
-  AboutRoomHotel.value = ''
-  AboutHotelFor.value = ''
-  AboutFoodHotel.value = ''
-  selectedFacilities.value = []
-  selectedHotelLocation.value = []
-  selectedRoomHotel.value = []
-  selectedHotelFor.value = []
-  selectedFoodHotel.value = []
+async function resetForm() {
+  const result = await Swal.fire({
+    title: 'ยืนยันการรีเซ็ตข้อมูล?',
+    text: 'คุณต้องการรีเซ็ตข้อมูลกลับเป็นค่าที่บันทึกไว้ล่าสุดใช่หรือไม่',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'ตกลง',
+    cancelButtonText: 'ยกเลิก'
+  })
+  if (!result.isConfirmed) return;
+  if (initialData.value) {
+    hasExtraBed.value = initialData.value.hasExtraBed
+    extraBed.value = initialData.value.typeBedPrice || { child: '', normal: '' }
+    checkInForm.value = initialData.value.checkInForm || ''
+    checkInTo.value = initialData.value.checkInTo || ''
+    checkOutForm.value = initialData.value.checkOutForm || ''
+    checkOutTo.value = initialData.value.checkOutTo || ''
+    VerifyIden_checkIn.value = initialData.value.VerifyIden_checkIn || ''
+    AboutFacilityHotel.value = initialData.value.AboutFacilityHotel || ''
+    AboutHotelLocation.value = initialData.value.AboutHotelLocation || ''
+    AboutRoomHotel.value = initialData.value.AboutRoomHotel || ''
+    AboutHotelFor.value = initialData.value.AboutHotelFor || ''
+    AboutFoodHotel.value = initialData.value.AboutFoodHotel || ''
+    manageHotelSleepGun.value = initialData.value.manageHotelSleepGun || 'open'
+    selectedFacilities.value = initialData.value.typeFacilityHotel
+      ? initialData.value.typeFacilityHotel.map(item => item._id || item)
+      : []
+    selectedHotelLocation.value = initialData.value.typeHotelLocation
+      ? initialData.value.typeHotelLocation.map(item => item._id || item)
+      : []
+    selectedRoomHotel.value = initialData.value.typeRoomHotel
+      ? initialData.value.typeRoomHotel.map(item => item._id || item)
+      : []
+    selectedHotelFor.value = initialData.value.typeHotelFor
+      ? initialData.value.typeHotelFor.map(item => item._id || item)
+      : []
+    selectedFoodHotel.value = initialData.value.typeFoodHotel
+      ? initialData.value.typeFoodHotel.map(item => item._id || item)
+      : []
+  } else {
+    hasExtraBed.value = null
+    extraBed.value = { child: '', normal: '' }
+    checkInForm.value = ''
+    checkInTo.value = ''
+    checkOutForm.value = ''
+    checkOutTo.value = ''
+    VerifyIden_checkIn.value = ''
+    AboutFacilityHotel.value = ''
+    AboutHotelLocation.value = ''
+    AboutRoomHotel.value = ''
+    AboutHotelFor.value = ''
+    AboutFoodHotel.value = ''
+    manageHotelSleepGun.value = 'open'
+    selectedFacilities.value = []
+    selectedHotelLocation.value = []
+    selectedRoomHotel.value = []
+    selectedHotelFor.value = []
+    selectedFoodHotel.value = []
+  }
+  Swal.fire({
+    icon: 'info',
+    title: 'รีเซ็ตข้อมูลเรียบร้อย',
+    showConfirmButton: false,
+    timer: 1200
+  })
 }
 
 

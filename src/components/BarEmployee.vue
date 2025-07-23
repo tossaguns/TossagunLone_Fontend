@@ -22,8 +22,8 @@
 
 
       <div class="pt-8 text-stone-700">
-        
-        <div @click="navigateTo('/manageroomemployee', 'manageroom')"
+
+        <div @click="navigateTo('/managestatusroom', 'statusroom')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-stone-500 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
             activeMenu === 'manageroom' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
@@ -69,12 +69,12 @@
             <transition name="fade-slide" mode="out-in" appear>
               <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
                 :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                check-out
+                Check-out
               </p>
             </transition>
           </div>
         </div>
-        <div @click="navigateTo('/mainprofile', 'proflie')"
+        <div @click="navigateTo('/profileemployee', 'proflie')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-stone-500 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
             activeMenu === 'proflie' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
@@ -224,14 +224,11 @@ function getActiveMenuFromRoute() {
     '/addemployee': 'manageemployee',
     // '/editemployee/:id': 'manageemployee',
 
-    '/editprofile': 'proflie',
-    '/profile': 'proflie',
-    '/mainprofile': 'proflie',
-    '/profilecompany': 'proflie',
-    '/editdetailhotel': 'proflie',
-    '/detailhotel': 'proflie',
 
-    '/mainmanageroom': 'manageroom',
+    '/profileemployee': 'proflie',
+    '/managestatusroom': 'statusroom',
+
+
     '/addroom': 'manageroom',
     '/editroom': 'manageroom',
     '/mainhotelroom': 'stayroom',
