@@ -75,7 +75,7 @@
             </transition>
           </div>
         </div>
-       
+
         <div @click="navigateTo('/mainpromotion', 'promotion')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
@@ -163,6 +163,26 @@
             </transition>
           </div>
         </div>
+
+        <div @click="navigateTo('/mainreview', 'review')"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-amber-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+          :class="[
+            activeMenu === 'review' ? 'bg-amber-400 text-white drop-shadow-lg' : '',
+            isCollapsed ? 'px-3' : 'px-3'
+          ]">
+          <div class="flex items-center gap-3 ml-3 transition-all duration-300">
+            <img src="/images/icon/profile.png" alt="icon"
+              class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
+            <transition name="fade-slide" mode="out-in" appear>
+              <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
+                รีวิวที่พัก
+              </p>
+            </transition>
+          </div>
+        </div>
+
+
         <div v-show="!isCollapsed" class="mt-12">
           <FontAndLangSelector />
         </div>
@@ -183,6 +203,11 @@
           </div>
         </div>
 
+
+        <div v-show="!isCollapsed">
+          <PartnerToEmployee />
+        </div>
+
         <div @click="navigateTo('/logout', 'logout')"
           class="mt-12 group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-red-400 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
@@ -200,6 +225,7 @@
             </transition>
           </div>
         </div>
+
       </div>
     </nav>
   </div>
@@ -210,7 +236,7 @@ import { ref, watch, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import FontAndLangSelector from '@components/FontAndLangSelector.vue'
 import { useI18n } from 'vue-i18n'
-
+import PartnerToEmployee from '@components/PartnerToEmployee.vue'
 const { t } = useI18n()
 
 const partner = ref({
@@ -298,7 +324,8 @@ function getActiveMenuFromRoute() {
 
     '/editprofile': 'proflie',
     '/profile': 'proflie',
-    
+
+    '/mainreview': 'review',
 
     '/managehotel': 'managehotel',
 

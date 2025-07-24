@@ -10,10 +10,11 @@
         </div>
         <div>
           <TableModelBasic ref="tableRef" :customers="room" :statusOptions="statusOptions"
-            :statusRoomOptions="statusRoomOptions"
-            :visibleColumns="['status', 'statuRoom', 'roomNumber', 'typeRoom', 'price', 'stayPeople']"
+            :statusRoomOptions="statusRoomOptions" :statusPromotionOptions="statusPromotionOptions"
+            :visibleColumns="['status', 'statusRoom', 'roomNumber', 'typeRoom', 'price', 'stayPeople', 'statusPromotion']"
             :fieldLayout="fieldLayout" :hideEditDelete="true" @confirm-status-change="onConfirmStatusChange"
-            @confirm-status-room-change="onConfirmStatusRoomChange" />
+            @confirm-status-room-change="onConfirmStatusRoomChange"
+            @confirm-status-promotion-change="onConfirmStatusPromotionChange" :statusPromotionEditable="false" />
         </div>
       </div>
       <Confirm :show="showConfirm" :onConfirm="confirmStatusChange" :onCancel="cancelStatusChange">
@@ -21,6 +22,10 @@
       </Confirm>
       <Confirm :show="showConfirmRoom" :onConfirm="confirmStatusRoomChange" :onCancel="cancelStatusRoomChange">
         คุณต้องการเปลี่ยนสถานะห้องนี้เป็น "{{ pendingStatusRoomChange.newStatusRoom }}" ใช่หรือไม่?
+      </Confirm>
+      <Confirm :show="showConfirmPromotion" :onConfirm="confirmStatusPromotionChange"
+        :onCancel="cancelStatusPromotionChange">
+        คุณต้องการเปลี่ยนสถานะโปรโมชั่นห้องนี้เป็น "{{ pendingStatusPromotionChange.newStatusPromotion }}" ใช่หรือไม่?
       </Confirm>
     </template>
   </TemplateEmployee>
@@ -32,10 +37,12 @@ import TableModelBasic from "@/components/table/TableModelBasic.vue";
 import { ref, onMounted, onUnmounted } from 'vue';
 import Confirm from "@/components/element/Confirm.vue";
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const room = ref([]);
 const statusOptions = ref([]);
 const statusRoomOptions = ref(["เปิดใช้งาน", "ปิดทำการ"]);
+const statusPromotionOptions = ref(["openPromotion", "closePromotion"]);
 
 const tableRef = ref(null);
 
@@ -49,7 +56,8 @@ const fieldLayout = ref([
   { key: "typeRoomHotel", label: "ลักษณะห้อง", position: 7 },
   { key: "imgrooms", label: "รูป", position: 8 },
   { key: "timestamps", label: "เวลา", position: 9 },
-  { key: "statuRoom", label: "สถานะห้อง", position: 10 },
+  { key: "statusRoom", label: "สถานะห้อง", position: 10 },
+  { key: "statusPromotion", label: "สถานะการใช้งานโปรโมชั่น", position: 11 },
 ]);
 
 const showConfirm = ref(false)
@@ -83,8 +91,33 @@ const showConfirmRoom = ref(false)
 const pendingStatusRoomChange = ref({ row: null, newStatusRoom: null })
 
 function onConfirmStatusRoomChange({ row, newStatusRoom }) {
-  pendingStatusRoomChange.value = { row, newStatusRoom }
-  showConfirmRoom.value = true
+  Swal.fire({
+    title: 'ยืนยันการเปลี่ยนสถานะห้อง',
+    text: `คุณต้องการเปลี่ยนสถานะห้องนี้เป็น "${newStatusRoom}" ใช่หรือไม่?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'ยืนยัน',
+    cancelButtonText: 'ยกเลิก',
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      if (tableRef.value && typeof tableRef.value.applyPendingStatus === 'function') {
+        tableRef.value.applyPendingStatus(row._id)
+      }
+      await updateRoomStatusRoom({ id: row._id, statusRoom: newStatusRoom })
+      await fetchRooms()
+      Swal.fire({
+        title: 'สำเร็จ!',
+        text: 'เปลี่ยนสถานะห้องเรียบร้อยแล้ว',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
+    } else {
+      if (tableRef.value && typeof tableRef.value.resetPendingStatus === 'function') {
+        tableRef.value.resetPendingStatus(row._id)
+      }
+    }
+  });
 }
 
 async function confirmStatusRoomChange() {
@@ -104,6 +137,33 @@ function cancelStatusRoomChange() {
     tableRef.value.resetPendingStatus(pendingStatusRoomChange.value.row._id)
   }
   pendingStatusRoomChange.value = { row: null, newStatusRoom: null }
+}
+
+const showConfirmPromotion = ref(false)
+const pendingStatusPromotionChange = ref({ row: null, newStatusPromotion: null })
+
+function onConfirmStatusPromotionChange({ row, newStatusPromotion }) {
+  pendingStatusPromotionChange.value = { row, newStatusPromotion }
+  showConfirmPromotion.value = true
+}
+
+async function confirmStatusPromotionChange() {
+  const { row, newStatusPromotion } = pendingStatusPromotionChange.value
+  if (tableRef.value && typeof tableRef.value.applyPendingStatus === 'function') {
+    tableRef.value.applyPendingStatus(row._id)
+  }
+  await updateRoomStatusPromotion({ id: row._id, statusPromotion: newStatusPromotion })
+  await fetchRooms()
+  showConfirmPromotion.value = false
+  pendingStatusPromotionChange.value = { row: null, newStatusPromotion: null }
+}
+
+function cancelStatusPromotionChange() {
+  showConfirmPromotion.value = false
+  if (pendingStatusPromotionChange.value.row && tableRef.value && typeof tableRef.value.resetPendingStatus === 'function') {
+    tableRef.value.resetPendingStatus(pendingStatusPromotionChange.value.row._id)
+  }
+  pendingStatusPromotionChange.value = { row: null, newStatusPromotion: null }
 }
 
 // โหลดข้อมูลห้องพัก และสถานะที่เลือกได้
@@ -199,11 +259,29 @@ async function updateRoomStatusRoom({ id, statusRoom }) {
     // อัปเดต UI
     const idx = room.value.findIndex(r => r._id === id);
     if (idx !== -1) {
-      room.value[idx].statuRoom = statusRoom;
+      room.value[idx].statusRoom = statusRoom;
     }
   } catch (error) {
     await fetchRooms();
     alert("เกิดข้อผิดพลาดในการอัปเดตสถานะห้อง");
+  }
+}
+
+async function updateRoomStatusPromotion({ id, statusPromotion }) {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.patch(`http://localhost:9999/HotelSleepGun/room/update/${id}/status-promotion`, { statusPromotion }, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    localStorage.setItem('rooms-updated', Date.now())
+    // อัปเดต UI
+    const idx = room.value.findIndex(r => r._id === id);
+    if (idx !== -1) {
+      room.value[idx].statusPromotion = statusPromotion;
+    }
+  } catch (error) {
+    await fetchRooms();
+    alert("เกิดข้อผิดพลาดในการอัปเดตสถานะโปรโมชั่นห้อง");
   }
 }
 

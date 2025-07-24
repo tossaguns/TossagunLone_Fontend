@@ -72,9 +72,9 @@
         </div>
 
         <div class="flex justify-center items-center mb-12 mt-20 space-x-2">
-          <ButtonCancel @confirm="handleCancel" />
-          <ButtonReset @confirm="handleReset" />
-          <ButtonSave @confirm="handleSave" />
+          <ButtonCancel @click="handleCancel" />
+          <ButtonReset @click="handleReset" />
+          <ButtonSave @click="handleSave" />
         </div>
       </div>
 
@@ -99,6 +99,7 @@ import ButtonReset from '@/components/element/ButtonReset.vue'
 import ButtonCancel from '@/components/element/ButtonCancel.vue'
 import ChooseRoomType from '@/components/element/ChooseRoomType.vue'
 import { useI18n } from 'vue-i18n'
+import Swal from 'sweetalert2'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -182,7 +183,17 @@ function validateForm() {
   return isValid
 }
 
-function handleReset() {
+async function handleReset() {
+  const result = await Swal.fire({
+    title: 'ยืนยันการรีเซ็ตข้อมูล?',
+    text: 'คุณต้องการรีเซ็ตข้อมูลกลับเป็นค่าที่โหลดมาจากระบบใช่หรือไม่',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'ตกลง',
+    cancelButtonText: 'ยกเลิก'
+  })
+  if (!result.isConfirmed) return;
+  // รีเซ็ตกลับเป็น initialData
   NumberRoom.value = initialData.value.roomNumber || ''
   selectedTypeRoom.value = initialData.value.typeRoom || null
   Price.value = initialData.value.price || ''
@@ -198,25 +209,41 @@ function handleReset() {
     selectedTypeRoomHotel: '',
   }
   highlightField.value = ''
+  Swal.fire({
+    icon: 'info',
+    title: 'รีเซ็ตข้อมูลเรียบร้อย',
+    showConfirmButton: false,
+    timer: 1200
+  })
 }
 
 function handleCancel() {
-  router.back()
+  router.push('/mainmanageroom')
 }
 
-function handleSave() {
+
+async function handleSave() {
   const isValid = validateForm()
   if (!isValid) {
     scrollToFirstErrorWithAnimation()
     return
   }
+  const result = await Swal.fire({
+    title: 'ยืนยันการบันทึกข้อมูล?',
+    text: 'คุณต้องการบันทึกข้อมูลนี้ใช่หรือไม่',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'ตกลง',
+    cancelButtonText: 'ยกเลิก'
+  })
+  if (!result.isConfirmed) return;
   confirmSave()
 }
 
 async function confirmSave() {
   const formData = new FormData()
   formData.append('roomNumber', NumberRoom.value)
-  formData.append('typeRoom', selectedTypeRoom.value)
+  formData.append('typeRoom', typeof selectedTypeRoom.value === 'object' ? selectedTypeRoom.value.value : selectedTypeRoom.value);
   formData.append('price', Price.value)
   formData.append('stayPeople', Stay.value)
   formData.append('roomDetail', RoomDetail.value)
@@ -232,8 +259,13 @@ async function confirmSave() {
     let data
     try { data = await res.json() } catch (e) { data = {} }
     if (res.ok) {
-      alert('บันทึกข้อมูลห้องสำเร็จ')
-      router.push('/mainmanageroom')
+      await Swal.fire({
+        icon: 'success',
+        title: 'บันทึกข้อมูลห้องสำเร็จ',
+        showConfirmButton: false,
+        timer: 1200
+      });
+      router.push('/mainmanageroom');
     } else {
       alert('เกิดข้อผิดพลาด: ' + (data.message || JSON.stringify(data)))
       console.error('เกิดข้อผิดพลาด:', data)

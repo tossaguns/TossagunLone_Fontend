@@ -8,7 +8,7 @@
 
     <!-- BarDateMember: แสดงเมื่อ showBarDateMember เป็น true -->
     <transition name="slide-down">
-      <div v-if="showBarDateMember" class="sticky md:top-[80px] top-[65px] z-40 bg-white shadow">
+      <div v-if="showBarDateMember" class="sticky md:top-[80px] top-[65px] z-40 bg-white shadow-lg">
         <BarDateMember :show-calendar="showCalendar" @close-calendar="showCalendar = false" />
       </div>
     </transition>
@@ -17,7 +17,6 @@
     <div class="min-h-screen">
       <div class="max-w-7xl mx-auto text-stone-600">
         <div class="mt-8">
-
           <div class="flex flex-col md:flex-row justify-start md:items-center">
             <div class=" flex space-x-3 px-4 justify-start items-center">
               <img src="/images/icon/company_nav.png" class="w-8" />
@@ -25,9 +24,10 @@
             </div>
 
             <div class="flex justify-end items-end px-4 md:px-0">
-              <div v-for="(item, idx) in reviews" :key="idx" class="flex items-start space-x-4">
-                <div><span v-for="n in 5" :key="n" class="text-xl"
-                    :class="n <= item.rating ? 'text-yellow-400' : 'text-gray-300'">★</span>
+              <div class="flex items-start space-x-4">
+                <div>
+                  <span v-for="n in 5" :key="n" class="text-xl"
+                    :class="n <= Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'">★</span>
                 </div>
               </div>
             </div>
@@ -69,12 +69,11 @@
                   <label>รหัสไปรษณีย์ : <span class="font-bold">{{ zipcode }}</span></label>
                 </div>
               </div>
-
             </div>
           </div>
 
-          <div class="mx-4 border mt-4 p-4 rounded-lg">
-            <div class="">
+          <div class=" mt-4 p-4">
+            <div class="md:text-sm text-xs">
               <label class="block mt-2 indent-8 text-stone-400">{{
                 }}ประเภทของห้องพักโรงแรมคือการจำแนกประเภทห้องพักที่มีให้บริการในโรงแรม การแบ่ง ‘ประเภท’
                 ห้องพักจะช่วยให้แขกเข้าใจได้อย่างชัดเจนว่าพวกเขากำลังจองห้องพักลักษณะไหนในขณะวางแผนการท่องเที่ยว
@@ -84,10 +83,10 @@
             </div>
           </div>
 
-          <div class="px-8 mt-20">
+          <div class="px-8 mt-12">
             <div class="flex flex-col justify-center items-center">
               <label class="font-bold">ช่วงเวลาในการเข้าใช้บริการ</label>
-              <div class="flex items-center">
+              <div class="flex items-center md:text-base text-xs">
                 <div class="flex justify-center items-center flex-col md:px-6">
                   <div class="my-4">
                     <img src="/imgHotel/checkin.jpg" class="w-14 h-14 object-cover  rounded-full shadow-lg">
@@ -105,16 +104,15 @@
                   <label>เวลาเช็ค้าท์</label>
                   <label>{{ checkoutTime }}</label>
                 </div>
-
               </div>
             </div>
           </div>
 
           <div class="px-4 mt-20">
-            <label class="px-4 text-xl font-bold">ห้องพัก</label>
+            <label class="text-2xl font-bold">ห้องพัก</label>
 
             <div
-              class="flex flex-col md:flex-row justify-center items-center space-x-3 bg-stone-500 px-12 py-3 rounded-lg mt-6">
+              class="flex flex-col md:flex-row justify-center items-center space-x-3 bg-stone-500 px-12 py-3 rounded-lg mt-2">
               <label class="text-white pb-2 md:pb-0">กรุณาเลือกวันที่เข้าพัก : </label>
               <div class="md:w-[400px] w-full">
                 <div
@@ -135,17 +133,53 @@
               @remove-from-cart="handleRemoveFromCart" @open-calendar="showCalendar = true" />
           </div>
 
-          <div class="mt-4">
+          <div class="mt-20 px-4 block lg:hidden">
+            <div>
+              <label class="text-2xl font-bold">ตำแหน่งที่ตั้ง</label>
+            </div>
+            <div class="flex text-xs space-x-2 mb-2 mt-4 font-bold">
+              <div>
+                <label>{{ address }}</label>
+              </div>
+              <div>
+                <label>{{ subDistrict }}</label>
+              </div>
+              <div>
+                <label> {{ district }}</label>
+              </div>
+              <div>
+                <label>{{ province }}</label>
+              </div>
+              <div>
+                <label>{{ zipcode }}</label>
+              </div>
+            </div>
+
+            <div class="rounded-lg w-full block">
+              <div>
+                <iframe class="w-full h-full rounded-lg" frameborder="0" style="border:0" loading="lazy" allowfullscreen
+                  referrerpolicy="no-referrer-when-downgrade" :src="mapUrl"></iframe>
+                <div class="flex justify-center mt-1 md:text-xs text-xxs space-x-2">
+                  <label>ละติจูด : {{ latitude }}</label>
+                  <label>ลองติจูด : {{ longitude }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-20">
             <About :icon-hotel="iconHotel" :icon-iocation="iconIocation" :icon-room="iconRoom" :icon-pet="iconPet"
               :icon-food="iconFood" />
           </div>
 
-          <div class="mt-4">
-            <Review />
+
+
+          <div class="my-20">
+            <div class="mb-4 px-4">
+              <label class="font-bold text-2xl">รีวิวที่พัก</label>
+            </div>
+            <Review :reviews="reviews" />
           </div>
-
-
-
         </div>
       </div>
     </div>
@@ -206,13 +240,28 @@ function handleRemoveFromCart(room) {
 }
 
 const reviews = ref([
-  {
-    rating: 5,
-  }
+  { rating: 5, name: 'User1', detail: 'ดีมาก', roomType: 'ห้องธรรมดา', dateStay: 2, monthStay: 'มิถุนายน', yearStay: 2024, dateReview: '2024-06-10' },
+  { rating: 4, name: 'User2', detail: 'โอเค', roomType: 'ห้องวิวทะเล', dateStay: 1, monthStay: 'พฤษภาคม', yearStay: 2024, dateReview: '2024-05-22' },
+  { rating: 3, name: 'User3', detail: 'ปานกลาง', roomType: 'ห้องสวีท', dateStay: 3, monthStay: 'เมษายน', yearStay: 2024, dateReview: '2024-04-15' },
+  { rating: 5, name: 'User4', detail: 'สุดยอด', roomType: 'ห้องแฟมิลี่', dateStay: 2, monthStay: 'มีนาคม', yearStay: 2024, dateReview: '2024-03-30' },
+  { rating: 2, name: 'User5', detail: 'ควรปรับปรุง', roomType: 'ห้องโรแมนติก', dateStay: 1, monthStay: 'กุมภาพันธ์', yearStay: 2024, dateReview: '2024-02-18' },
+  { rating: 4, name: 'User6', detail: 'ดี', roomType: 'ห้องธรรมดา', dateStay: 2, monthStay: 'มกราคม', yearStay: 2024, dateReview: '2024-01-12' },
+  { rating: 5, name: 'User7', detail: 'ประทับใจมาก', roomType: 'ห้องวิวทะเล', dateStay: 1, monthStay: 'ธันวาคม', yearStay: 2023, dateReview: '2023-12-25' },
+  { rating: 3, name: 'User8', detail: 'เฉยๆ', roomType: 'ห้องสวีท', dateStay: 2, monthStay: 'พฤศจิกายน', yearStay: 2023, dateReview: '2023-11-09' },
+  { rating: 4, name: 'User9', detail: 'ดีใช้ได้', roomType: 'ห้องแฟมิลี่', dateStay: 1, monthStay: 'ตุลาคม', yearStay: 2023, dateReview: '2023-10-03' },
+  { rating: 5, name: 'User10', detail: 'แนะนำเลย', roomType: 'ห้องโรแมนติก', dateStay: 3, monthStay: 'กันยายน', yearStay: 2023, dateReview: '2023-09-27' },
 ])
 
 
 const totalAll = computed(() => selectedRooms.value.reduce((sum, r) => sum + (r.total || 0), 0))
+
+const averageRating = computed(() => {
+  if (!reviews.value.length) return 0;
+  return (
+    reviews.value.reduce((sum, r) => sum + (r.rating || 0), 0) /
+    reviews.value.length
+  );
+});
 
 const iconHotel = [
   { label: 'Wi-Fi', icon: '/icons/wifi.svg' },

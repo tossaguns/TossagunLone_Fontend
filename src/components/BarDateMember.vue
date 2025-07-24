@@ -1,5 +1,5 @@
 <template>
-  <div class="py-2 shadow-lg">
+  <div class="py-2">
     <div class="max-w-7xl mx-auto px-2">
       <div class="flex items-center space-x-2">
         <!-- Search -->

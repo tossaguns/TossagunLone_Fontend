@@ -23,10 +23,11 @@
 
       <div class="pt-8 text-stone-700">
 
+
         <div @click="navigateTo('/managestatusroom', 'statusroom')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-stone-500 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'manageroom' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
+            activeMenu === 'statusroom' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -40,10 +41,27 @@
             </transition>
           </div>
         </div>
-        <div @click="navigateTo('/mainmanageroom', 'manageroom')"
+        <div @click="navigateTo('/managesleepgunWeb', 'sleepgun')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-stone-500 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'manageroom' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
+            activeMenu === 'sleepgun' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
+            isCollapsed ? 'px-3' : 'px-3'
+          ]">
+          <div class="flex items-center gap-3 ml-3 transition-all duration-300">
+            <img src="/images/icon/room_nav.png" alt="icon"
+              class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
+            <transition name="fade-slide" mode="out-in" appear>
+              <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
+                จองกับ SLEEPGUN
+              </p>
+            </transition>
+          </div>
+        </div>
+        <div @click="navigateTo('/checkin', 'checkin')"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-stone-500 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+          :class="[
+            activeMenu === 'checkin' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -57,10 +75,10 @@
             </transition>
           </div>
         </div>
-        <div @click="navigateTo('/mainmanageemployee', 'manageemployee')"
+        <div @click="navigateTo('/checkout', 'checkout')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-stone-500 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'manageemployee' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
+            activeMenu === 'checkout' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -228,7 +246,10 @@ function getActiveMenuFromRoute() {
     '/profileemployee': 'proflie',
     '/managestatusroom': 'statusroom',
 
+    '/checkout': 'checkout',
+    '/checkin': 'checkin',
 
+    '/managesleepgunWeb': 'sleepgun',
     '/addroom': 'manageroom',
     '/editroom': 'manageroom',
     '/mainhotelroom': 'stayroom',

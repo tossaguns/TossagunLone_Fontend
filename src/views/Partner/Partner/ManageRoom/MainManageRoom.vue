@@ -21,11 +21,12 @@
               </div>
               <div class="w-full mt-2">
                 <TableModelBasic ref="tableRef" :customers="room" :statusOptions="statusOptions"
-                  :statusRoomOptions="statusRoomOptions"
-                  :visibleColumns="['status', 'statuRoom', 'roomNumber', 'typeRoom', 'price', 'stayPeople']"
+                  :statusRoomOptions="statusRoomOptions" :statusPromotionOptions="['openPromotion', 'closePromotion']"
+                  :visibleColumns="['status', 'statusRoom', 'roomNumber', 'typeRoom', 'price', 'statusPromotion']"
                   :fieldLayout="fieldLayout" @update-status="updateRoomStatus" @update-row="updateRoom"
                   @delete-row="deleteRoom" @confirm-status-change="onConfirmStatusChange"
-                  @confirm-status-room-change="onConfirmStatusRoomChange" @edit-row="goToEditRoom" />
+                  @confirm-status-room-change="onConfirmStatusRoomChange" @edit-row="goToEditRoom"
+                  :statusPromotionEditable="true" @confirm-status-promotion-change="onConfirmStatusPromotionChange" />
               </div>
             </div>
           </div>
@@ -49,6 +50,7 @@ import Confirm from "@/components/element/Confirm.vue";
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const room = ref([]);
 const statusOptions = ref([]);
@@ -66,26 +68,41 @@ const fieldLayout = ref([
   { key: "typeRoomHotel", label: "ลักษณะห้อง", position: 7 },
   { key: "imgrooms", label: "รูป", position: 8 },
   { key: "timestamps", label: "เวลา", position: 9 },
-  { key: "statuRoom", label: "สถานะห้อง", position: 10 },
+  { key: "statusRoom", label: "สถานะห้อง", position: 10 },
+  { key: "statusPromotion", label: "สถานะการใช้งานโปรโฒชั่น", position: 11 },
 ]);
 
 const showConfirm = ref(false)
 const pendingStatusChange = ref({ row: null, newStatus: null })
 
 function onConfirmStatusChange({ row, newStatus }) {
-  pendingStatusChange.value = { row, newStatus }
-  showConfirm.value = true
-}
-
-async function confirmStatusChange() {
-  const { row, newStatus } = pendingStatusChange.value
-  if (tableRef.value && typeof tableRef.value.applyPendingStatus === 'function') {
-    tableRef.value.applyPendingStatus(row._id)
-  }
-  await updateRoomStatus({ id: row._id, status: newStatus })
-  await fetchRooms()
-  showConfirm.value = false
-  pendingStatusChange.value = { row: null, newStatus: null }
+  Swal.fire({
+    title: 'ยืนยันการเปลี่ยนสถานะ',
+    text: `คุณต้องการเปลี่ยนสถานะห้องนี้เป็น "${newStatus}" ใช่หรือไม่?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'ยืนยัน',
+    cancelButtonText: 'ยกเลิก',
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      if (tableRef.value && typeof tableRef.value.applyPendingStatus === 'function') {
+        tableRef.value.applyPendingStatus(row._id)
+      }
+      await updateRoomStatus({ id: row._id, status: newStatus })
+      await fetchRooms()
+      Swal.fire({
+        title: 'สำเร็จ!',
+        text: 'เปลี่ยนสถานะเรียบร้อยแล้ว',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
+    } else {
+      if (tableRef.value && typeof tableRef.value.resetPendingStatus === 'function') {
+        tableRef.value.resetPendingStatus(row._id)
+      }
+    }
+  });
 }
 
 function cancelStatusChange() {
@@ -100,19 +117,33 @@ const showConfirmRoom = ref(false)
 const pendingStatusRoomChange = ref({ row: null, newStatusRoom: null })
 
 function onConfirmStatusRoomChange({ row, newStatusRoom }) {
-  pendingStatusRoomChange.value = { row, newStatusRoom }
-  showConfirmRoom.value = true
-}
-
-async function confirmStatusRoomChange() {
-  const { row, newStatusRoom } = pendingStatusRoomChange.value
-  if (tableRef.value && typeof tableRef.value.applyPendingStatus === 'function') {
-    tableRef.value.applyPendingStatus(row._id)
-  }
-  await updateRoomStatusRoom({ id: row._id, statusRoom: newStatusRoom })
-  await fetchRooms()
-  showConfirmRoom.value = false
-  pendingStatusRoomChange.value = { row: null, newStatusRoom: null }
+  Swal.fire({
+    title: 'ยืนยันการเปลี่ยนสถานะห้อง',
+    text: `คุณต้องการเปลี่ยนสถานะห้องนี้เป็น "${newStatusRoom}" ใช่หรือไม่?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'ยืนยัน',
+    cancelButtonText: 'ยกเลิก',
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      if (tableRef.value && typeof tableRef.value.applyPendingStatus === 'function') {
+        tableRef.value.applyPendingStatus(row._id)
+      }
+      await updateRoomStatusRoom({ id: row._id, statusRoom: newStatusRoom })
+      await fetchRooms()
+      Swal.fire({
+        title: 'สำเร็จ!',
+        text: 'เปลี่ยนสถานะห้องเรียบร้อยแล้ว',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
+    } else {
+      if (tableRef.value && typeof tableRef.value.resetPendingStatus === 'function') {
+        tableRef.value.resetPendingStatus(row._id)
+      }
+    }
+  });
 }
 
 function cancelStatusRoomChange() {
@@ -121,6 +152,45 @@ function cancelStatusRoomChange() {
     tableRef.value.resetPendingStatus(pendingStatusRoomChange.value.row._id)
   }
   pendingStatusRoomChange.value = { row: null, newStatusRoom: null }
+}
+
+function onConfirmStatusPromotionChange({ row, newStatusPromotion }) {
+  Swal.fire({
+    title: 'ยืนยันการเปลี่ยนสถานะโปรโมชั่น',
+    text: `คุณต้องการเปลี่ยนสถานะโปรโมชั่นห้องนี้เป็น "${newStatusPromotion}" ใช่หรือไม่?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'ยืนยัน',
+    cancelButtonText: 'ยกเลิก',
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      await updateRoomStatusPromotion({ id: row._id, statusPromotion: newStatusPromotion })
+      await fetchRooms()
+      Swal.fire({
+        title: 'สำเร็จ!',
+        text: 'เปลี่ยนสถานะโปรโมชั่นเรียบร้อยแล้ว',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
+    } else {
+      if (tableRef.value && typeof tableRef.value.resetPendingStatus === 'function') {
+        tableRef.value.resetPendingStatus(row._id)
+      }
+    }
+  });
+}
+
+async function updateRoomStatusPromotion({ id, statusPromotion }) {
+  try {
+    const token = localStorage.getItem('token');
+    await axios.patch(`http://localhost:9999/HotelSleepGun/room/update/${id}/status-promotion`, { statusPromotion }, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    await fetchRooms();
+  } catch (error) {
+    alert("เกิดข้อผิดพลาดในการอัปเดตสถานะโปรโมชั่นห้อง");
+  }
 }
 
 const router = useRouter()
@@ -201,12 +271,23 @@ async function updateRoomStatus({ id, status }) {
     });
     console.log("Status updated successfully:", response.data);
 
+    // ถ้าเปลี่ยนเป็นสถานะอื่นที่ไม่ใช่ SleepGunWeb ให้ปิด promotion
+    if (status !== 'SleepGunWeb') {
+      await axios.patch(`http://localhost:9999/HotelSleepGun/room/update/${id}/status-promotion`, { statusPromotion: 'closePromotion' }, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+    }
+
     // อัปเดต UI หลังบันทึกสำเร็จ
     const idx = room.value.findIndex(r => r._id === id);
     if (idx !== -1) {
       room.value[idx].status = status;
+      if (status !== 'SleepGunWeb') {
+        room.value[idx].statusPromotion = 'closePromotion';
+      }
     }
     localStorage.setItem('rooms-updated', Date.now())
+    await fetchRooms();
     // (ถ้าต้องการ) await fetchRooms(); // เพื่อ sync กับ backend
 
   } catch (error) {
@@ -225,7 +306,7 @@ async function updateRoomStatusRoom({ id, statusRoom }) {
     // อัปเดต UI
     const idx = room.value.findIndex(r => r._id === id);
     if (idx !== -1) {
-      room.value[idx].statuRoom = statusRoom;
+      room.value[idx].stastuRoom = statusRoom;
     }
     localStorage.setItem('rooms-updated', Date.now())
   } catch (error) {

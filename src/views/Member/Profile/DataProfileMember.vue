@@ -48,6 +48,35 @@
                 <hr class="border" />
               </div>
 
+              <!-- ชื่อโปรไฟล์ -->
+              <div class="mt-8">
+                <div class="flex justify-between items-center">
+                  <div>
+                    <label>ชื่อโปรไฟล์ : {{ profileName }}</label>
+                  </div>
+                  <div v-if="!isEditProfileName">
+                    <button class="bg-red-400 hover:bg-red-300 px-3 py-2 rounded-lg text-white"
+                      @click="editProfileNameFn">แก้ไข</button>
+                  </div>
+                </div>
+
+                <div v-if="isEditProfileName" class="flex flex-col md:flex-row justify-between items-center mt-3">
+                  <div
+                    class="md:md:space-x-2 mt-2 space-y-2 md:space-y-0 flex flex-col md:flex-row  justify-center mb-6 ">
+                    <input v-model="editProfileName" class="border rounded-lg py-2 px-4" placeholder="ชื่อโปรไฟล์" />
+                  </div>
+                  <div class="space-x-3 text-white">
+                    <button class="bg-stone-400 hover:bg-stone-300 px-3 py-2 rounded-lg"
+                      @click="cancelEditProfileName">ยกเลิก</button>
+                    <button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-lg"
+                      @click="saveProfileName">บันทึก</button>
+                  </div>
+                </div>
+              </div>
+              <div class="my-4">
+                <hr class="border" />
+              </div>
+
               <!-- อีเมล -->
               <div>
                 <div class="flex justify-between items-center">
@@ -276,11 +305,32 @@ const editSubdistrict = ref('')
 const editDistrict = ref('')
 const editProvince = ref('')
 
+// ตัวอย่างชื่อโปรไฟล์เริ่มต้น
+const profileName = ref('สมชาย ใจดี');
+const isEditProfileName = ref(false);
+const editProfileName = ref(profileName.value);
+
+// ฟังก์ชันสำหรับแก้ไขชื่อโปรไฟล์โดยเฉพาะ
+function editProfileNameFn() {
+  isEditProfileName.value = true;
+  editProfileName.value = profileName.value;
+}
+function cancelEditProfileName() {
+  isEditProfileName.value = false;
+}
+function saveProfileName() {
+  if (editProfileName.value.trim()) {
+    profileName.value = editProfileName.value.trim();
+    isEditProfileName.value = false;
+  }
+}
+
 // ฟังก์ชันสำหรับแต่ละ section
 function editName() {
+  isEditName.value = true;
   editFirstName.value = firstName.value
   editLastName.value = lastName.value
-  isEditName.value = true
+  editProfileName.value = profileName.value;
 }
 function cancelEditName() {
   isEditName.value = false
@@ -288,6 +338,9 @@ function cancelEditName() {
 function saveName() {
   firstName.value = editFirstName.value
   lastName.value = editLastName.value
+  if (editProfileName.value.trim()) {
+    profileName.value = editProfileName.value.trim();
+  }
   isEditName.value = false
 }
 

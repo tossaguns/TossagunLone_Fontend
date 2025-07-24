@@ -25,6 +25,7 @@ import EditProfile from "../views/Partner/Partner/Profile/EditProfile.vue";
 import ImportantData from "../views/Partner/Partner/AfterLogin/ImportantData.vue";
 import ManageHotel from "../views/Partner/Partner/ManageHotel/ManageHotel.vue";
 import EditManageHotel from "../views/Partner/Partner/ManageHotel/EditManageHotel.vue";
+import MainReview from "../views/Partner/Partner/ManageReview/MainReview.vue";
 //Admin
 import MainManageHotelAdmin from "../views/Admin/ManageHotel/MainManageHotelAdmin.vue";
 import MainSelectType from "../views/Admin/SelectType/MainSelectType.vue";
@@ -36,6 +37,9 @@ import DetailWaitForApprove from "../views/Admin/ManageApprovePartner/DetailWait
 // Employee
 import ProfileEmployee from "../views/Partner/Employee/ProfileEmployee.vue";
 import ManageStatusRoom from "../views/Partner/Employee/ManageStatusRoom.vue";
+import ManageSleepGunWeb from "../views/Partner/Employee/ManageSleepGun/ManageSleepGunWeb.vue";
+import CheckIn from "../views/Partner/Employee/CheckIn.vue";
+import CheckOut from "../views/Partner/Employee/CheckOut.vue";
 //member
 import MainMemberPage from "../views/Member/MainMemberPage.vue";
 import DataMember from "../views/Member/Payment/DataMember.vue";
@@ -78,6 +82,7 @@ const routes = [
   { path: "/importantdata", component: ImportantData },
   { path: "/managehotel", component: ManageHotel },
   { path: "/editmanagehotel", component: EditManageHotel },
+  { path: "/mainreview", component: MainReview },
   //Admin
   { path: "/mainmanagehoteladmin", component: MainManageHotelAdmin },
   { path: "/mainselecttype", component: MainSelectType },
@@ -89,6 +94,9 @@ const routes = [
   //Employee
   { path: "/profileemployee", component: ProfileEmployee },
   { path: "/managestatusroom", component: ManageStatusRoom },
+  { path: "/managesleepgunWeb", component: ManageSleepGunWeb },
+  { path: "/checkin", component: CheckIn },
+  { path: "/checkout", component: CheckOut },
   //Member
   { path: "/mainmemberpage", component: MainMemberPage },
   { path: "/datamember", component: DataMember},

@@ -19,7 +19,10 @@
                 <!-- แสดงค่าอื่นตามปกติ -->
                 <template v-if="key === 'status'">
                   <div class="dropdown-container">
-                    <select class="status-select" :value="pendingStatusMap[row._id] ?? row.status"
+                    <select class="status-select" :class="{
+                      'bg-yellow-200 font-bold': row.status === 'SleepGunWeb',
+                      'bg-white': row.status === 'Walkin'
+                    }" :value="pendingStatusMap[row._id] ?? row.status"
                       @change="(e) => onStatusSelect(row, e.target.value)" @click.stop.prevent @mousedown.stop
                       :disabled="!props.statusOptions || props.statusOptions.length === 0">
                       <option v-for="opt in props.statusOptions" :key="opt" :value="opt">
@@ -28,15 +31,19 @@
                     </select>
                   </div>
                 </template>
-                <template v-else-if="key === 'statusRoom' || key === 'statuRoom'">
+                <template v-else-if="key === 'statusRoom' || key === 'statusRoom'">
                   <div class="dropdown-container">
-                    <select class="status-select" :value="pendingStatusRoomMap[row._id] ?? row[key]"
+                    <select class="status-select" :class="{
+                      'bg-lime-500 text-white font-bold': row[key] === 'เปิดใช้งาน',
+                      'bg-gray-400 text-white font-bold': row[key] === 'ปิดทำการ'
+                    }" :value="pendingStatusRoomMap[row._id] ?? row[key]"
                       @change="(e) => onStatusRoomSelect(row, e.target.value)" @click.stop.prevent @mousedown.stop
                       :disabled="!props.statusRoomOptions || props.statusRoomOptions.length === 0">
                       <option v-for="opt in props.statusRoomOptions" :key="opt" :value="opt">
                         {{ opt }}
                       </option>
                     </select>
+
                   </div>
                 </template>
                 <template v-else-if="key === 'typeRoom'">
@@ -44,6 +51,28 @@
                 </template>
                 <template v-else-if="key === 'imgrooms'">
                   <CustomGallery :images="row.imgrooms" />
+                </template>
+                <template v-else-if="key === 'statusPromotion'">
+                  <div v-if="row.status === 'SleepGunWeb' && props.statusPromotionEditable">
+                    <select class="status-select" :class="{
+                      'bg-lime-100': row.statusPromotion === 'openPromotion'
+                    }" :value="pendingStatusPromotionMap[row._id] ?? row.statusPromotion"
+                      @change="(e) => onStatusPromotionSelect(row, e.target.value)" @click.stop.prevent @mousedown.stop
+                      :disabled="!props.statusPromotionOptions || props.statusPromotionOptions.length === 0">
+                      <option v-for="opt in props.statusPromotionOptions" :key="opt" :value="opt">
+                        {{ opt }}
+                      </option>
+                    </select>
+                  </div>
+                  <div v-else-if="row.status === 'SleepGunWeb' && !props.statusPromotionEditable">
+                    <span :class="{
+                      'text-lime-500 font-bold': row.statusPromotion === 'openPromotion',
+                      'text-stone-400': row.statusPromotion === 'closePromotion'
+                    }">{{ row.statusPromotion || '-' }}</span>
+                  </div>
+                  <div v-else>
+                    <span>-</span>
+                  </div>
                 </template>
                 <template v-else>
                   {{ formatValue(row[key], key) }}
@@ -65,6 +94,7 @@
                   <div v-show="expandedRow === rowIndex" class="overflow-hidden bg-gray-50" ref="detailBox">
                     <div class="p-4 space-y-4 max-h-[570px] overflow-y-auto">
                       <h3 class="text-lg font-bold text-gray-800">รายละเอียดห้องพัก</h3>
+
                       <div class="bg-white rounded-md shadow-sm py-2">
 
                         <div
@@ -76,7 +106,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(1).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(1).key], getFieldByPosition(1).key)
-                                    }}</span>
+                                  }}</span>
                                 </div>
                               </div>
 
@@ -85,7 +115,26 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(10).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(10).key], getFieldByPosition(10).key)
-                                    }}</span>
+                                  }}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div>
+                              <div v-if="getFieldByPosition(11)" class="flex flex-col p-3 col-span-1">
+                                <div class="flex justify-center items-center space-x-3">
+                                  <span class="text-sm text-gray-500">{{ getFieldByPosition(11).label }}</span>
+                                  <span class="text-base text-gray-800 font-medium" :class="{
+                                    'text-lime-600 font-bold': row.statusPromotion === 'openPromotion',
+                                    'text-stone-400': row.statusPromotion === 'closePromotion'
+                                  }">
+                                    <template v-if="row.status === 'SleepGunWeb'">
+                                      {{ row.statusPromotion || '-' }}
+                                    </template>
+                                    <template v-else>
+                                      -
+                                    </template>
+                                  </span>
                                 </div>
                               </div>
                             </div>
@@ -96,7 +145,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(4).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(4).key], getFieldByPosition(4).key)
-                                    }}</span>
+                                  }}</span>
                                 </div>
                               </div>
 
@@ -105,7 +154,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(2).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(2).key], getFieldByPosition(2).key)
-                                    }}</span>
+                                  }}</span>
                                 </div>
                               </div>
                             </div>
@@ -116,7 +165,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(3).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(3).key], getFieldByPosition(3).key)
-                                    }}</span>
+                                  }}</span>
                                 </div>
                               </div>
 
@@ -125,7 +174,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(5).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(5).key], getFieldByPosition(5).key)
-                                    }}</span>
+                                  }}</span>
                                 </div>
                               </div>
                             </div>
@@ -135,7 +184,7 @@
                                 <span class="text-sm text-gray-500">{{ getFieldByPosition(6).label }}</span>
                                 <span class="text-base text-gray-800 font-medium">{{
                                   formatValue(row[getFieldByPosition(6).key], getFieldByPosition(6).key)
-                                  }}</span>
+                                }}</span>
                               </div>
                             </div>
 
@@ -145,7 +194,7 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(7).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(7).key], getFieldByPosition(7).key)
-                                    }}</span>
+                                  }}</span>
                                 </div>
                               </div>
                             </div>
@@ -161,7 +210,7 @@
                                   <CustomGallery />
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(8).key], getFieldByPosition(8).key)
-                                    }}</span>
+                                  }}</span>
                                 </div>
                               </div>
                             </div>
@@ -173,7 +222,7 @@
                             <span class="text-xs pl-6">{{ getFieldByPosition(9).label }}</span>
                             <span class="text-xs font-medium">{{
                               formatValue(row[getFieldByPosition(9).key], getFieldByPosition(9).key)
-                              }}</span>
+                            }}</span>
                           </div>
                         </div>
 
@@ -235,7 +284,10 @@
               <div class="text-gray-800 break-words">
                 <template v-if="key === 'status'">
                   <div class="dropdown-container">
-                    <select class="status-select" :value="pendingStatusMap[row._id] ?? row.status"
+                    <select class="status-select" :class="{
+                      'bg-yellow-200': row.status === 'SleepGunWeb',
+                      'bg-white': row.status === 'Walkin'
+                    }" :value="pendingStatusMap[row._id] ?? row.status"
                       @change="(e) => onStatusSelect(row, e.target.value)" @click.stop.prevent @mousedown.stop
                       :disabled="!props.statusOptions || props.statusOptions.length === 0">
                       <option v-for="opt in props.statusOptions" :key="opt" :value="opt">
@@ -244,9 +296,12 @@
                     </select>
                   </div>
                 </template>
-                <template v-else-if="key === 'statusRoom' || key === 'statuRoom'">
+                <template v-else-if="key === 'statusRoom' || key === 'statusRoom'">
                   <div class="dropdown-container">
-                    <select class="status-select" :value="pendingStatusRoomMap[row._id] ?? row[key]"
+                    <select class="status-select" :class="{
+                      'bg-lime-500 text-white font-bold': row[key] === 'เปิดใช้งาน',
+                      'bg-gray-400 text-white font-bold': row[key] === 'ปิดทำการ'
+                    }" :value="pendingStatusRoomMap[row._id] ?? row[key]"
                       @change="(e) => onStatusRoomSelect(row, e.target.value)" @click.stop.prevent @mousedown.stop
                       :disabled="!props.statusRoomOptions || props.statusRoomOptions.length === 0">
                       <option v-for="opt in props.statusRoomOptions" :key="opt" :value="opt">
@@ -261,6 +316,28 @@
                 <template v-else-if="key === 'imgrooms'">
                   <CustomGallery :images="row.imgrooms" />
                 </template>
+                <template v-else-if="key === 'statusPromotion'">
+                  <div v-if="row.status === 'SleepGunWeb' && props.statusPromotionEditable">
+                    <select class="status-select" :class="{
+                      'bg-lime-100': row.statusPromotion === 'openPromotion'
+                    }" :value="pendingStatusPromotionMap[row._id] ?? row.statusPromotion"
+                      @change="(e) => onStatusPromotionSelect(row, e.target.value)" @click.stop.prevent @mousedown.stop
+                      :disabled="!props.statusPromotionOptions || props.statusPromotionOptions.length === 0">
+                      <option v-for="opt in props.statusPromotionOptions" :key="opt" :value="opt">
+                        {{ opt }}
+                      </option>
+                    </select>
+                  </div>
+                  <div v-else-if="row.status === 'SleepGunWeb' && !props.statusPromotionEditable">
+                    <span :class="{
+                      'text-lime-600 font-bold': row.statusPromotion === 'openPromotion',
+                      'text-stone-400': row.statusPromotion === 'closePromotion'
+                    }">{{ row.statusPromotion || '-' }}</span>
+                  </div>
+                  <div v-else>
+                    <span>-</span>
+                  </div>
+                </template>
                 <template v-else>
                   {{ formatValue(row[key], key) }}
                 </template>
@@ -272,12 +349,12 @@
           <div class="pt-4 flex space-x-2">
             <template v-if="!props.hideEditDelete">
               <button
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow flex-1 transition-shadow duration-200"
+                class=" hover:bg-blue-100 text-blue-600 text-xl font-semibold px-4 py-2 rounded shadow-md flex-1 transition-shadow duration-200"
                 @click="editRow(row)">
                 แก้ไขข้อมูล
               </button>
               <button
-                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow flex-1 transition-shadow duration-200"
+                class=" hover:bg-red-100  text-red-600 text-xl font-semibold px-4 py-2 rounded shadow-md flex-1 transition-shadow duration-200"
                 @click="deleteRow(row)">
                 ลบข้อมูล
               </button>
@@ -336,7 +413,7 @@ const rowsPerPage = ref(5)
 const currentPage = ref(1)
 const expandedRow = ref(null)
 const isAnimating = ref(false)
-const emit = defineEmits(['update-row', 'delete-row', 'update-status', 'confirm-status-change', 'confirm-status-room-change'])
+const emit = defineEmits(['update-row', 'delete-row', 'update-status', 'confirm-status-change', 'confirm-status-room-change', 'confirm-status-promotion-change'])
 
 const showEditModal = ref(false)
 const editForm = reactive({})
@@ -344,6 +421,7 @@ const editForm = reactive({})
 const expandedCardIndex = ref(null);
 const pendingStatusMap = ref({})
 const pendingStatusRoomMap = ref({})
+const pendingStatusPromotionMap = ref({})
 
 const props = defineProps({
   customers: {
@@ -358,6 +436,10 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
+  statusPromotionOptions: {
+    type: Array,
+    default: () => []
+  },
   visibleColumns: {
     type: Array,
     default: () => []
@@ -367,6 +449,10 @@ const props = defineProps({
     default: () => []
   },
   hideEditDelete: {
+    type: Boolean,
+    default: false
+  },
+  statusPromotionEditable: {
     type: Boolean,
     default: false
   }
@@ -410,13 +496,19 @@ function onStatusRoomSelect(row, newStatusRoom) {
   pendingStatusRoomMap.value[row._id] = newStatusRoom
   emit('confirm-status-room-change', { row, newStatusRoom })
 }
+function onStatusPromotionSelect(row, newStatusPromotion) {
+  pendingStatusPromotionMap.value[row._id] = newStatusPromotion
+  emit('confirm-status-promotion-change', { row, newStatusPromotion })
+}
 function resetPendingStatus(rowId) {
   pendingStatusMap.value[rowId] = undefined
   pendingStatusRoomMap.value[rowId] = undefined
+  pendingStatusPromotionMap.value[rowId] = undefined
 }
 function applyPendingStatus(rowId) {
   pendingStatusMap.value[rowId] = undefined
   pendingStatusRoomMap.value[rowId] = undefined
+  pendingStatusPromotionMap.value[rowId] = undefined
 }
 defineExpose({ resetPendingStatus, applyPendingStatus, collapseDetail })
 

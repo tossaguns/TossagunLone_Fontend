@@ -222,7 +222,7 @@ function confirmSave() {
   // สร้าง FormData
   const formData = new FormData();
   formData.append('roomNumber', NumberRoom.value);
-  formData.append('typeRoom', selectedTypeRoom.value);
+  formData.append('typeRoom', typeof selectedTypeRoom.value === 'object' ? selectedTypeRoom.value.value : selectedTypeRoom.value);
   formData.append('price', Price.value);
   formData.append('stayPeople', Stay.value);
   formData.append('roomDetail', RoomDetail.value);
@@ -255,6 +255,12 @@ function confirmSave() {
       console.log('API response:', res.status, data);
       showConfirmSave.value = false;
       if (res.ok) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'บันทึกข้อมูลห้องสำเร็จ',
+          showConfirmButton: false,
+          timer: 1200
+        });
         router.push('/mainmanageroom');
       } else {
         alert('เกิดข้อผิดพลาด: ' + (data.message || JSON.stringify(data)));

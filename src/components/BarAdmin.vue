@@ -140,11 +140,11 @@
         <div class="flex flex-col justify-center mt-6 space-x-2 text-sm">
           <p class="text-center text-stone-400">
             {{ t('Role') }}
-            <span class=" text-lg text-amber-500 font-bold">{{
+            <span class=" text-lg text-[#3D795A] font-bold">{{
               partner.role }}</span>
           </p>
           <div v-show="!isCollapsed"
-            class="text-center mt-1 transition-transform duration-300 group-hover:scale-110 text-stone-500 bg-amber-100 py-1 rounded-lg mx-4">
+            class="text-center mt-1 transition-transform duration-300 group-hover:scale-110 text-stone-500 bg-lime-100 py-1 rounded-lg mx-4">
             <div class="flex space-x-2 justify-center">
               <p>{{ partner.firstname }}</p>
               <p> {{ partner.lastname }}</p>

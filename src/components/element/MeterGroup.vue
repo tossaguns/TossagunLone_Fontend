@@ -3,8 +3,8 @@
   <div class=" w-full max-w-md">
     <div v-for="(item, index) in value" :key="index" class="mb-4">
       <div class="flex justify-between">
-        <span class="text-sm font-medium">{{ item.label }}</span>
-        <span class="text-sm font-medium">{{ item.value }}%</span>
+        <span class="md:text-sm text-xxs font-medium">{{ item.label }}</span>
+        <span class="md:text-sm text-xxs font-medium">{{ item.value }}%</span>
       </div>
       <div class="w-full bg-gray-200 rounded-full h-2">
         <div
