@@ -30,7 +30,8 @@
     "vue-i18n": "^11.1.9",
     "vue-router": "^4.5.1",
     "vue-signature-pad": "^3.0.2",
-    "vue-tailwind-datepicker": "^1.7.3"
+    "vue-tailwind-datepicker": "^1.7.3",
+    "vue3-slide-up-down": "^2.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.3",

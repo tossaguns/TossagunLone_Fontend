@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen">
+  <div class="min-h-screen minimal-scrollbar">
     <router-view />
   </div>
 </template>
@@ -47,7 +47,8 @@ onMounted(() => {
   font-family: "Itim", cursive;
 }
 
-.dropdown-container, .status-select {
+.dropdown-container,
+.status-select {
   z-index: 9999 !important;
   pointer-events: auto !important;
   position: relative;

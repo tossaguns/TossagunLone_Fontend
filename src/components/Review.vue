@@ -2,7 +2,7 @@
   <div class="mx-4 md:p-4">
     <div>
       <div
-        class="flex flex-col md:flex-row justify-between items-center mt-2  border shadow py-8 mx-12 px-8 rounded-lg mb-12">
+        class="flex flex-col md:flex-row justify-between items-center mt-2  border shadow py-8 md:mx-12 px-8 rounded-lg mb-12">
         <div class="md:w-1/2 flex flex-col md:flex-row justify-center md:pr-6">
           <div>
             <label class="text-xs md:text-base">จำนวนรีวิวทั้งหมด : <span class="font-bold px-2">{{ reviews.length

@@ -110,8 +110,6 @@
               </div>
 
 
-
-
               <div class="w-9/12">
                 <div>
                   <label class="text-sm font-bold">ห้องพักทั้งหมด {{ allRooms.length }} รายการ</label>
@@ -161,13 +159,13 @@ const selectedFood = ref([]);
 const allRooms = [
   // 3 ตัวอย่างแรก
   {
-    roomCode: 'R001', roomType: 'ห้องธรรมดา', maxGuests: 2, description: 'ห้องพักเรียบง่ายพร้อมสิ่งอำนวยความสะดวกพื้นฐาน', discountPrice: 1200, facilities: [{ icon: '/images/icon/bed.png', label: 'เตียงนุ่มสบาย' }, { icon: '/images/icon/wifi.png', label: 'ฟรี Wi-Fi' }], images: ['/imgHotel/sea.jpg', '/imgHotel/imgprovince/Bangkok.jpg'], extraBed: true, addBedPrice: 400,
+    roomCode: 'R001', roomType: 'ห้องธรรมดา', maxGuests: 2, description: 'ห้องพักเรียบง่ายพร้อมสิ่งอำนวยความสะดวกพื้นฐาน', discountPrice: 1200, facilities: [{ icon: '/images/icon/bed.png', label: 'เตียงนุ่มสบาย' }, { icon: '/images/icon/wifi.png', label: 'ฟรี Wi-Fi' }], images: ['/imgHotel/sea.jpg', '/imgHotel/imgprovince/Bangkok.jpg'],
   },
   {
-    roomCode: 'R002', roomType: 'ห้องวิวทะเล', maxGuests: 3, description: 'สัมผัสวิวทะเลสวยจากระเบียงส่วนตัว', discountPrice: 2500, facilities: [{ icon: '/images/icon/sea.png', label: 'วิวทะเล' }, { icon: '/images/icon/aircon.png', label: 'แอร์เย็นฉ่ำ' }], images: ['/imgHotel/sea.jpg', '/imgHotel/imgprovince/Phuket.jpg'], extraBed: true, addBedPrice: 400,
+    roomCode: 'R002', roomType: 'ห้องวิวทะเล', maxGuests: 3, description: 'สัมผัสวิวทะเลสวยจากระเบียงส่วนตัว', originalPrice: 2800, discountPrice: 2500, facilities: [{ icon: '/images/icon/sea.png', label: 'วิวทะเล' }, { icon: '/images/icon/aircon.png', label: 'แอร์เย็นฉ่ำ' }], images: ['/imgHotel/sea.jpg', '/imgHotel/imgprovince/Phuket.jpg'],
   },
   {
-    roomCode: 'R003', roomType: 'ห้องสวีท', maxGuests: 4, description: 'ห้องพักหรูหราสำหรับครอบครัวหรือคู่รัก', discountPrice: 4200, facilities: [{ icon: '/images/icon/bathtub.png', label: 'อ่างอาบน้ำ' }, { icon: '/images/icon/tv.png', label: 'ทีวีจอใหญ่' }], images: ['/imgHotel/sea.jpg', '/imgHotel/imgprovince/Chonburi.jpg'], extraBed: true, addBedPrice: 400,
+    roomCode: 'R003', roomType: 'ห้องสวีท', maxGuests: 4, description: 'ห้องพักหรูหราสำหรับครอบครัวหรือคู่รัก', originalPrice: 4500, discountPrice: 4200, facilities: [{ icon: '/images/icon/bathtub.png', label: 'อ่างอาบน้ำ' }, { icon: '/images/icon/tv.png', label: 'ทีวีจอใหญ่' }], images: ['/imgHotel/sea.jpg', '/imgHotel/imgprovince/Chonburi.jpg'],
   },
   // mock 4-20
   ...Array.from({ length: 17 }, (_, i) => ({
@@ -181,8 +179,8 @@ const allRooms = [
       { icon: '/images/icon/wifi.png', label: 'ฟรี Wi-Fi' },
     ],
     images: ['/imgHotel/sea.jpg', '/imgHotel/imgprovince/Bangkok.jpg'],
-    extraBed: true,
-    addBedPrice: 400,
+
+
   }))
 ];
 const rooms = ref([]);

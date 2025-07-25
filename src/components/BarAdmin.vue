@@ -77,7 +77,7 @@
           </div>
         </div>
 
-      
+
         <div @click="navigateTo('/mainmanagepromotion', 'promotion')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
@@ -96,7 +96,7 @@
           </div>
         </div>
 
-        <div @click="navigateTo('/', 'managehotel')"
+        <div @click="navigateTo('/mainmanagehoteladmin', 'managehotel')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
             activeMenu === 'managehotel' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
@@ -108,16 +108,16 @@
             <transition name="fade-slide" mode="out-in" appear>
               <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
                 :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
-                จัดการโรงเเรมในเครือ
+                จัดการพาร์ทเนอร์
               </p>
             </transition>
           </div>
         </div>
 
-        <div @click="navigateTo('/managemember', 'managemember')"
+        <div @click="navigateTo('/mainmanagemember', 'managemember')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#3D795A] hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
-            activeMenu === 'managehotel' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
+            activeMenu === 'managemember' ? 'bg-[#3D795A] text-white drop-shadow-lg' : '',
             isCollapsed ? 'px-3' : 'px-3'
           ]">
           <div class="flex items-center gap-3 ml-3 transition-all duration-300">
@@ -131,7 +131,7 @@
             </transition>
           </div>
         </div>
-        
+
         <div v-show="!isCollapsed" class="mt-12">
           <FontAndLangSelector />
         </div>
@@ -273,8 +273,9 @@ function getActiveMenuFromRoute() {
     '/detailhotel': 'editproflie',
 
     '/mainmanagehoteladmin': 'managehotel',
-    '/addroom': 'managehotel',
-    '/editroom': 'managehotel',
+    '/mainmanagemember': 'managemember',
+
+
     '/mainselecttype': 'selecttype',
     '/maincheckincheckout': 'selecttype',
     '/checkin': 'selecttype',

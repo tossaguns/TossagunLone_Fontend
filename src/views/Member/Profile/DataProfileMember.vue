@@ -52,30 +52,33 @@
               <div class="mt-8">
                 <div class="flex justify-between items-center">
                   <div>
-                    <label>ชื่อโปรไฟล์ : {{ profileName }}</label>
+                    <label>ชื่อโปรไฟล์ : {{ nameProfile }}</label>
                   </div>
-                  <div v-if="!isEditProfileName">
+                  <div v-if="!isEditProfile">
                     <button class="bg-red-400 hover:bg-red-300 px-3 py-2 rounded-lg text-white"
-                      @click="editProfileNameFn">แก้ไข</button>
+                      @click="editProfile">แก้ไข</button>
                   </div>
                 </div>
 
-                <div v-if="isEditProfileName" class="flex flex-col md:flex-row justify-between items-center mt-3">
+                <div v-if="isEditProfile" class="flex flex-col md:flex-row justify-between items-center mt-3">
                   <div
                     class="md:md:space-x-2 mt-2 space-y-2 md:space-y-0 flex flex-col md:flex-row  justify-center mb-6 ">
-                    <input v-model="editProfileName" class="border rounded-lg py-2 px-4" placeholder="ชื่อโปรไฟล์" />
+                    <input v-model="editNameProfile" class="border rounded-lg py-2 px-4" placeholder="ชื่อโปรไฟล์" />
                   </div>
                   <div class="space-x-3 text-white">
                     <button class="bg-stone-400 hover:bg-stone-300 px-3 py-2 rounded-lg"
-                      @click="cancelEditProfileName">ยกเลิก</button>
+                      @click="cancelEditProfile">ยกเลิก</button>
                     <button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-lg"
-                      @click="saveProfileName">บันทึก</button>
+                      @click="saveProfile">บันทึก</button>
                   </div>
                 </div>
               </div>
               <div class="my-4">
                 <hr class="border" />
               </div>
+
+
+
 
               <!-- อีเมล -->
               <div>
@@ -306,22 +309,21 @@ const editDistrict = ref('')
 const editProvince = ref('')
 
 // ตัวอย่างชื่อโปรไฟล์เริ่มต้น
-const profileName = ref('สมชาย ใจดี');
-const isEditProfileName = ref(false);
-const editProfileName = ref(profileName.value);
+const nameProfile = ref('สมชายใจดี');
+const isEditProfile = ref(false);
+const editNameProfile = ref(nameProfile.value);
 
-// ฟังก์ชันสำหรับแก้ไขชื่อโปรไฟล์โดยเฉพาะ
-function editProfileNameFn() {
-  isEditProfileName.value = true;
-  editProfileName.value = profileName.value;
+function editProfile() {
+  isEditProfile.value = true;
+  editNameProfile.value = nameProfile.value;
 }
-function cancelEditProfileName() {
-  isEditProfileName.value = false;
+function cancelEditProfile() {
+  isEditProfile.value = false;
 }
-function saveProfileName() {
-  if (editProfileName.value.trim()) {
-    profileName.value = editProfileName.value.trim();
-    isEditProfileName.value = false;
+function saveProfile() {
+  if (editNameProfile.value.trim()) {
+    nameProfile.value = editNameProfile.value.trim();
+    isEditProfile.value = false;
   }
 }
 

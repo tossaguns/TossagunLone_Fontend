@@ -194,7 +194,7 @@ import Footer from "@components/FooterLoneTossagun.vue";
 import Gallery from "@components/element/Gallery.vue";
 import Roomlist from "@components/element/Roomlist.vue";
 import About from "./All/About.vue";
-import Review from "./All/Review.vue";
+import Review from "@components/Review.vue";
 import BarDateMember from "@components/BarDateMember.vue";
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router';

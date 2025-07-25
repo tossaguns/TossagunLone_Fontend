@@ -34,6 +34,7 @@ import AddPromotion from "../views/Admin/Promotion/AddPromotion.vue";
 import EditPromotion from "../views/Admin/Promotion/EditPromotion.vue";
 import MainManageApprovePartner from "../views/Admin/ManageApprovePartner/MainManageApprovePartner.vue";
 import DetailWaitForApprove from "../views/Admin/ManageApprovePartner/DetailWaitForApprove.vue";
+import MainManageMember from "../views/Admin/ManageMember/MainManageMember.vue";
 // Employee
 import ProfileEmployee from "../views/Partner/Employee/ProfileEmployee.vue";
 import ManageStatusRoom from "../views/Partner/Employee/ManageStatusRoom.vue";
@@ -83,6 +84,7 @@ const routes = [
   { path: "/managehotel", component: ManageHotel },
   { path: "/editmanagehotel", component: EditManageHotel },
   { path: "/mainreview", component: MainReview },
+ 
   //Admin
   { path: "/mainmanagehoteladmin", component: MainManageHotelAdmin },
   { path: "/mainselecttype", component: MainSelectType },
@@ -91,6 +93,7 @@ const routes = [
   { path: "/editpromotion/:id", component: EditPromotion },
   { path: "/mainmanageapprovepartner", component: MainManageApprovePartner },
   { path: "/detailwaitforapprove/:id", component: DetailWaitForApprove },
+  { path: "/mainmanagemember", component: MainManageMember },
   //Employee
   { path: "/profileemployee", component: ProfileEmployee },
   { path: "/managestatusroom", component: ManageStatusRoom },
