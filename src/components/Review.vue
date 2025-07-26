@@ -24,7 +24,7 @@
       <!-- member ที่เข้าพักเป็ฯคนรีวิว -->
       <div class="mt-16">
         <div v-for="(item, idx) in paginatedReviews" :key="idx"
-          class="border rounded-lg py-4 md:px-12 px-4 md:mx-12 md:mb-4 mb-2">
+          class="border rounded-lg py-4 md:px-12 px-4  md:mb-4 mb-2">
           <div>
             <div class="flex space-x-2">
               <div>
@@ -68,8 +68,8 @@
 
               <button class="bg-stone-400 text-white px-2 py-1 rounded text-xxxs md:text-xs mt-2"
                 @click="toggleReplyBox(idx)">ตอบกลับ</button>
-              <div v-if="replyBoxOpen[idx]" class="w-full md:w-2/3 mt-2">
-                <textarea v-model="replyText[idx]" rows="3" class="w-full border rounded p-2 text-xs md:text-base"
+              <div v-if="replyBoxOpen[idx]" class="w-full mt-2">
+                <textarea v-model="replyText[idx]" rows="3" class="w-full border rounded p-2 text-xs md:text-base bg-stone-50"
                   placeholder="พิมพ์ข้อความตอบกลับ..."></textarea>
                 <div class="flex justify-end space-x-2 mt-2">
                   <button class="bg-red-500 text-white px-2 py-1 rounded text-xxxs md:text-xs"

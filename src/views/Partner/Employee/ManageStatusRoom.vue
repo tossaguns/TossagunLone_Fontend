@@ -14,7 +14,8 @@
             :visibleColumns="['status', 'statusRoom', 'roomNumber', 'typeRoom', 'price', 'stayPeople', 'statusPromotion']"
             :fieldLayout="fieldLayout" :hideEditDelete="true" @confirm-status-change="onConfirmStatusChange"
             @confirm-status-room-change="onConfirmStatusRoomChange"
-            @confirm-status-promotion-change="onConfirmStatusPromotionChange" :statusPromotionEditable="false" />
+            @confirm-status-promotion-change="onConfirmStatusPromotionChange" :statusPromotionEditable="false"
+            :statusEditable="statusEditable" :statusRoomEditable="statusRoomEditable" />
         </div>
       </div>
       <Confirm :show="showConfirm" :onConfirm="confirmStatusChange" :onCancel="cancelStatusChange">
@@ -142,6 +143,50 @@ function cancelStatusRoomChange() {
 const showConfirmPromotion = ref(false)
 const pendingStatusPromotionChange = ref({ row: null, newStatusPromotion: null })
 
+const statusEditable = ref(false)
+const statusRoomEditable = ref(false)
+
+// โหลดข้อมูลห้องพัก และสถานะที่เลือกได้
+onMounted(async () => {
+  await fetchStatusOptions(); // โหลด status options ก่อน
+  await fetchRooms(); // แล้วค่อยโหลด rooms
+  window.addEventListener('storage', onStorageChange)
+
+  // โหลดค่าจาก localStorage เมื่อ component mount
+  loadStatusEditableSettings()
+
+  // เพิ่ม event listener สำหรับ localStorage changes
+  window.addEventListener('storage', onStatusEditableChange)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('storage', onStorageChange)
+  window.removeEventListener('storage', onStatusEditableChange)
+})
+
+function onStatusEditableChange(e) {
+  if (e.key === 'statusEditable' || e.key === 'statusRoomEditable') {
+    loadStatusEditableSettings()
+  }
+}
+
+function loadStatusEditableSettings() {
+  const savedStatusEditable = localStorage.getItem('statusEditable')
+  const savedStatusRoomEditable = localStorage.getItem('statusRoomEditable')
+  if (savedStatusEditable !== null) {
+    statusEditable.value = savedStatusEditable === 'true'
+  }
+  if (savedStatusRoomEditable !== null) {
+    statusRoomEditable.value = savedStatusRoomEditable === 'true'
+  }
+}
+
+function onStorageChange(e) {
+  if (e.key === 'rooms-updated') {
+    fetchRooms()
+  }
+}
+
 function onConfirmStatusPromotionChange({ row, newStatusPromotion }) {
   pendingStatusPromotionChange.value = { row, newStatusPromotion }
   showConfirmPromotion.value = true
@@ -164,23 +209,6 @@ function cancelStatusPromotionChange() {
     tableRef.value.resetPendingStatus(pendingStatusPromotionChange.value.row._id)
   }
   pendingStatusPromotionChange.value = { row: null, newStatusPromotion: null }
-}
-
-// โหลดข้อมูลห้องพัก และสถานะที่เลือกได้
-onMounted(async () => {
-  await fetchStatusOptions(); // โหลด status options ก่อน
-  await fetchRooms(); // แล้วค่อยโหลด rooms
-  window.addEventListener('storage', onStorageChange)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('storage', onStorageChange)
-})
-
-function onStorageChange(e) {
-  if (e.key === 'rooms-updated') {
-    fetchRooms()
-  }
 }
 
 async function fetchRooms() {

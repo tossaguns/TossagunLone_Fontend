@@ -54,7 +54,10 @@
 
             <div class="xl:w-3/12 text-center">{{ member.email }}</div>
             <div class="xl:w-2/12 text-center">{{ member.phone }}</div>
-            <div class="xl:w-1/6 text-center">{{ member.createdAt }}</div>
+
+
+            <div class="xl:w-1/6 text-center hidden xl:block">{{ member.createdAt }}</div>
+            <div class="xl:w-1/6 text-center  xl:hidden text-sm text-stone-400">วันที่สมัครสมาชิก : {{ member.createdAt }}</div>
 
             <div class="xl:w-1/6 text-center">
               <button class="mt-2 xl:mt-0 xl:ml-4 bg-green-600 hover:bg-green-500 text-white px-3 py-1 rounded-lg"

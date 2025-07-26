@@ -20,6 +20,18 @@
                 </div>
               </div>
               <div class="w-full mt-2">
+                <div class="flex flex-col mb-2 space-y-2">
+                  <div>
+                    <label>ให้เเสดง<span class="font-bold px-2">สถานะ</span>ใน Employee เป็น</label>
+                    <button class="ml-2 px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 text-xs"
+                      @click="openStatusEditablePopup">{{ statusEditable ? 'Dropdown' : 'Text' }}</button>
+                  </div>
+                  <div>
+                    <label>ให้เเสดง<span class="font-bold p-2">สถานะห้อง</span>ใน Employee เป็น</label>
+                    <button class="ml-2 px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 text-xs"
+                      @click="openStatusRoomEditablePopup">{{ statusRoomEditable ? 'Dropdown' : 'Text' }}</button>
+                  </div>
+                </div>
                 <TableModelBasic ref="tableRef" :customers="room" :statusOptions="statusOptions"
                   :statusRoomOptions="statusRoomOptions" :statusPromotionOptions="['openPromotion', 'closePromotion']"
                   :visibleColumns="['status', 'statusRoom', 'roomNumber', 'typeRoom', 'price', 'statusPromotion']"
@@ -40,6 +52,41 @@
       </Confirm>
     </template>
   </TemplatePartner>
+  <!-- Popup เลือกเปิด/ปิด dropdown -->
+  <div v-if="showStatusEditablePopup"
+    class="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+    <div class="bg-white p-6 rounded shadow-lg w-[90%] max-w-xs relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+        @click="closeStatusEditablePopup">✕</button>
+      <h3 class="text-lg font-bold mb-4">ตั้งค่าการแก้ไขสถานะ</h3>
+      <div class="mb-4">
+        <label class="block mb-1">สถานะ</label>
+        <select v-model="statusEditable" class="border rounded px-2 py-1 w-full">
+          <option :value="true">Dropdown</option>
+          <option :value="false">Text</option>
+        </select>
+      </div>
+      <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full"
+        @click="closeStatusEditablePopup">บันทึก</button>
+    </div>
+  </div>
+  <div v-if="showStatusRoomEditablePopup"
+    class="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+    <div class="bg-white p-6 rounded shadow-lg w-[90%] max-w-xs relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+        @click="closeStatusRoomEditablePopup">✕</button>
+      <h3 class="text-lg font-bold mb-4">ตั้งค่าการแก้ไขสถานะห้อง</h3>
+      <div class="mb-4">
+        <label class="block mb-1">สถานะห้อง</label>
+        <select v-model="statusRoomEditable" class="border rounded px-2 py-1 w-full">
+          <option :value="true">Dropdown</option>
+          <option :value="false">Text</option>
+        </select>
+      </div>
+      <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full"
+        @click="closeStatusRoomEditablePopup">บันทึก</button>
+    </div>
+  </div>
 </template>
 
 
@@ -69,7 +116,7 @@ const fieldLayout = ref([
   { key: "imgrooms", label: "รูป", position: 8 },
   { key: "timestamps", label: "เวลา", position: 9 },
   { key: "statusRoom", label: "สถานะห้อง", position: 10 },
-  { key: "statusPromotion", label: "สถานะการใช้งานโปรโฒชั่น", position: 11 },
+  { key: "statusPromotion", label: "สถานะการใช้งานโปรโมชั่น", position: 11 },
 ]);
 
 const showConfirm = ref(false)
@@ -361,4 +408,34 @@ async function deleteRoom(roomToDelete) {
     alert("เกิดข้อผิดพลาดในการลบห้อง");
   }
 }
+
+const statusEditable = ref(true)
+const statusRoomEditable = ref(true)
+const showStatusEditablePopup = ref(false)
+const showStatusRoomEditablePopup = ref(false)
+
+function openStatusEditablePopup() { showStatusEditablePopup.value = true }
+function closeStatusEditablePopup() {
+  showStatusEditablePopup.value = false
+  // บันทึกค่าไป localStorage เพื่อส่งไปหน้า ManageStatusRoom
+  localStorage.setItem('statusEditable', statusEditable.value.toString())
+}
+function openStatusRoomEditablePopup() { showStatusRoomEditablePopup.value = true }
+function closeStatusRoomEditablePopup() {
+  showStatusRoomEditablePopup.value = false
+  // บันทึกค่าไป localStorage เพื่อส่งไปหน้า ManageStatusRoom
+  localStorage.setItem('statusRoomEditable', statusRoomEditable.value.toString())
+}
+
+// โหลดค่าจาก localStorage เมื่อ component mount
+onMounted(() => {
+  const savedStatusEditable = localStorage.getItem('statusEditable')
+  const savedStatusRoomEditable = localStorage.getItem('statusRoomEditable')
+  if (savedStatusEditable !== null) {
+    statusEditable.value = savedStatusEditable === 'true'
+  }
+  if (savedStatusRoomEditable !== null) {
+    statusRoomEditable.value = savedStatusRoomEditable === 'true'
+  }
+})
 </script>

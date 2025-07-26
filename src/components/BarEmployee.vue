@@ -92,6 +92,23 @@
             </transition>
           </div>
         </div>
+        <div @click="navigateTo('/mainicomeemployee', 'income')"
+          class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-stone-500 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
+          :class="[
+            activeMenu === 'income' ? 'bg-stone-500 text-white drop-shadow-lg' : '',
+            isCollapsed ? 'px-3' : 'px-3'
+          ]">
+          <div class="flex items-center gap-3 ml-3 transition-all duration-300">
+            <img src="/images/icon/profile.png" alt="icon"
+              class="w-4 h-5 object-contain transition-transform duration-300 group-hover:scale-110" />
+            <transition name="fade-slide" mode="out-in" appear>
+              <p class="transition-all duration-300 whitespace-nowrap overflow-hidden"
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'">
+                รายได้รวม
+              </p>
+            </transition>
+          </div>
+        </div>
         <div @click="navigateTo('/profileemployee', 'proflie')"
           class="group mb-2 font-semibold py-2 rounded-lg transition duration-300 hover:bg-stone-500 hover:text-white hover:drop-shadow-lg flex items-center cursor-pointer"
           :class="[
@@ -254,8 +271,8 @@ function getActiveMenuFromRoute() {
     '/editroom': 'manageroom',
     '/mainhotelroom': 'stayroom',
     '/maincheckincheckout': 'stayroom',
-    '/checkin': 'stayroom',
-    '/checkout': 'stayroom',
+  
+    '/mainincomeemployee': 'income',
     '/mainhoteldetailroom': 'stayroom',
     '/mainbookingtossagun': 'reservetossagun',
     '/maindetailbookingtossagun': 'reservetossagun',

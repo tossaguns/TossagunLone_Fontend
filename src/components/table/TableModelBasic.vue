@@ -18,7 +18,7 @@
                 @click="key === 'status' ? null : handleExpand(rowIndex)">
                 <!-- แสดงค่าอื่นตามปกติ -->
                 <template v-if="key === 'status'">
-                  <div class="dropdown-container">
+                  <div v-if="props.statusEditable" class="dropdown-container">
                     <select class="status-select" :class="{
                       'bg-yellow-200 font-bold': row.status === 'SleepGunWeb',
                       'bg-white': row.status === 'Walkin'
@@ -30,9 +30,18 @@
                       </option>
                     </select>
                   </div>
+                  <div v-else class="status-display" :class="{
+                    'bg-yellow-200 font-bold px-3 py-1 rounded': row.status === 'SleepGunWeb',
+                    'bg-white border px-3 py-1 rounded': row.status === 'Walkin',
+                    'bg-gray-200 px-3 py-1 rounded': row.status === 'Available',
+                    'bg-red-200 px-3 py-1 rounded': row.status === 'Occupied',
+                    'bg-orange-200 px-3 py-1 rounded': row.status === 'Maintenance'
+                  }">
+                    {{ row.status }}
+                  </div>
                 </template>
                 <template v-else-if="key === 'statusRoom' || key === 'statusRoom'">
-                  <div class="dropdown-container">
+                  <div v-if="props.statusRoomEditable" class="dropdown-container">
                     <select class="status-select" :class="{
                       'bg-lime-500 text-white font-bold': row[key] === 'เปิดใช้งาน',
                       'bg-gray-400 text-white font-bold': row[key] === 'ปิดทำการ'
@@ -43,7 +52,12 @@
                         {{ opt }}
                       </option>
                     </select>
-
+                  </div>
+                  <div v-else class="status-display" :class="{
+                    'bg-lime-500 text-white font-bold px-3 py-1 rounded': row[key] === 'เปิดใช้งาน',
+                    'bg-gray-400 text-white font-bold px-3 py-1 rounded': row[key] === 'ปิดทำการ'
+                  }">
+                    {{ row[key] }}
                   </div>
                 </template>
                 <template v-else-if="key === 'typeRoom'">
@@ -283,7 +297,7 @@
               <div class="text-gray-600 font-semibold">{{ columnLabels[key] || key }}</div>
               <div class="text-gray-800 break-words">
                 <template v-if="key === 'status'">
-                  <div class="dropdown-container">
+                  <div v-if="props.statusEditable" class="dropdown-container">
                     <select class="status-select" :class="{
                       'bg-yellow-200': row.status === 'SleepGunWeb',
                       'bg-white': row.status === 'Walkin'
@@ -295,9 +309,18 @@
                       </option>
                     </select>
                   </div>
+                  <div v-else class="status-display" :class="{
+                    'bg-yellow-200 font-bold px-3 py-1 rounded': row.status === 'SleepGunWeb',
+                    'bg-white border px-3 py-1 rounded': row.status === 'Walkin',
+                    'bg-gray-200 px-3 py-1 rounded': row.status === 'Available',
+                    'bg-red-200 px-3 py-1 rounded': row.status === 'Occupied',
+                    'bg-orange-200 px-3 py-1 rounded': row.status === 'Maintenance'
+                  }">
+                    {{ row.status }}
+                  </div>
                 </template>
                 <template v-else-if="key === 'statusRoom' || key === 'statusRoom'">
-                  <div class="dropdown-container">
+                  <div v-if="props.statusRoomEditable" class="dropdown-container">
                     <select class="status-select" :class="{
                       'bg-lime-500 text-white font-bold': row[key] === 'เปิดใช้งาน',
                       'bg-gray-400 text-white font-bold': row[key] === 'ปิดทำการ'
@@ -308,6 +331,12 @@
                         {{ opt }}
                       </option>
                     </select>
+                  </div>
+                  <div v-else class="status-display" :class="{
+                    'bg-lime-500 text-white font-bold px-3 py-1 rounded': row[key] === 'เปิดใช้งาน',
+                    'bg-gray-400 text-white font-bold px-3 py-1 rounded': row[key] === 'ปิดทำการ'
+                  }">
+                    {{ row[key] }}
                   </div>
                 </template>
                 <template v-else-if="key === 'typeRoom'">
@@ -455,6 +484,14 @@ const props = defineProps({
   statusPromotionEditable: {
     type: Boolean,
     default: false
+  },
+  statusEditable: {
+    type: Boolean,
+    default: true
+  },
+  statusRoomEditable: {
+    type: Boolean,
+    default: true
   }
 })
 
