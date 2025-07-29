@@ -18,6 +18,10 @@
                 <div>
                   <label>จำนวนห้องพักปัจจุบัน : {{ room.length }}</label>
                 </div>
+                <div>
+                  <label>โควต้าห้อง SleepGun : {{ quotaData.currentCount || 0 }}/{{ quotaData.maxQuota || 5 }} (เหลือ {{
+                    quotaData.remaining || 5 }} ห้อง)</label>
+                </div>
               </div>
               <div class="w-full mt-2">
                 <div class="flex flex-col mb-2 space-y-2">
@@ -34,7 +38,7 @@
                 </div>
                 <TableModelBasic ref="tableRef" :customers="room" :statusOptions="statusOptions"
                   :statusRoomOptions="statusRoomOptions" :statusPromotionOptions="['openPromotion', 'closePromotion']"
-                  :visibleColumns="['status', 'statusRoom', 'roomNumber', 'typeRoom', 'price', 'statusPromotion']"
+                  :visibleColumns="['status', 'statusRoom', 'roomNumber', 'typeRoom', 'price', 'air', 'statusPromotion']"
                   :fieldLayout="fieldLayout" @update-status="updateRoomStatus" @update-row="updateRoom"
                   @delete-row="deleteRoom" @confirm-status-change="onConfirmStatusChange"
                   @confirm-status-room-change="onConfirmStatusRoomChange" @edit-row="goToEditRoom"
@@ -102,6 +106,12 @@ import Swal from 'sweetalert2';
 const room = ref([]);
 const statusOptions = ref([]);
 const statusRoomOptions = ref(["เปิดใช้งาน", "ปิดทำการ"]);
+const quotaData = ref({
+  currentCount: 0,
+  maxQuota: 5,
+  remaining: 5,
+  isFull: false
+});
 
 const tableRef = ref(null); // <--- เพิ่ม ref สำหรับ TableModelBasic
 
@@ -117,6 +127,7 @@ const fieldLayout = ref([
   { key: "timestamps", label: "เวลา", position: 9 },
   { key: "statusRoom", label: "สถานะห้อง", position: 10 },
   { key: "statusPromotion", label: "สถานะการใช้งานโปรโมชั่น", position: 11 },
+  { key: "air", label: "ประเภทพัดลม/แอร์", position: 12 },
 ]);
 
 const showConfirm = ref(false)
@@ -135,15 +146,23 @@ function onConfirmStatusChange({ row, newStatus }) {
       if (tableRef.value && typeof tableRef.value.applyPendingStatus === 'function') {
         tableRef.value.applyPendingStatus(row._id)
       }
-      await updateRoomStatus({ id: row._id, status: newStatus })
-      await fetchRooms()
-      Swal.fire({
-        title: 'สำเร็จ!',
-        text: 'เปลี่ยนสถานะเรียบร้อยแล้ว',
-        icon: 'success',
-        timer: 1500,
-        showConfirmButton: false
-      });
+
+      try {
+        await updateRoomStatus({ id: row._id, status: newStatus })
+        await fetchRooms()
+
+        // แสดง success message เฉพาะเมื่อไม่ใช่ error โควต้าเต็ม
+        Swal.fire({
+          title: 'สำเร็จ!',
+          text: 'เปลี่ยนสถานะเรียบร้อยแล้ว',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      } catch (error) {
+        // ไม่ต้องแสดง success message เพราะ updateRoomStatus จะจัดการ error เอง
+        console.log('Status update completed with error handling');
+      }
     } else {
       if (tableRef.value && typeof tableRef.value.resetPendingStatus === 'function') {
         tableRef.value.resetPendingStatus(row._id)
@@ -274,19 +293,22 @@ async function fetchRooms() {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     console.log("Rooms loaded:", res.data); // debug ดูข้อมูลที่ backend ส่งมา
-    room.value = res.data.map(r => ({
-      ...r,
-      typeRoomName: r.typeRoom?.name || '-',
-      // map typeRoomHotel เป็น array ของ object { name }
-      typeRoomHotel: Array.isArray(r.typeRoomHotel)
-        ? r.typeRoomHotel.map(h => typeof h === 'object' ? h : { name: h })
-        : [],
-      imgrooms: (r.imgrooms || []).map(filename => ({
-        itemImageSrc: `http://localhost:9999/uploads/room/${filename}`,
-        thumbnailImageSrc: `http://localhost:9999/uploads/room/${filename}`,
-        alt: r.roomNumber || 'room'
-      }))
-    }));
+    room.value = res.data.map(r => {
+      console.log("Room air data:", r.air); // debug ดูข้อมูล air
+      return {
+        ...r,
+        typeRoomName: r.typeRoom?.name || '-',
+        // map typeRoomHotel เป็น array ของ object { name }
+        typeRoomHotel: Array.isArray(r.typeRoomHotel)
+          ? r.typeRoomHotel.map(h => typeof h === 'object' ? h : { name: h })
+          : [],
+        imgrooms: (r.imgrooms || []).map(filename => ({
+          itemImageSrc: `http://localhost:9999/uploads/room/${filename}`,
+          thumbnailImageSrc: `http://localhost:9999/uploads/room/${filename}`,
+          alt: r.roomNumber || 'room'
+        }))
+      };
+    });
   } catch (error) {
     console.error("Error fetching rooms:", error);
   }
@@ -304,6 +326,27 @@ async function fetchStatusOptions() {
     console.error("Error fetching status options:", error);
     // กรณี error ตั้งสถานะ default เอง
     statusOptions.value = ["SleepGunWeb", "Walkin", "Available", "Occupied", "Maintenance"];
+  }
+}
+
+// ดึงข้อมูลโควต้า SleepGun
+async function fetchQuotaData() {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.get("http://localhost:9999/HotelSleepGun/room/sleepgun-quota", {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    console.log("Quota data loaded:", res.data);
+    quotaData.value = res.data;
+  } catch (error) {
+    console.error("Error fetching quota data:", error);
+    // กรณี error ใช้ค่า default
+    quotaData.value = {
+      currentCount: 0,
+      maxQuota: 5,
+      remaining: 5,
+      isFull: false
+    };
   }
 }
 
@@ -339,8 +382,29 @@ async function updateRoomStatus({ id, status }) {
 
   } catch (error) {
     console.error("Error updating room status:", error);
+
+    // ตรวจสอบ error โควต้าเต็ม
+    if (error.response && error.response.status === 400 && error.response.data.message) {
+      Swal.fire({
+        title: 'โควต้าเต็ม!',
+        text: error.response.data.message,
+        icon: 'warning',
+        confirmButtonText: 'ตกลง'
+      });
+    } else {
+      Swal.fire({
+        title: 'เกิดข้อผิดพลาด!',
+        text: 'เกิดข้อผิดพลาดในการอัปเดตสถานะห้อง',
+        icon: 'error',
+        confirmButtonText: 'ตกลง'
+      });
+    }
+
     await fetchRooms();
-    alert("เกิดข้อผิดพลาดในการอัปเดตสถานะห้อง");
+    await fetchQuotaData(); // อัปเดตข้อมูลโควต้า
+
+    // Throw error เพื่อให้ caller รู้ว่าเกิด error
+    throw error;
   }
 }
 
@@ -428,7 +492,7 @@ function closeStatusRoomEditablePopup() {
 }
 
 // โหลดค่าจาก localStorage เมื่อ component mount
-onMounted(() => {
+onMounted(async () => {
   const savedStatusEditable = localStorage.getItem('statusEditable')
   const savedStatusRoomEditable = localStorage.getItem('statusRoomEditable')
   if (savedStatusEditable !== null) {
@@ -437,5 +501,10 @@ onMounted(() => {
   if (savedStatusRoomEditable !== null) {
     statusRoomEditable.value = savedStatusRoomEditable === 'true'
   }
+
+  // โหลดข้อมูลเริ่มต้น
+  await fetchRooms();
+  await fetchStatusOptions();
+  await fetchQuotaData();
 })
 </script>

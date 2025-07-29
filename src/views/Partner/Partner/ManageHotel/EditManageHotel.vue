@@ -98,13 +98,13 @@
 
 
 
-        <!-- TODO: เอาไว้ใช้ตอนทำเเบรนด์เอง -->
-        <!-- <div>
+
+        <div>
           <hr class="border-2 my-6" />
           <p class="font-bold">3. นโยบายการเก็บเงินมัดจำ</p>
 
           <div class="max-w-3xl mx-auto px-5 pt-4 pb-2 text-center">
-      
+
             <div class="mb-6 space-x-8 space-y-2">
               <p>ที่พักขอคุณมีนโยบายเรียกเก็บเงินมัดจำหรือไม่<span class="text-red-600 px-1">*</span>
               </p>
@@ -125,24 +125,26 @@
                 </p>
                 <div class="flex space-x-3">
                   <p>ค่ามัดจำต่อห้องราคา :</p>
-                  <input class="border rounded-md px-3 py-1 w-24 " placeholder="ราคา" /><span>บาท</span>
+                  <input v-model="cashPledge.price" type="number" class="border rounded-md px-3 py-1 w-24"
+                    placeholder="ราคา" /><span>บาท</span>
                 </div>
                 <div class="flex-col mt-2">
                   <p class="text-left">ราคาที่ต้องจ่ายของค่ามัดจำมีอะไรบ้าง :</p>
-                  <input class="border rounded-md px-3 py-2 w-full mt-2" placeholder="ค่ากุญเเจ ค่าคีย์การ์ด..." />
+                  <input v-model="cashPledge.note" class="border rounded-md px-3 py-2 w-full mt-2"
+                    placeholder="ค่ากุญเเจ ค่าคีย์การ์ด..." />
                 </div>
               </div>
             </transition>
           </div>
-        </div>-->
+        </div>
 
         <hr class="border-2 my-6" />
 
-        <p class="font-bold">3. เกี่ยวกับที่พัก</p>
+        <p class="font-bold">4. เกี่ยวกับที่พัก</p>
 
         <div class="mt-5">
           <div class="mx-5">
-            <p class="mb-2 text-lime-700">3.1 อธิบายเกี่ยวกับที่พัก</p>
+            <p class="mb-2 text-lime-700">4.1 อธิบายเกี่ยวกับที่พัก</p>
             <textarea v-model="AboutFacilityHotel" rows="3"
               class="border border-gray-300 px-3 py-2 rounded w-full resize-none"
               placeholder="พิมพ์รายละเอียดที่นี่..."></textarea>
@@ -169,7 +171,7 @@
 
         <div class="mt-5">
           <div class="mx-5">
-            <p class="mb-2 text-fuchsia-700">3.2 อธิบายเกี่ยวกับทำเลที่ตั้ง</p>
+            <p class="mb-2 text-fuchsia-700">4.2 อธิบายเกี่ยวกับทำเลที่ตั้ง</p>
             <textarea v-model="AboutHotelLocation" rows="3"
               class="border border-gray-300 px-3 py-2 rounded w-full resize-none"
               placeholder="พิมพ์รายละเอียดที่นี่..."></textarea>
@@ -181,12 +183,19 @@
               <div
                 class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 border p-4 rounded-lg shadow-md bg-fuchsia-50">
                 <div v-for="hotelLocation in hotelLocation" :key="hotelLocation._id"
-                  class="flex items-center border p-3 space-x-2 rounded shadow bg-white">
-                  <input type="checkbox" v-model="selectedHotelLocation" :value="hotelLocation._id" />
-                  <img :src="`http://localhost:9999/uploads/icons/${hotelLocation.icon}`" alt="icon"
-                    class="h-5 object-contain pl-2" />
-
-                  <span class="text-gray-700">{{ hotelLocation.name }}</span>
+                  class="border p-3 rounded shadow bg-white">
+                  <div class="flex items-center space-x-2 mb-2">
+                    <input type="checkbox" v-model="selectedHotelLocation" :value="hotelLocation._id" />
+                    <img :src="`http://localhost:9999/uploads/icons/${hotelLocation.icon}`" alt="icon"
+                      class="h-5 object-contain pl-2" />
+                    <span class="text-gray-700">{{ hotelLocation.name }}</span>
+                  </div>
+                  <!-- แสดงช่อง input เมื่อเลือก checkbox -->
+                  <div v-if="selectedHotelLocation.includes(hotelLocation._id)" class="mt-2">
+                    <input v-model="hotelLocationDetails[hotelLocation._id]" type="text"
+                      class="w-full border border-gray-300 px-3 py-2 rounded text-sm"
+                      :placeholder="`ระยะห่างกี่กิโลเมตรจากที่พัก`" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -197,7 +206,7 @@
 
         <div class="mt-5">
           <div class="mx-5">
-            <p class="mb-2 text-stone-700">3.3 อธิบายเกี่ยวกับสิ่งอำนวยความสะดวกภายในที่พัก</p>
+            <p class="mb-2 text-stone-700">4.3 อธิบายเกี่ยวกับสิ่งอำนวยความสะดวกภายในที่พัก</p>
             <textarea v-model="AboutRoomHotel" rows="3"
               class="border border-gray-300 px-3 py-2 rounded w-full resize-none"
               placeholder="พิมพ์รายละเอียดที่นี่..."></textarea>
@@ -225,7 +234,7 @@
 
         <div class="mt-5">
           <div class="mx-5">
-            <p class="mb-2 text-indigo-700">3.4 ที่พักของท่านรองรับสัตว์เลี้ยงหรือไม่</p>
+            <p class="mb-2 text-indigo-700">4.4 ที่พักของท่านรองรับสัตว์เลี้ยงหรือไม่</p>
             <textarea v-model="AboutHotelFor" rows="3"
               class="border border-gray-300 px-3 py-2 rounded w-full resize-none"
               placeholder="พิมพ์รายละเอียดที่นี่..."></textarea>
@@ -253,7 +262,7 @@
 
         <div class="mt-5">
           <div class="mx-5">
-            <p class="mb-2 text-amber-600">3.5 มื้ออาหาร</p>
+            <p class="mb-2 text-amber-600">4.5 มื้ออาหาร</p>
             <textarea v-model="AboutFoodHotel" rows="3"
               class="border border-gray-300 px-3 py-2 rounded w-full resize-none"
               placeholder="พิมพ์รายละเอียดที่นี่..."></textarea>
@@ -320,6 +329,7 @@ const manageHotelSleepGun = ref('open')
 const hasExtraBed = ref(null)
 const extraBed = ref({ child: '', normal: '' })
 const hasExtraCashPledge = ref(null)
+const cashPledge = ref({ price: '', note: '' })
 
 // Add form data variables
 const checkInForm = ref('')
@@ -348,6 +358,9 @@ const selectedHotelLocation = ref([])
 const selectedRoomHotel = ref([])
 const selectedHotelFor = ref([])
 const selectedFoodHotel = ref([])
+
+// เพิ่ม reactive data สำหรับเก็บ detailByPartner ของแต่ละ hotel location
+const hotelLocationDetails = ref({})
 
 const initialData = ref(null)
 
@@ -422,7 +435,9 @@ async function loadExistingAboutHotel() {
 
         // Populate form with existing data
         hasExtraBed.value = existingData.hasExtraBed
+        hasExtraCashPledge.value = existingData.hasExtraCashPledge
         extraBed.value = existingData.typeBedPrice || { child: '', normal: '' }
+        cashPledge.value = existingData.cashPledge || { price: '', note: '' }
         checkInForm.value = existingData.checkInForm || ''
         checkInTo.value = existingData.checkInTo || ''
         checkOutForm.value = existingData.checkOutForm || ''
@@ -454,6 +469,11 @@ async function loadExistingAboutHotel() {
           existingData.typeHotelFor.map(item => item._id || item) : []
         selectedFoodHotel.value = existingData.typeFoodHotel ?
           existingData.typeFoodHotel.map(item => item._id || item) : []
+
+        // โหลดข้อมูล detailByPartner สำหรับ hotel location
+        if (existingData.hotelLocationDetails) {
+          hotelLocationDetails.value = existingData.hotelLocationDetails
+        }
         // Save snapshot for reset
         initialData.value = JSON.parse(JSON.stringify(existingData))
       } else {
@@ -484,7 +504,9 @@ async function saveAboutHotel() {
     const aboutHotelData = {
       partnerId: partnerId,
       hasExtraBed: hasExtraBed.value,
+      hasExtraCashPledge: hasExtraCashPledge.value,
       typeBedPrice: extraBed.value,
+      cashPledge: cashPledge.value,
       checkInForm: checkInForm.value,
       checkInTo: checkInTo.value,
       checkOutForm: checkOutForm.value,
@@ -501,6 +523,7 @@ async function saveAboutHotel() {
       typeRoomHotel: selectedRoomHotel.value.length > 0 ? selectedRoomHotel.value : [],
       typeHotelFor: selectedHotelFor.value.length > 0 ? selectedHotelFor.value : [],
       typeFoodHotel: selectedFoodHotel.value.length > 0 ? selectedFoodHotel.value : [],
+      hotelLocationDetails: hotelLocationDetails.value,
     }
 
     console.log('Saving about hotel data:', aboutHotelData) // Debug log
@@ -547,7 +570,9 @@ async function resetForm() {
   if (!result.isConfirmed) return;
   if (initialData.value) {
     hasExtraBed.value = initialData.value.hasExtraBed
+    hasExtraCashPledge.value = initialData.value.hasExtraCashPledge
     extraBed.value = initialData.value.typeBedPrice || { child: '', normal: '' }
+    cashPledge.value = initialData.value.cashPledge || { price: '', note: '' }
     checkInForm.value = initialData.value.checkInForm || ''
     checkInTo.value = initialData.value.checkInTo || ''
     checkOutForm.value = initialData.value.checkOutForm || ''
@@ -574,9 +599,18 @@ async function resetForm() {
     selectedFoodHotel.value = initialData.value.typeFoodHotel
       ? initialData.value.typeFoodHotel.map(item => item._id || item)
       : []
+
+    // รีเซ็ตข้อมูล detailByPartner สำหรับ hotel location
+    if (initialData.value.hotelLocationDetails) {
+      hotelLocationDetails.value = initialData.value.hotelLocationDetails
+    } else {
+      hotelLocationDetails.value = {}
+    }
   } else {
     hasExtraBed.value = null
+    hasExtraCashPledge.value = null
     extraBed.value = { child: '', normal: '' }
+    cashPledge.value = { price: '', note: '' }
     checkInForm.value = ''
     checkInTo.value = ''
     checkOutForm.value = ''
@@ -593,6 +627,7 @@ async function resetForm() {
     selectedRoomHotel.value = []
     selectedHotelFor.value = []
     selectedFoodHotel.value = []
+    hotelLocationDetails.value = {}
   }
   Swal.fire({
     icon: 'info',

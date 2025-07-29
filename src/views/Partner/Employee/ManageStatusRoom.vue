@@ -11,7 +11,7 @@
         <div>
           <TableModelBasic ref="tableRef" :customers="room" :statusOptions="statusOptions"
             :statusRoomOptions="statusRoomOptions" :statusPromotionOptions="statusPromotionOptions"
-            :visibleColumns="['status', 'statusRoom', 'roomNumber', 'typeRoom', 'price', 'stayPeople', 'statusPromotion']"
+            :visibleColumns="['status', 'statusRoom', 'roomNumber', 'typeRoom', 'price', 'air', 'stayPeople', 'statusPromotion']"
             :fieldLayout="fieldLayout" :hideEditDelete="true" @confirm-status-change="onConfirmStatusChange"
             @confirm-status-room-change="onConfirmStatusRoomChange"
             @confirm-status-promotion-change="onConfirmStatusPromotionChange" :statusPromotionEditable="false"
@@ -59,6 +59,7 @@ const fieldLayout = ref([
   { key: "timestamps", label: "เวลา", position: 9 },
   { key: "statusRoom", label: "สถานะห้อง", position: 10 },
   { key: "statusPromotion", label: "สถานะการใช้งานโปรโมชั่น", position: 11 },
+  { key: "air", label: "ประเภทพัดลม/แอร์", position: 12 },
 ]);
 
 const showConfirm = ref(false)
@@ -219,18 +220,21 @@ async function fetchRooms() {
     });
     console.log("Rooms loaded:", res.data); // debug ดูข้อมูลที่ backend ส่งมา
     // แปลงข้อมูล imgrooms เป็น array ของ object ที่ Gallery.vue ใช้ได้
-    room.value = res.data.map(r => ({
-      ...r,
-      typeRoomName: r.typeRoom?.name || '-',
-      typeRoomHotelName: Array.isArray(r.typeRoomHotel) && r.typeRoomHotel.length > 0
-        ? r.typeRoomHotel.map(h => typeof h === 'object' ? h.name : h).join(', ')
-        : '-',
-      imgrooms: (r.imgrooms || []).map(filename => ({
-        itemImageSrc: `http://localhost:9999/uploads/room/${filename}`,
-        thumbnailImageSrc: `http://localhost:9999/uploads/room/${filename}`,
-        alt: r.roomNumber || 'room'
-      }))
-    }));
+    room.value = res.data.map(r => {
+      console.log("Room air data:", r.air); // debug ดูข้อมูล air
+      return {
+        ...r,
+        typeRoomName: r.typeRoom?.name || '-',
+        typeRoomHotelName: Array.isArray(r.typeRoomHotel) && r.typeRoomHotel.length > 0
+          ? r.typeRoomHotel.map(h => typeof h === 'object' ? h.name : h).join(', ')
+          : '-',
+        imgrooms: (r.imgrooms || []).map(filename => ({
+          itemImageSrc: `http://localhost:9999/uploads/room/${filename}`,
+          thumbnailImageSrc: `http://localhost:9999/uploads/room/${filename}`,
+          alt: r.roomNumber || 'room'
+        }))
+      };
+    });
   } catch (error) {
     console.error("Error fetching rooms:", error);
   }

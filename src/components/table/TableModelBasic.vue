@@ -63,6 +63,9 @@
                 <template v-else-if="key === 'typeRoom'">
                   {{ row.typeRoomName }}
                 </template>
+                <template v-else-if="key === 'air'">
+                  {{ row.air || '-' }}
+                </template>
                 <template v-else-if="key === 'imgrooms'">
                   <CustomGallery :images="row.imgrooms" />
                 </template>
@@ -188,6 +191,17 @@
                                   <span class="text-sm text-gray-500">{{ getFieldByPosition(5).label }}</span>
                                   <span class="text-base text-gray-800 font-medium">{{
                                     formatValue(row[getFieldByPosition(5).key], getFieldByPosition(5).key)
+                                  }}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="flex space-x-5">
+                              <div v-if="getFieldByPosition(12)" class="flex flex-col p-3 col-span-1">
+                                <div class="flex justify-center items-center space-x-3">
+                                  <span class="text-sm text-gray-500">{{ getFieldByPosition(12).label }}</span>
+                                  <span class="text-base text-gray-800 font-medium">{{
+                                    formatValue(row[getFieldByPosition(12).key], getFieldByPosition(12).key)
                                   }}</span>
                                 </div>
                               </div>
@@ -341,6 +355,9 @@
                 </template>
                 <template v-else-if="key === 'typeRoom'">
                   {{ row.typeRoomName }}
+                </template>
+                <template v-else-if="key === 'air'">
+                  {{ row.air || '-' }}
                 </template>
                 <template v-else-if="key === 'imgrooms'">
                   <CustomGallery :images="row.imgrooms" />
@@ -588,6 +605,10 @@ function formatValue(value, key) {
   // กรณี typeRoomHotel เป็น array ของ object ให้ return เฉพาะ name join ด้วย ,
   if (key === 'typeRoomHotel' && Array.isArray(value)) {
     return value.map(v => v.name).join(', ');
+  }
+  // กรณี air
+  if (key === 'air') {
+    return value || '-';
   }
   return value ?? '';
 }

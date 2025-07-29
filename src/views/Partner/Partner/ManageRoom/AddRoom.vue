@@ -33,6 +33,14 @@
                     </p>
                   </div>
 
+                  <div :ref="el => (inputRefs.selectedTypeAir = el)">
+                    <Dropdown v-model="selectedTypeAir" :options="TypeAir[0]?.items || []" id="selectedTypeAir"
+                      placeholder="เลือกประเภทพัดลม/เเอร์"
+                      :class="highlightField === 'selectedTypeAir' ? 'ring-2 ring-red-400 rounded-md animate-shake' : ''" />
+                    <p v-if="errors.selectedTypeAir" class="text-red-500 text-xs pl-2">{{ errors.selectedTypeAir }}
+                    </p>
+                  </div>
+
 
                   <div :ref="el => (inputRefs.Price = el)">
                     <InputNumber v-model="Price" id="Price" :label="t('Price_Label')"
@@ -110,7 +118,9 @@ const router = useRouter()
 const inputRefs = reactive({})
 const RoomTypeGroupedOptions = ref([])
 const TypeRoom = ref([])
+const TypeAir = ref([])
 const selectedTypeRoom = ref(null)
+const selectedTypeAir = ref(null)
 const NumberRoom = ref('')
 const Stay = ref('')
 const RoomDetail = ref('')
@@ -119,6 +129,7 @@ const Price = ref('')
 const errors = ref({
   NumberRoom: '',
   selectedTypeRoom: '',
+  selectedTypeAir: '',
   Price: '',
   Stay: '',
   RoomDetail: '',
@@ -148,6 +159,9 @@ watch(NumberRoom, (val) => {
 })
 watch(selectedTypeRoom, (val) => {
   if (val) errors.value.selectedTypeRoom = ''
+})
+watch(selectedTypeAir, (val) => {
+  if (val) errors.value.selectedTypeAir = ''
 })
 watch(Price, (val) => {
   if (val) errors.value.Price = ''
@@ -189,6 +203,7 @@ async function handleReset() {
   if (!result.isConfirmed) return;
   NumberRoom.value = ''
   selectedTypeRoom.value = null
+  selectedTypeAir.value = null
   Price.value = null
   Stay.value = null
   RoomDetail.value = ''
@@ -197,6 +212,7 @@ async function handleReset() {
   errors.value = {
     NumberRoom: '',
     selectedTypeRoom: '',
+    selectedTypeAir: '',
     Price: '',
     Stay: '',
     RoomDetail: '',
@@ -223,6 +239,7 @@ function confirmSave() {
   const formData = new FormData();
   formData.append('roomNumber', NumberRoom.value);
   formData.append('typeRoom', typeof selectedTypeRoom.value === 'object' ? selectedTypeRoom.value.value : selectedTypeRoom.value);
+  formData.append('air', typeof selectedTypeAir.value === 'object' ? selectedTypeAir.value.value : selectedTypeAir.value);
   formData.append('price', Price.value);
   formData.append('stayPeople', Stay.value);
   formData.append('roomDetail', RoomDetail.value);
@@ -294,6 +311,11 @@ function validateForm() {
 
   if (!selectedTypeRoom.value) {
     errors.value.selectedTypeRoom = t('selectedTypeRoom_Error')
+    isValid = false
+  }
+
+  if (!selectedTypeAir.value) {
+    errors.value.selectedTypeAir = 'กรุณาเลือกประเภทพัดลม/แอร์'
     isValid = false
   }
 
@@ -370,6 +392,23 @@ onMounted(async () => {
     }))
   } catch (e) {
     console.error('โหลดข้อมูล typeRoomHotel ไม่สำเร็จ:', e)
+  }
+
+  // ดึงข้อมูล TypeAir
+  try {
+    TypeAir.value = [
+      {
+        label: 'ประเภทพัดลม/แอร์ทั้งหมด',
+        code: 'all',
+        items: [
+          { label: 'ห้องแอร์', value: 'ห้องเเอร์' },
+          { label: 'ห้องพัดลม', value: 'ห้องพัดลม' },
+          { label: 'ห้องแอร์และพัดลม', value: 'ห้องเเอร์และพัดลม' }
+        ]
+      }
+    ]
+  } catch (e) {
+    console.error('โหลดข้อมูล TypeAir ไม่สำเร็จ:', e)
   }
 })
 </script>

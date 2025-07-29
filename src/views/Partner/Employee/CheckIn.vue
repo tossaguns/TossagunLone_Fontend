@@ -55,46 +55,49 @@
             <div>
               <label class="md:text-base text-sm font-bold px-4">รายการจองจาก SleepGunWeb</label>
 
-              <div class="mt-4">
-                <div class="flex flex-col xl:flex-row justify-between items-center border  rounded-md shadow-md p-4">
+              <div class="mt-4 lg:text-base text-sm">
+                <div
+                  class="flex flex-col xl:flex-row xl:justify-between items-center border w-full  rounded-md shadow-md p-4">
 
-                  <div class="w-4/6">
+                  <div class="xl:w-4/6 w-full">
                     <div>
                       <div>
-                        <label>วันที่เข้า check-in : </label>
+                        <label class="font-bold">วันที่เข้า check-in : </label>
                         <label>{{ dateCheckInSleepGunWebStart }} - {{ dateCheckInSleepGunWebEnd }}</label>
                       </div>
                       <div>
-                        <label>หมายเลขห้อง : </label>
+                        <label class="font-bold">หมายเลขห้อง : </label>
                         <label>{{ roomNumber }}</label>
                       </div>
                       <div>
-                        <label>ประเภทห้องพัก : </label>
+                        <label class="font-bold">ประเภทห้องพัก : </label>
                         <label>{{ typeRoom }}</label>
                       </div>
                       <div>
-                        <label>เข้าพักสูงสุดได้ : </label>
+                        <label class="font-bold">เข้าพักสูงสุดได้ : </label>
                         <label>{{ maxStayPeople }} คน</label>
                       </div>
                     </div>
 
-                    <div>
+                    <div class="mt-4 space-y-1">
                       <div>
                         <div>
-                          <label>หลักฐานการจอง : </label>
+                          <label class="font-bold">หลักฐานการจอง : </label>
                           <label>{{ proofBooking }}</label>
                         </div>
                       </div>
                       <div>
-                        <label>เรียกใช้เตียงเสริม : </label>
+                        <label class="font-bold">เรียกใช้เตียงเสริม : </label>
                         <label :class="hasUseExtraBed ? 'bg-green-500 text-white px-2 rounded' : ''">
-                          {{ hasUseExtraBed ? 'ใช้งาน' : 'ไม่ใช้งาน' }} ,ประเภท : {{ typeExtraBed }} ,ราคา / คืน : {{
-                            priceExtraBedByDay }} บาท
+                          {{ hasUseExtraBed ? 'ใช้งาน' : 'ไม่ใช้งาน' }}
                         </label>
+                        <label class="font-bold"> ประเภท : {{ typeExtraBed }} ,ราคา / คืน : {{
+                          priceExtraBedByDay }} บาท</label>
                       </div>
                       <div>
-                        <label>ค่ามัดจำ : ค่าจุญเเจ ({{ depositKey }}) + ค่ามัดจำห้อง ({{ depositRoom }}) = {{
-                          depositTotal }} บาท</label>
+                        <label class="font-bold">ค่ามัดจำ : ค่าจุญเเจ ({{ depositKey }}) + ค่ามัดจำห้อง ({{ depositRoom
+                        }}) = {{
+                            depositTotal }} บาท</label>
                       </div>
                     </div>
 
@@ -104,41 +107,43 @@
 
                     <div>
                       <div>
-                        <label>ชื่อผู้ทำการจอง : </label>
+                        <label class="font-bold">ชื่อผู้ทำการจอง : </label>
                         <label>{{ customerName }}</label>
                       </div>
                       <div>
-                        <label>จำนวนคนที่เข้าพักด้วย : </label>
+                        <label class="font-bold">จำนวนคนที่เข้าพักทั้งหมด : </label>
                         <label>{{ numberOfPeople }}</label>
                       </div>
                     </div>
                   </div>
 
 
-                  <div class="w-2/6">
+                  <div class="xl:w-2/6 w-full mt-6 xl:mt-0 text-stone-500 text-sm">
                     <div>
                       <div>
-                        <label>ราคาห้องปกติ : </label>
+                        <label class="font-bold">ราคาห้องปกติ : </label>
                         <label>{{ priceRoomOld }} บาท</label>
                       </div>
                       <div>
-                        <label>ราคาห้องที่ลดราคาเเล้ว : </label>
+                        <label class="font-bold">ราคาห้องที่ลดราคาเเล้ว : </label>
                         <label>{{ priceRoomNew }} บาท</label>
                       </div>
                       <div>
-                        <label>ราคาห้องที่ต้องชำระ : ค่าเตียงเสริม/คืน + ค่ามัดจำ + ค่าห้อง = {{ priceRoomTotal }}
+                        <label class="font-bold">ราคาห้องที่ต้องชำระ : ค่าเตียงเสริม/คืน + ค่ามัดจำ + ค่าห้อง = {{
+                          priceRoomTotal }}
                           บาท</label>
                       </div>
                     </div>
-                    <div class="mt-4 flex space-x-2 items-center">
-                      <div class="w-1/3">
+
+                    <div class="mt-8 flex space-x-2 items-center">
+                      <div class="md:w-1/3 w-full">
                         <button
                           class=" text-red-500 border border-red-500 px-4 py-2 rounded-lg hover:bg-red-600 hover:text-white w-full"
                           @click="openChangeRoomModal">
                           เปลี่ยนห้องพัก
                         </button>
                       </div>
-                      <div class="w-2/3">
+                      <div class="md:w-2/3 w-full">
                         <button
                           class="bg-green-500 text-white px-4 py-2 rounded-xl hover:bg-green-600 w-full flex flex-col justify-center items-center shadow-lg"
                           @click="openCheckInModal">
@@ -266,10 +271,10 @@
     </div>
   </div>
 
-  <!-- Modal เปลี่ยนห้องพัก 2 -->
+  <!-- Modal เปลี่ยนห้องพัก 2   v-if="showChangeRoomModal2"-->
   <div v-if="showChangeRoomModal2"
     class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black bg-opacity-40">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] flex flex-col">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] flex flex-col md:text-base text-xs">
       <div class="flex  justify-between items-center p-4 border-b">
         <div class="flex items-center">
           <button @click="goBackToFirstModal" class="mr-3 text-blue-500 hover:text-blue-700">
@@ -277,14 +282,14 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
           </button>
-          <h2 class="text-lg font-bold">เหตุผลที่ทำการเปลี่ยนห้องพัก</h2>
+          <h2 class="lg:text-lg text-base font-bold">เหตุผลที่ทำการเปลี่ยนห้องพัก</h2>
         </div>
         <button @click="closeChangeRoomModal2" class="text-xl font-bold">x</button>
       </div>
       <div class="p-4 overflow-y-auto" style="max-height:60vh;">
         <div>
           <label class="font-bold">เหตุผลที่ทำการเปลี่ยนห้องพัก</label>
-          <div>
+          <div class="mt-2">
             <textarea v-model="reasonChangeRoom" class="border rounded-md p-2 w-full"
               placeholder="เหตุผลที่ทำการเปลี่ยนห้องพัก.."></textarea>
           </div>
@@ -295,25 +300,24 @@
         </div>
 
         <div class="mt-4">
-          <label class="font-bold">ห้องพักที่มีอยู่ในระบบ</label>
-          <div>
+          <div class="my-5">
             <label>หากลูกค้าต้องการเข้าพักก่อนเวลาให้เช็คกล่องด้านล่าง</label>
-            <div class="flex items-center">
+            <div class="flex items-center space-x-1 px-4">
               <input type="checkbox" v-model="isCheckInEarly"></input>
               <label>ลูกค้าเข้าพักก่อนเวลา</label>
             </div>
 
             <!-- หากลูกกดเช็คบ๊อกให้เเสดงส่วนนนี้ -->
-            <div v-if="isCheckInEarly">
-              <label>เข้าพักก่อนเวลากี่ชั่วโมง</label>
-              <label>ชั่วโมง(เกิน 35 นาทีนับเป็น 1 ชั่วโมง)</label>
-
-              <div>
+            <div v-if="isCheckInEarly" class="mt-8 border rounded-md p-4 shadow-md">
+              <div class="flex justify-center">
+                <label class="font-bold">เข้าพักก่อนเวลากี่ชั่วโมง (เกิน 35 นาทีนับเป็น 1 ชั่วโมง)</label>
+              </div>
+              <div class="mt-4">
                 <label>ราคารวมที่ต้องชำระ : <input type="number" v-model="earlyCheckInHours"
                     class="border rounded-md p-2 w-full" placeholder="เข้าพักก่อนเวลากี่ชั่วโมง.." min="0"
-                    max="24"></input> * {{ priceLateCheckInbyHoure }}
-                  บาท/ชั่วโมง</label>
-                <label>ราคารวมที่ต้องชำระ : {{ priceLateCheckInbyHoureSum }} บาท</label>
+                    max="24"></input> </label>
+                <label class="text-xxs text-stone-500">* {{ priceLateCheckInbyHoure }}
+                  บาท/ชั่วโมง ราคารวมที่ต้องชำระ : {{ priceLateCheckInbyHoureSum }} บาท</label>
               </div>
             </div>
           </div>
@@ -329,40 +333,44 @@
 
   <!-- Modal Check-in -->
   <div v-if="showCheckInModal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black bg-opacity-40">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] flex flex-col">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] flex flex-col md:text-base text-xs">
       <div class="flex  justify-between items-center p-4 border-b">
         <div class="flex flex-col">
-          <h2 class="text-lg font-bold">ยืนยันการ check-in</h2>
+          <h2 class="lg:text-lg font-bold text-base">ยืนยันการ check-in</h2>
         </div>
         <button @click="closeCheckInModal" class="text-xl font-bold">x</button>
       </div>
       <div class="p-4 overflow-y-auto" style="max-height:60vh;">
         <div>
-          <div>
-            <label>หากลูกค้าต้องการเข้าพักก่อนเวลาให้เช็คกล่องด้านล่าง</label>
-            <div class="flex items-center">
-              <input type="checkbox" v-model="isCheckInEarly"></input>
-              <label>ลูกค้าเข้าพักก่อนเวลา</label>
-            </div>
+          <div class="mt-4">
+            <div class="my-5">
+              <label>หากลูกค้าต้องการเข้าพักก่อนเวลาให้เช็คกล่องด้านล่าง</label>
+              <div class="flex items-center space-x-1 px-4 mt-1">
+                <input type="checkbox" v-model="isCheckInEarly"></input>
+                <label>ลูกค้าเข้าพักก่อนเวลา</label>
+              </div>
 
-            <!-- หากลูกกดเช็คบ๊อกให้เเสดงส่วนนนี้ -->
-            <div v-if="isCheckInEarly">
-              <label>เข้าพักก่อนเวลากี่ชั่วโมง</label>
-              <label>ชั่วโมง(เกิน 35 นาทีนับเป็น 1 ชั่วโมง)</label>
-
-              <div>
-                <label>ราคารวมที่ต้องชำระ : <input type="number" v-model="earlyCheckInHours"
-                    class="border rounded-md p-2 w-full" placeholder="เข้าพักก่อนเวลากี่ชั่วโมง.." min="0"
-                    max="24"></input> * {{ priceLateCheckInbyHoure }}
-                  บาท/ชั่วโมง</label>
-                <label>ราคารวมที่ต้องชำระ : {{ priceLateCheckInbyHoureSum }} บาท</label>
+              <!-- หากลูกกดเช็คบ๊อกให้เเสดงส่วนนนี้ -->
+              <div v-if="isCheckInEarly" class="mt-8 border rounded-md p-4 shadow-md">
+                <div class="flex justify-center">
+                  <label class="font-bold">เข้าพักก่อนเวลากี่ชั่วโมง (เกิน 35 นาทีนับเป็น 1 ชั่วโมง)</label>
+                </div>
+                <div class="mt-4">
+                  <label>ราคารวมที่ต้องชำระ : <input type="number" v-model="earlyCheckInHours"
+                      class="border rounded-md p-2 w-full" placeholder="เข้าพักก่อนเวลากี่ชั่วโมง.." min="0"
+                      max="24"></input> </label>
+                  <label class="text-xxs text-stone-500">* {{ priceLateCheckInbyHoure }}
+                    บาท/ชั่วโมง ราคารวมที่ต้องชำระ : {{ priceLateCheckInbyHoureSum }} บาท</label>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="mt-6">
-          <label class="font-bold">ยืนยันการ Check-in ใช่หรือไม่</label>
+        <div class="mt-6 ">
+          <div class="flex justify-center">
+            <label class="font-bold">ยืนยันการ Check-in ใช่หรือไม่?</label>
+          </div>
           <div class="flex space-x-2 mt-4">
             <button class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 w-full"
               @click="closeCheckInModal">ยกเลิก</button>
@@ -694,6 +702,31 @@ function openCheckInModal() {
 function closeCheckInModal() {
   showCheckInModal.value = false
 }
+
+// ข้อมูลจำลองสำหรับรายละเอียดการ Check-in
+const dateCheckInSleepGunWebStart = ref('2025-07-26')
+const dateCheckInSleepGunWebEnd = ref('2025-07-28')
+const roomNumber = ref('101')
+const typeRoom = ref('Deluxe Room')
+const maxStayPeople = ref(4)
+const proofBooking = ref('Booking ID: SGW-2025-001234')
+const hasUseExtraBed = ref(true)
+const typeExtraBed = ref('เตียงเสริมเดี่ยว')
+const priceExtraBedByDay = ref(500)
+const depositKey = ref(1000)
+const depositRoom = ref(2000)
+const depositTotal = computed(() => depositKey.value + depositRoom.value)
+const customerName = ref('คุณสมชาย ใจดี')
+const numberOfPeople = ref(3)
+const priceRoomOld = ref(3500)
+const priceRoomNew = ref(2800)
+const priceRoomTotal = computed(() => {
+  let total = priceRoomNew.value + depositTotal.value
+  if (hasUseExtraBed.value) {
+    total += priceExtraBedByDay.value
+  }
+  return total
+})
 
 onMounted(() => {
   // future: ดึงข้อมูลจาก backend
