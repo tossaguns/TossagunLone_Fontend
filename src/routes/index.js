@@ -28,6 +28,7 @@ import EditManageHotel from "../views/Partner/Partner/ManageHotel/EditManageHote
 import MainReview from "../views/Partner/Partner/ManageReview/MainReview.vue";
 import MainBookingSleepGun from "../views/Partner/Partner/BookingSleepGun/MainBookingSleepGun.vue";
 import MainIncome from "../views/Partner/Partner/Income/MainIcome.vue";
+import MainManagePOS from "../views/Partner/Partner/ManagePOS/MainManagePOS.vue";
 //Admin
 import MainManageHotelAdmin from "../views/Admin/ManageHotel/MainManageHotelAdmin.vue";
 import MainSelectType from "../views/Admin/SelectType/MainSelectType.vue";
@@ -44,6 +45,7 @@ import ManageSleepGunWeb from "../views/Partner/Employee/ManageSleepGun/ManageSl
 import CheckIn from "../views/Partner/Employee/CheckIn.vue";
 import CheckOut from "../views/Partner/Employee/CheckOut.vue";
 import MainIncomeEmployee from "../views/Partner/Employee/MainIncomeEmployee.vue";
+import MainPOS from "../views/Partner/Employee/POS/MainPOS.vue";
 //member
 import MainMemberPage from "../views/Member/MainMemberPage.vue";
 import DataMember from "../views/Member/Payment/DataMember.vue";
@@ -89,6 +91,7 @@ const routes = [
   { path: "/mainreview", component: MainReview },
   { path: "/mainbookingsleepgun", component: MainBookingSleepGun },
   { path: "/mainincome", component: MainIncome },
+  { path: "/mainmanagepos", component: MainManagePOS },
   //Admin
   { path: "/mainmanagehoteladmin", component: MainManageHotelAdmin },
   { path: "/mainselecttype", component: MainSelectType },
@@ -105,6 +108,7 @@ const routes = [
   { path: "/checkin", component: CheckIn },
   { path: "/checkout", component: CheckOut },
   { path: "/mainincomeemployee", component: MainIncomeEmployee },
+  { path: "/mainpos", component: MainPOS },
   //Member
   { path: "/mainmemberpage", component: MainMemberPage },
   { path: "/datamember", component: DataMember},
