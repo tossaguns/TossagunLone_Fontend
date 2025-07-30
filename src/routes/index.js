@@ -29,6 +29,7 @@ import MainReview from "../views/Partner/Partner/ManageReview/MainReview.vue";
 import MainBookingSleepGun from "../views/Partner/Partner/BookingSleepGun/MainBookingSleepGun.vue";
 import MainIncome from "../views/Partner/Partner/Income/MainIcome.vue";
 import MainManagePOS from "../views/Partner/Partner/ManagePOS/MainManagePOS.vue";
+import ManageTag from "../views/Partner/Partner/ManagePOS/ManageTag.vue";
 //Admin
 import MainManageHotelAdmin from "../views/Admin/ManageHotel/MainManageHotelAdmin.vue";
 import MainSelectType from "../views/Admin/SelectType/MainSelectType.vue";
@@ -92,6 +93,7 @@ const routes = [
   { path: "/mainbookingsleepgun", component: MainBookingSleepGun },
   { path: "/mainincome", component: MainIncome },
   { path: "/mainmanagepos", component: MainManagePOS },
+  { path: "/managetag", component: ManageTag },
   //Admin
   { path: "/mainmanagehoteladmin", component: MainManageHotelAdmin },
   { path: "/mainselecttype", component: MainSelectType },
