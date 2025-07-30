@@ -29,8 +29,10 @@
               </div>
               <div>
                 <label>เลือกเเท็กสี</label>
-                <div class="p-8">
+                <div class="p-8 flex flex-col justify-center items-center">
+                  <label class="text-gray-700 font-medium">เลือกสีของคุณ:</label>
                   <ColorPicker v-model="selectedColor" />
+                  <p class="text-sm text-gray-500 mt-2">ค่าสีที่เลือก: {{ selectedColor }}</p>
                 </div>
               </div>
 
@@ -120,9 +122,15 @@ async function createTag(tagData) {
     console.log('🚀 Sending request to: http://localhost:9999/HotelSleepGun/tag/create');
     console.log('📦 Request data:', tagData);
 
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+    }
+
     const response = await fetch('http://localhost:9999/HotelSleepGun/tag/create', {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(tagData)
@@ -149,7 +157,17 @@ async function getAllTags() {
   try {
     console.log('🔄 Fetching tags from: http://localhost:9999/HotelSleepGun/tag/getAll');
 
-    const response = await fetch('http://localhost:9999/HotelSleepGun/tag/getAll');
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+    }
+
+    const response = await fetch('http://localhost:9999/HotelSleepGun/tag/getAll', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
     console.log('📡 Response status:', response.status);
 
     const result = await response.json();
@@ -171,8 +189,17 @@ async function deleteTagById(tagId) {
   try {
     console.log('🗑️ Deleting tag with ID:', tagId);
 
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+    }
+
     const response = await fetch(`http://localhost:9999/HotelSleepGun/tag/delete/${tagId}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
     });
 
     console.log('📡 Response status:', response.status);
@@ -333,7 +360,15 @@ onMounted(async () => {
     tags.value = fetchedTags;
   } catch (error) {
     console.error('❌ Error loading tags:', error);
-    alert(`เกิดข้อผิดพลาดในการโหลดข้อมูล: ${error.message}`);
+
+    // Check if it's an authentication error
+    if (error.message.includes('token') || error.message.includes('เข้าสู่ระบบ')) {
+      alert('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่');
+      // Redirect to login page
+      router.push('/loginpartner');
+    } else {
+      alert(`เกิดข้อผิดพลาดในการโหลดข้อมูล: ${error.message}`);
+    }
   }
 });
 </script>

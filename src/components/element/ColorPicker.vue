@@ -1,8 +1,6 @@
 <template>
-  <div class="flex flex-col items-center justify-center gap-4 p-6">
-    <label class="text-gray-700 font-medium">เลือกสีของคุณ:</label>
-    <input type="color" v-model="localColor" class="w-16 h-16 cursor-pointer " />
-    <p class="text-sm text-gray-500">ค่าสี: {{ localColor }}</p>
+  <div class="flex flex-col items-center justify-center">
+    <input type="color" v-model="localColor" class="md:w-16 md:h-16 w-10 h-10 cursor-pointer " />
   </div>
 </template>
 
