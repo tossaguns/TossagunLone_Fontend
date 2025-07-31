@@ -118,7 +118,8 @@
         </div>
 
         <!-- แสดงตึกและชั้น -->
-        <div v-if="buildings.length > 0" class="space-y-6">
+        <div v-if="buildings.length > 0" class="space-y-6 mt-4">
+
           <!-- แสดงชั้นและห้องของตึกที่เลือก -->
           <div v-if="selectedBuildingId && selectedBuilding" class="border rounded-lg p-6 bg-gray-50">
             <!-- หัวข้อตึกที่เลือก -->
@@ -130,6 +131,8 @@
                   ห้อง</span>
               </div>
             </div>
+
+
 
             <!-- ชั้นที่มีอยู่แล้ว -->
             <div v-if="selectedBuilding.floors && selectedBuilding.floors.length > 0" class="space-y-4">
@@ -150,10 +153,13 @@
                   </div>
                 </div>
 
+
+
                 <!-- ห้องพักในชั้นนี้ -->
                 <div
                   v-if="isFloorExpanded(selectedBuilding._id, floor.name) && getRoomsByBuildingAndFloor(selectedBuilding._id, floor.name).length > 0"
                   class="mb-4">
+
                   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     <div v-for="room in getRoomsByBuildingAndFloor(selectedBuilding._id, floor.name)" :key="room._id"
                       class="border rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white flex flex-col h-full">
@@ -221,6 +227,8 @@
                           <span v-if="room.buildingId">ตึก {{ room.buildingId.nameBuilding }}</span>
                           <span v-if="room.floor">, ชั้น {{ room.floor }}</span>
                         </div>
+
+
                       </div>
 
                       <!-- ตัวเลือกการจัดการ -->
@@ -289,15 +297,31 @@
                       </div>
                     </div>
                   </div>
+                  <!-- ปุ่มสร้างห้องพักในชั้นนี้ -->
+                  <div class="flex flex-wrap gap-2 mt-10">
+                    <button @click="openAddRoomDialog(selectedBuilding._id, floor.name)"
+                      class="xl:w-[305px] md:w-[225px] w-[160px] h-32 border-2 border-dashed border-stone-300 rounded-lg flex items-center justify-center text-3xl text-stone-400 hover:bg-stone-100 transition">
+                      +
+                    </button>
+                  </div>
                 </div>
 
-                <!-- ปุ่มสร้างห้องพักในชั้นนี้ -->
-                <div class="flex flex-wrap gap-2">
-                  <button @click="openAddRoomDialog(selectedBuilding._id, floor.name)"
-                    class="xl:w-[305px] md:w-[225px] w-[160px] h-32 border-2 border-dashed border-stone-300 rounded-lg flex items-center justify-center text-3xl text-stone-400 hover:bg-stone-100 transition">
-                    +
-                  </button>
+                <!-- แสดงข้อความเมื่อไม่มีห้องในชั้นนี้ -->
+                <div
+                  v-if="isFloorExpanded(selectedBuilding._id, floor.name) && getRoomsByBuildingAndFloor(selectedBuilding._id, floor.name).length === 0"
+                  class="text-center py-8 text-gray-500">
+                  <p>ไม่มีห้องในชั้นนี้</p>
+
+                  <!-- ปุ่มสร้างห้องพักในชั้นนี้ -->
+                  <div class="flex flex-wrap gap-2">
+                    <button @click="openAddRoomDialog(selectedBuilding._id, floor.name)"
+                      class="xl:w-[305px] md:w-[225px] w-[160px] h-32 border-2 border-dashed border-stone-300 rounded-lg flex items-center justify-center text-3xl text-stone-400 hover:bg-stone-100 transition">
+                      +
+                    </button>
+                  </div>
                 </div>
+
+
               </div>
             </div>
 
@@ -322,16 +346,11 @@
           </div>
         </div>
 
-        <!-- Input สำหรับเพิ่มลำดับชั้นใหม่ (แบบเดิม - เก็บไว้เพื่อความเข้ากันได้) -->
-        <div class="flex justify-start items-center space-x-2 my-12">
-          <label class="text-stone-400 font-bold">ลำดับชั้น : </label>
-          <input v-model="floorDetail" type="text" class="border rounded-md p-2" placeholder="รายละเอียด..."
-            @keyup.enter="addFloorDetail" :disabled="savingFloorDetail" />
-          <button @click="addFloorDetail"
-            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-            :disabled="savingFloorDetail || !floorDetail.trim()">
-            {{ savingFloorDetail ? 'กำลังบันทึก...' : 'ตกลง' }}
-          </button>
+        <!-- แสดงข้อความเมื่อไม่มีตึก -->
+        <div v-else class="text-center py-12">
+          <div class="text-gray-500 text-lg">
+            <p>ยังไม่มีตึก กรุณาสร้างตึกก่อน</p>
+          </div>
         </div>
       </div>
 
@@ -397,13 +416,27 @@
           </button>
         </div>
 
-      </div>  
+      </div>
+
+      <!-- ปุ่มบันทึกและยกเลิก -->
+      <div class="flex justify-end space-x-3 mt-6 pt-4 border-t">
+        <button @click="cancelDialog"
+          class="px-4 py-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+          :disabled="savingBuilding">
+          ยกเลิก
+        </button>
+        <button @click="saveBuilding"
+          class="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          :disabled="savingBuilding || !buildingName.trim()">
+          {{ savingBuilding ? 'กำลังบันทึก...' : 'บันทึก' }}
+        </button>
+      </div>
     </div>
   </Dialog>
 
   <!-- เพิ่มห้อง -->
   <Dialog :modelValue="addRoomDialogVisible" @update:modelValue="addRoomDialogVisible = $event"
-    :header="`เพิ่มห้อง - ตึก ${selectedBuildingId} ชั้น ${selectedFloor}`">
+    :header="`เพิ่มห้อง - ตึก ${getBuildingName(selectedBuildingId)} ชั้น ${selectedFloor}`">
     <div class="p-4">
       <AddRoom @roomSaved="handleRoomSaved" :selectedFloor="selectedFloor" :selectedBuildingId="selectedBuildingId" />
     </div>
@@ -428,7 +461,8 @@ const posSummary = ref({}); // สรุปข้อมูล POS
 const loading = ref(false); // สถานะการโหลด
 const savedRoomData = ref(null); // ข้อมูลห้องที่บันทึกสำเร็จ
 const savingBuilding = ref(false); // สถานะการบันทึกตึก
-const statusRoomEditable = ref(false); // สถานะการเปิด/ปิด Drawer
+const statusEditable = ref(false); // สถานะการเปิด/ปิดการแสดงสถานะแบบ dropdown
+const statusRoomEditable = ref(false); // สถานะการเปิด/ปิดการแสดงสถานะห้องแบบ dropdown
 const dialogVisible = ref(false); // สถานะการเปิด/ปิด Dialog
 const addRoomDialogVisible = ref(false); // สถานะการเปิด/ปิด Dialog เพิ่มห้อง
 const selectedFloor = ref(''); // ชั้นที่เลือกสำหรับสร้างห้อง
@@ -536,8 +570,6 @@ async function updateRoomStatus(roomId, field, value) {
 // ฟังก์ชันโหลดข้อมูลห้อง
 async function loadRooms() {
   try {
-    console.log('🔄 Loading rooms from: http://localhost:9999/HotelSleepGun/pos/rooms');
-
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
@@ -550,14 +582,26 @@ async function loadRooms() {
       }
     });
 
-    console.log('📡 Room response status:', response.status);
     const result = await response.json();
-    console.log('📦 Room response data:', result);
 
     if (response.ok) {
       rooms.value = result.data || [];
-      console.log('✅ Rooms loaded successfully:', rooms.value.length, 'rooms');
-      console.log('📋 Rooms data:', rooms.value);
+
+      // รีเฟรชข้อมูลสถิติหลังจากโหลดห้องใหม่
+      try {
+        const posSummaryResult = await getPOSStatistics();
+        if (posSummaryResult) {
+          posSummary.value = {
+            totalRoomCount: posSummaryResult.totalRoomCount || 0,
+            totalRoomCountSleepGun: posSummaryResult.totalRoomCountSleepGun || 0,
+            totalBuildingCount: posSummaryResult.totalBuildingCount || 0,
+            totalFloorCount: posSummaryResult.totalFloorCount || 0,
+            totalPosRecords: posSummaryResult.totalPosRecords || 0
+          };
+        }
+      } catch (error) {
+        console.error('❌ Error refreshing statistics:', error);
+      }
     } else {
       console.error('❌ Error loading rooms:', result.message);
     }
@@ -568,13 +612,15 @@ async function loadRooms() {
 
 // ฟังก์ชันแก้ไขห้อง
 function editRoom(room) {
+  console.log('✏️ Edit room:', room);
   // TODO: เปิด dialog แก้ไขห้อง
-  console.log('Edit room:', room);
   // สามารถเปิด dialog หรือ navigate ไปหน้าแก้ไขห้อง
 }
 
 // ฟังก์ชันลบห้อง
 async function deleteRoom(roomId) {
+  console.log('🗑️ Delete room:', roomId);
+
   if (!confirm('คุณแน่ใจหรือไม่ที่จะลบห้องนี้?')) {
     return;
   }
@@ -636,6 +682,7 @@ async function getPOSData() {
       throw new Error(result.message || 'เกิดข้อผิดพลาดในการดึงข้อมูล POS');
     }
 
+    console.log('📊 POS data fetched successfully:', result.data?.length || 0, 'records');
     return result.data;
   } catch (error) {
     console.error('❌ Error fetching POS data:', error);
@@ -668,6 +715,7 @@ async function getAllBuildings() {
       throw new Error(result.message || 'เกิดข้อผิดพลาดในการดึงข้อมูลตึก');
     }
 
+    console.log('🏢 Buildings fetched successfully:', result.data?.length || 0, 'buildings');
     return result.data;
   } catch (error) {
     console.error('❌ Error fetching buildings:', error);
@@ -700,6 +748,7 @@ async function getPOSStatistics() {
       throw new Error(result.message || 'เกิดข้อผิดพลาดในการดึงข้อมูลสถิติ POS');
     }
 
+    console.log('📊 POS statistics fetched successfully:', result.data);
     return result.data;
   } catch (error) {
     console.error('❌ Error fetching POS statistics:', error);
@@ -814,13 +863,15 @@ const goToManageTag = () => {
   router.push("/managetag");
 };
 
-// ฟังก์ชันเปิด Drawer
+// ฟังก์ชันเปิด Drawer (เก็บไว้เพื่อความเข้ากันได้)
 const openDrawer = () => {
   console.log('🎯 Opening drawer...');
   console.log('📊 statusRoomEditable before:', statusRoomEditable.value);
   statusRoomEditable.value = true;
   console.log('📊 statusRoomEditable after:', statusRoomEditable.value);
 };
+
+
 
 const openDialog = () => {
   console.log('🎯 Opening dialog...');
@@ -829,37 +880,54 @@ const openDialog = () => {
   console.log('📊 dialogVisible after:', dialogVisible.value);
 };
 
+// ฟังก์ชันเปิด/ปิดการแสดงสถานะแบบ dropdown
+const openStatusEditablePopup = () => {
+  console.log('🔄 Toggling status editable...');
+  statusEditable.value = !statusEditable.value;
+  console.log('📊 statusEditable after:', statusEditable.value);
+};
+
+// ฟังก์ชันเปิด/ปิดการแสดงสถานะห้องแบบ dropdown
+const openStatusRoomEditablePopup = () => {
+  console.log('🔄 Toggling status room editable...');
+  statusRoomEditable.value = !statusRoomEditable.value;
+  console.log('📊 statusRoomEditable after:', statusRoomEditable.value);
+};
+
 // ฟังก์ชันเปิด Dialog เพิ่มห้อง (แบบเก่า - เก็บไว้เพื่อความเข้ากันได้)
 const openAddRoomDialogOld = (floorName) => {
+  console.log('🚪 Opening add room dialog (old):', floorName);
   selectedFloor.value = floorName;
   addRoomDialogVisible.value = true;
 };
 
 // ฟังก์ชันรับข้อมูลห้องที่บันทึกสำเร็จ
-const handleRoomSaved = (roomData) => {
+const handleRoomSaved = async (roomData) => {
   // ปิด Dialog
   addRoomDialogVisible.value = false;
 
   if (roomData) {
-    console.log('📦 Room saved successfully:', roomData);
-    // เก็บข้อมูลห้องที่บันทึกสำเร็จ
-    savedRoomData.value = roomData;
-    // รีเฟรชข้อมูล POS และห้องที่แสดงในหน้า
-    refreshPosData();
-  } else {
-    console.log('❌ Room creation cancelled');
+    // รีเฟรชข้อมูลห้องใหม่ทันที
+    await loadRooms();
+    // ไม่ต้อง filter อะไรเพิ่ม rooms.value จะถูกรีเฟรชและแสดงผลทันที
+    alert('เพิ่มห้องใหม่เรียบร้อยแล้ว!');
   }
 };
 
 // ฟังก์ชันรีเฟรชข้อมูล POS
 const refreshPosData = async () => {
   try {
+    console.log('🔄 Refreshing POS data...');
     const posDataResult = await getPOSData();
     const posSummaryResult = await getPOSStatistics();
+
+    console.log('📦 POS data result:', posDataResult);
+    console.log('📊 POS summary result:', posSummaryResult);
 
     // อัปเดตข้อมูล POS
     if (posDataResult && posDataResult.length > 0) {
       posData.value = posDataResult[0];
+      console.log('✅ Updated posData:', posData.value);
     }
 
     // อัปเดตสถิติ
@@ -871,9 +939,10 @@ const refreshPosData = async () => {
         totalFloorCount: posSummaryResult.totalFloorCount || 0,
         totalPosRecords: posSummaryResult.totalPosRecords || 0
       };
+      console.log('✅ Updated posSummary:', posSummary.value);
     }
 
-    // รีเฟรชข้อมูลแท็กและตึก
+    // รีเฟรชข้อมูลแท็กและตึก (ไม่รวมห้อง เพราะโหลดแล้ว)
     try {
       const token = localStorage.getItem('token');
 
@@ -887,6 +956,7 @@ const refreshPosData = async () => {
       const tagsResult = await tagsResponse.json();
       if (tagsResponse.ok) {
         tags.value = tagsResult.data || [];
+        console.log('✅ Refreshed tags:', tags.value.length, 'tags');
       }
 
       // โหลดข้อมูลตึก
@@ -899,12 +969,11 @@ const refreshPosData = async () => {
       const buildingsResult = await buildingsResponse.json();
       if (buildingsResponse.ok) {
         buildings.value = buildingsResult.data || [];
+        console.log('✅ Refreshed buildings:', buildings.value.length, 'buildings');
+        console.log('📋 Buildings data:', buildings.value);
       }
-
-      // โหลดข้อมูลห้อง
-      await loadRooms();
     } catch (error) {
-      console.error('❌ Error refreshing tags/buildings/rooms:', error);
+      console.error('❌ Error refreshing tags/buildings:', error);
     }
   } catch (error) {
     console.error('❌ Error refreshing POS data:', error);
@@ -933,8 +1002,10 @@ const previewStyle = computed(() => {
 
 // ฟังก์ชันจัดการการอัปโหลดรูปภาพ
 const handleImageUpload = (event) => {
+  console.log('🖼️ Handling image upload...');
   const file = event.target.files[0];
   if (file) {
+    console.log('🖼️ File selected:', file.name, 'Size:', file.size, 'Type:', file.type);
     // ตรวจสอบขนาดไฟล์ (ไม่เกิน 5MB)
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
@@ -961,6 +1032,8 @@ const handleImageUpload = (event) => {
 
 // ฟังก์ชันเพิ่มลำดับชั้น
 const addFloorDetail = async () => {
+  console.log('🏢 Adding floor detail:', floorDetail.value);
+
   if (!floorDetail.value.trim()) {
     alert('กรุณากรอกรายละเอียดลำดับชั้น');
     return;
@@ -1049,43 +1122,68 @@ const addFloorDetail = async () => {
 
 // ฟังก์ชันดึงห้องพักตามชั้น
 const getRoomsByFloor = (floorName) => {
-  return rooms.value.filter(room => room.floor === floorName);
+  console.log('🏠 Getting rooms for floor:', floorName);
+  const floorRooms = rooms.value.filter(room => room.floor === floorName);
+  console.log('🏠 Rooms found for floor:', floorRooms.length);
+  return floorRooms;
 };
 
 // ฟังก์ชันใหม่สำหรับดึงห้องตามตึกและชั้น
 const getRoomsByBuildingAndFloor = (buildingId, floorName) => {
-  return rooms.value.filter(room => room.buildingId === buildingId && room.floor === floorName);
+  return rooms.value.filter(room => {
+    // ตรวจสอบ buildingId - อาจจะเป็น string หรือ object
+    let roomBuildingId;
+    if (typeof room.buildingId === 'object' && room.buildingId !== null) {
+      roomBuildingId = room.buildingId._id || room.buildingId;
+    } else {
+      roomBuildingId = room.buildingId;
+    }
+    // เปรียบเทียบโดยใช้ String ครอบเสมอ
+    const buildingMatch = String(roomBuildingId) === String(buildingId);
+    const floorMatch = String(room.floor) === String(floorName);
+    return buildingMatch && floorMatch;
+  });
 };
 
 // ฟังก์ชันสำหรับสลับการแสดง/ซ่อนตึก
 const toggleBuildingExpanded = (buildingId) => {
+  console.log('🏢 Toggling building expanded:', buildingId);
   const index = expandedBuildings.value.indexOf(buildingId);
   if (index > -1) {
     expandedBuildings.value.splice(index, 1);
+    console.log('🏢 Building collapsed');
   } else {
     expandedBuildings.value.push(buildingId);
+    console.log('🏢 Building expanded');
   }
 };
 
 // ฟังก์ชันสำหรับสลับการแสดง/ซ่อนชั้น
 const toggleFloorExpanded = (buildingId, floorName) => {
+  console.log('🏢 Toggling floor expanded:', buildingId, floorName);
   const key = `${buildingId}-${floorName}`;
   const index = expandedFloors.value.indexOf(key);
   if (index > -1) {
     expandedFloors.value.splice(index, 1);
+    console.log('🏢 Floor collapsed');
   } else {
     expandedFloors.value.push(key);
+    console.log('🏢 Floor expanded');
   }
 };
 
 // ฟังก์ชันสำหรับตรวจสอบว่าชั้นขยายแล้วหรือไม่
 const isFloorExpanded = (buildingId, floorName) => {
   const key = `${buildingId}-${floorName}`;
-  return expandedFloors.value.includes(key);
+  const isExpanded = expandedFloors.value.includes(key);
+  console.log('🏢 Floor expanded check:', buildingId, floorName, '=', isExpanded);
+  return isExpanded;
 };
 
 // ฟังก์ชันสำหรับเพิ่มชั้นในตึก
 const addFloorToBuilding = async (buildingId) => {
+  console.log('🏢 Adding floor to building:', buildingId, 'Floor name:', newFloorName.value);
+
   if (!newFloorName.value.trim()) {
     alert('กรุณากรอกชื่อชั้น');
     return;
@@ -1138,6 +1236,8 @@ const addFloorToBuilding = async (buildingId) => {
 
 // ฟังก์ชันสำหรับลบชั้นจากตึก
 const removeFloorFromBuilding = async (buildingId, floorName) => {
+  console.log('🏢 Removing floor from building:', buildingId, 'Floor name:', floorName);
+
   if (confirm(`คุณต้องการลบชั้น "${floorName}" หรือไม่?`)) {
     try {
       const token = localStorage.getItem('token');
@@ -1176,6 +1276,8 @@ const removeFloorFromBuilding = async (buildingId, floorName) => {
 
 // ฟังก์ชันลบลำดับชั้น (แบบเดิม - เก็บไว้เพื่อความเข้ากันได้)
 const removeFloorDetail = async (index) => {
+  console.log('🏢 Removing floor detail at index:', index);
+
   if (confirm('คุณต้องการลบลำดับชั้นนี้หรือไม่?')) {
     try {
       const token = localStorage.getItem('token');
@@ -1246,6 +1348,13 @@ const removeFloorDetail = async (index) => {
 
 // แก้ไขฟังก์ชัน openAddRoomDialog เพื่อรองรับ buildingId
 const openAddRoomDialog = (buildingId, floorName) => {
+  console.log('🚪 Opening add room dialog:', {
+    buildingId: buildingId,
+    floorName: floorName,
+    selectedBuildingId: selectedBuildingId.value,
+    selectedFloor: selectedFloor.value
+  });
+
   selectedBuildingId.value = buildingId;
   selectedFloor.value = floorName;
   addRoomDialogVisible.value = true;
@@ -1253,6 +1362,7 @@ const openAddRoomDialog = (buildingId, floorName) => {
 
 // ฟังก์ชันยกเลิกการสร้างตึก
 const cancelDialog = () => {
+  console.log('❌ Cancelling dialog...');
   dialogVisible.value = false;
   // รีเซ็ตค่าทั้งหมด
   buildingName.value = '';
@@ -1260,10 +1370,20 @@ const cancelDialog = () => {
   backgroundColor.value = '#FFBB00';
   backgroundImage.value = '';
   backgroundType.value = 'color';
+  console.log('✅ Dialog cancelled and reset');
 };
 
 // ฟังก์ชันบันทึกข้อมูลตึก
 const saveBuilding = async () => {
+  console.log('🏢 Saving building...');
+  console.log('🏢 Building data:', {
+    name: buildingName.value,
+    textColor: textColor.value,
+    backgroundColor: backgroundColor.value,
+    backgroundType: backgroundType.value,
+    backgroundImage: backgroundImage.value ? 'present' : 'none'
+  });
+
   if (!buildingName.value.trim()) {
     alert('กรุณากรอกชื่อตึก');
     return;
@@ -1348,19 +1468,65 @@ const saveBuilding = async () => {
 
 // ฟังก์ชันสำหรับเลือกตึก
 const selectBuilding = (buildingId) => {
+  console.log('🏢 Selecting building:', buildingId);
   selectedBuildingId.value = buildingId;
+
+  // Debug: ตรวจสอบข้อมูลตึกที่เลือก
+  const selectedBuilding = buildings.value.find(b => b._id === buildingId);
+  console.log('🏢 Selected building data:', selectedBuilding);
+
   // ล้างข้อมูลชั้นที่ขยายแล้วเมื่อเปลี่ยนตึก
   expandedFloors.value = [];
 };
 
 // Computed property สำหรับตึกที่เลือก
 const selectedBuilding = computed(() => {
-  return buildings.value.find(b => b._id === selectedBuildingId.value);
+  const building = buildings.value.find(b => b._id === selectedBuildingId.value);
+  console.log('🏢 Computed selectedBuilding:', {
+    selectedBuildingId: selectedBuildingId.value,
+    foundBuilding: building,
+    totalBuildings: buildings.value.length
+  });
+  return building;
 });
 
 // ฟังก์ชันสำหรับนับจำนวนห้องทั้งหมดในตึกที่เลือก
 const getTotalRoomsInBuilding = (buildingId) => {
-  return rooms.value.filter(room => room.buildingId === buildingId).length;
+  console.log('🏢 Counting rooms for buildingId:', buildingId);
+  const buildingRooms = rooms.value.filter(room => {
+    // ตรวจสอบ buildingId - อาจจะเป็น string หรือ object
+    let roomBuildingId;
+    if (typeof room.buildingId === 'object' && room.buildingId !== null) {
+      roomBuildingId = room.buildingId._id || room.buildingId;
+    } else {
+      roomBuildingId = room.buildingId;
+    }
+
+    const match = String(roomBuildingId) === String(buildingId);
+    if (match) {
+      console.log(`✅ Room ${room.roomNumber} belongs to building ${buildingId}`);
+    } else {
+      console.log(`❌ Room ${room.roomNumber} (buildingId: ${roomBuildingId}) does not belong to building ${buildingId}`);
+    }
+    return match;
+  });
+
+  console.log(`🏢 Total rooms in building ${buildingId}:`, buildingRooms.length);
+  return buildingRooms.length;
+};
+
+// ฟังก์ชันสำหรับดึงชื่อตึกจาก buildingId
+const getBuildingName = (buildingId) => {
+  console.log('🏢 Getting building name for ID:', buildingId);
+  console.log('📋 Available buildings:', buildings.value);
+
+  const building = buildings.value.find(b => b._id === buildingId);
+  console.log('🏢 Found building:', building);
+
+  const buildingName = building ? building.nameBuilding : 'ไม่พบตึก';
+  console.log('🏢 Building name:', buildingName);
+
+  return buildingName;
 };
 
 
