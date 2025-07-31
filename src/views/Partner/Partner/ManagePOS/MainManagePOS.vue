@@ -227,8 +227,6 @@
                           <span v-if="room.buildingId">ตึก {{ room.buildingId.nameBuilding }}</span>
                           <span v-if="room.floor">, ชั้น {{ room.floor }}</span>
                         </div>
-
-
                       </div>
 
                       <!-- ตัวเลือกการจัดการ -->
@@ -306,6 +304,7 @@
                   </div>
                 </div>
 
+
                 <!-- แสดงข้อความเมื่อไม่มีห้องในชั้นนี้ -->
                 <div
                   v-if="isFloorExpanded(selectedBuilding._id, floor.name) && getRoomsByBuildingAndFloor(selectedBuilding._id, floor.name).length === 0"
@@ -336,6 +335,20 @@
                 {{ savingFloor ? 'กำลังบันทึก...' : 'เพิ่มชั้น' }}
               </button>
             </div>
+
+            <!-- ปุ่มลบและแก้ไขข้อมูลของตึกแต่ละตึกที่เลือก -->
+            <div class="mt-6 flex justify-end space-x-2">
+              <button class="text-red-500 hover:text-red-600 shadow-md px-4 py-2 rounded-lg"
+                @click="handleDeleteBuilding(selectedBuilding)"
+                :disabled="getTotalRoomsInBuilding(selectedBuilding._id) > 0"
+                :title="getTotalRoomsInBuilding(selectedBuilding._id) > 0 ? 'ต้องลบห้องทั้งหมดก่อน' : ''">
+                ลบ
+              </button>
+              <button class="bg-amber-400 hover:bg-amber-500 text-white shadow-md px-4 py-2 rounded-lg"
+                @click="handleEditBuilding(selectedBuilding)">
+                แก้ไขข้อมูลตึก
+              </button>
+            </div>
           </div>
 
           <!-- แสดงข้อความเมื่อยังไม่ได้เลือกตึก -->
@@ -361,7 +374,8 @@
   <AddRoom v-if="addRoomDialogVisible" @room-saved="handleRoomSaved" @close="addRoomDialogVisible = false" />
 
   <!-- เพิ่มตึก -->
-  <Dialog :modelValue="dialogVisible" @update:modelValue="dialogVisible = $event" header="เพิ่มตึก">
+  <Dialog :modelValue="dialogVisible" @update:modelValue="dialogVisible = $event"
+    :header="isEditBuilding ? 'แก้ไขข้อมูลตึก' : 'เพิ่มตึก'">
     <div class="p-4">
       <div class="flex justify-start items-center space-x-2">
         <label class="block  font-bold">ชื่อตึก :</label>
@@ -428,7 +442,7 @@
         <button @click="saveBuilding"
           class="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           :disabled="savingBuilding || !buildingName.trim()">
-          {{ savingBuilding ? 'กำลังบันทึก...' : 'บันทึก' }}
+          {{ savingBuilding ? 'กำลังบันทึก...' : (isEditBuilding ? 'อัปเดต' : 'บันทึก') }}
         </button>
       </div>
     </div>
@@ -485,6 +499,8 @@ const buildingName = ref(''); // ชื่อตึก
 const textColor = ref('#000000'); // สีข้อความ
 const backgroundColor = ref('#FFBB00'); // สีพื้นหลัง
 const backgroundImage = ref(''); // รูปภาพพื้นหลัง
+const isEditBuilding = ref(false);
+const editingBuildingId = ref(null);
 
 
 // ฟังก์ชันสำหรับคำนวณสีข้อความที่เหมาะสมกับพื้นหลัง
@@ -570,43 +586,18 @@ async function updateRoomStatus(roomId, field, value) {
 // ฟังก์ชันโหลดข้อมูลห้อง
 async function loadRooms() {
   try {
+    loading.value = true;
     const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
-    }
-
     const response = await fetch('http://localhost:9999/HotelSleepGun/pos/rooms', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Authorization': `Bearer ${token}` }
     });
-
-    const result = await response.json();
-
-    if (response.ok) {
-      rooms.value = result.data || [];
-
-      // รีเฟรชข้อมูลสถิติหลังจากโหลดห้องใหม่
-      try {
-        const posSummaryResult = await getPOSStatistics();
-        if (posSummaryResult) {
-          posSummary.value = {
-            totalRoomCount: posSummaryResult.totalRoomCount || 0,
-            totalRoomCountSleepGun: posSummaryResult.totalRoomCountSleepGun || 0,
-            totalBuildingCount: posSummaryResult.totalBuildingCount || 0,
-            totalFloorCount: posSummaryResult.totalFloorCount || 0,
-            totalPosRecords: posSummaryResult.totalPosRecords || 0
-          };
-        }
-      } catch (error) {
-        console.error('❌ Error refreshing statistics:', error);
-      }
-    } else {
-      console.error('❌ Error loading rooms:', result.message);
-    }
+    const data = await response.json();
+    // ตรวจสอบว่า data เป็น array หรือมี data.data
+    rooms.value = Array.isArray(data) ? data : (data.data || []);
   } catch (error) {
     console.error('❌ Error loading rooms:', error);
+  } finally {
+    loading.value = false;
   }
 }
 
@@ -903,14 +894,20 @@ const openAddRoomDialogOld = (floorName) => {
 
 // ฟังก์ชันรับข้อมูลห้องที่บันทึกสำเร็จ
 const handleRoomSaved = async (roomData) => {
-  // ปิด Dialog
   addRoomDialogVisible.value = false;
-
   if (roomData) {
-    // รีเฟรชข้อมูลห้องใหม่ทันที
-    await loadRooms();
-    // ไม่ต้อง filter อะไรเพิ่ม rooms.value จะถูกรีเฟรชและแสดงผลทันที
-    alert('เพิ่มห้องใหม่เรียบร้อยแล้ว!');
+    // รอ backend sync แล้วโหลดข้อมูลห้องใหม่
+    setTimeout(async () => {
+      await loadRooms();
+      // แสดง Swal alert แค่ตัวเดียว
+      const Swal = (await import('sweetalert2')).default;
+      Swal.fire({
+        icon: 'success',
+        title: 'บันทึกข้อมูลห้องสำเร็จ',
+        showConfirmButton: false,
+        timer: 1200
+      });
+    }, 500);
   }
 };
 
@@ -1370,6 +1367,8 @@ const cancelDialog = () => {
   backgroundColor.value = '#FFBB00';
   backgroundImage.value = '';
   backgroundType.value = 'color';
+  isEditBuilding.value = false;
+  editingBuildingId.value = null;
   console.log('✅ Dialog cancelled and reset');
 };
 
@@ -1417,52 +1416,43 @@ const saveBuilding = async () => {
       throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
     }
 
-    // เรียก API เพื่อบันทึกข้อมูลลงฐานข้อมูล
-    const response = await fetch('http://localhost:9999/HotelSleepGun/pos/buildings', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(buildingData),
-    });
-
-    // ตรวจสอบ response type
-    const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-      throw new Error('Server returned non-JSON response. Please try again.');
+    let response, result;
+    if (isEditBuilding.value && editingBuildingId.value) {
+      // อัปเดต
+      response = await fetch(`http://localhost:9999/HotelSleepGun/pos/buildings/${editingBuildingId.value}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(buildingData),
+      });
+    } else {
+      // เพิ่มใหม่
+      response = await fetch('http://localhost:9999/HotelSleepGun/pos/buildings', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(buildingData),
+      });
     }
-
-    const result = await response.json();
+    result = await response.json();
 
     if (!response.ok) {
       throw new Error(result.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
     }
 
-    alert('บันทึกข้อมูลตึกเรียบร้อยแล้ว');
+    alert(isEditBuilding.value ? 'อัปเดตข้อมูลตึกเรียบร้อยแล้ว' : 'บันทึกข้อมูลตึกเรียบร้อยแล้ว');
     cancelDialog();
-
-    // รีเฟรชข้อมูลตึกที่แสดงในหน้า
-    try {
-      const fetchedBuildings = await getAllBuildings();
-      buildings.value = fetchedBuildings;
-    } catch (error) {
-      console.error('❌ Error refreshing buildings:', error);
-    }
-
+    buildings.value = await getAllBuildings();
   } catch (error) {
-    console.error('❌ Error saving building:', error);
-
-    // Check if it's an authentication error
-    if (error.message.includes('token') || error.message.includes('เข้าสู่ระบบ')) {
-      alert('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่');
-      // Redirect to login page
-      router.push('/loginpartner');
-    } else {
-      alert(`เกิดข้อผิดพลาดในการบันทึกข้อมูล: ${error.message}`);
-    }
+    alert(`เกิดข้อผิดพลาดในการบันทึกข้อมูล: ${error.message}`);
   } finally {
     savingBuilding.value = false;
+    isEditBuilding.value = false;
+    editingBuildingId.value = null;
   }
 };
 
@@ -1529,5 +1519,152 @@ const getBuildingName = (buildingId) => {
   return buildingName;
 };
 
+// Define emits
+const emit = defineEmits(['room-saved', 'roomData']);
 
+// ฟังก์ชันสำหรับบันทึกข้อมูลห้อง
+const saveRoomData = async (roomData) => {
+  console.log('💾 Saving room data:', roomData);
+
+  try {
+    // ตรวจสอบข้อมูลห้อง
+    if (!roomData.roomNumber || !roomData.typeRoom) {
+      throw new Error('กรุณากรอกข้อมูลห้องให้ครบถ้วน');
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+    }
+
+    // เรียก API เพื่อบันทึกข้อมูลห้อง
+    const response = await fetch('http://localhost:9999/HotelSleepGun/pos/rooms', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(roomData),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูลห้อง');
+    }
+
+    alert('บันทึกข้อมูลห้องเรียบร้อยแล้ว');
+
+    // Emit event to parent
+    emit('room-saved', result.data);
+
+    // ปิด Dialog
+    addRoomDialogVisible.value = false;
+
+    // รีเฟรชข้อมูลห้อง
+    await loadRooms();
+
+  } catch (error) {
+    console.error('❌ Error saving room data:', error);
+    alert(`เกิดข้อผิดพลาดในการบันทึกข้อมูลห้อง: ${error.message}`);
+  }
+};
+
+// ฟังก์ชันสำหรับยกเลิกการเพิ่มห้อง
+function handleCancel() {
+  // รีเซ็ตค่าทั้งหมด
+  selectedFloor.value = '';
+  selectedBuildingId.value = '';
+  addRoomDialogVisible.value = false;
+
+  // Emit event to parent
+  emit('room-saved', null);
+}
+
+// ฟังก์ชันสำหรับยืนยันการบันทึกห้อง
+async function confirmSave() {
+  try {
+    // ตรวจสอบข้อมูลห้อง
+    if (!roomData.roomNumber || !roomData.typeRoom) {
+      throw new Error('กรุณากรอกข้อมูลห้องให้ครบถ้วน');
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+    }
+
+    // เรียก API เพื่อบันทึกข้อมูลห้อง
+    const response = await fetch('http://localhost:9999/HotelSleepGun/pos/rooms', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(roomData),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูลห้อง');
+    }
+
+    alert('บันทึกข้อมูลห้องเรียบร้อยแล้ว');
+
+    // Emit event to parent
+    emit('room-saved', result.data);
+
+    // ปิด Dialog
+    addRoomDialogVisible.value = false;
+
+    // รีเฟรชข้อมูลห้อง
+    await loadRooms();
+
+  } catch (error) {
+    console.error('❌ Error saving room data:', error);
+    alert(`เกิดข้อผิดพลาดในการบันทึกข้อมูลห้อง: ${error.message}`);
+  }
+}
+
+// ฟังก์ชันแก้ไขข้อมูลตึก
+function handleEditBuilding(building) {
+  isEditBuilding.value = true;
+  editingBuildingId.value = building._id;
+  dialogVisible.value = true;
+  // กรอกข้อมูลเดิมลงในฟอร์ม
+  buildingName.value = building.nameBuilding;
+  textColor.value = building.colorText;
+  backgroundType.value = building.hascolorBG === 'imgBG' ? 'image' : 'color';
+  backgroundColor.value = building.colorBG || '#FFBB00';
+  backgroundImage.value = building.imgBG || '';
+}
+
+// ฟังก์ชันลบตึก
+async function handleDeleteBuilding(building) {
+  if (getTotalRoomsInBuilding(building._id) > 0) {
+    alert('กรุณาลบห้องทั้งหมดในตึกนี้ก่อน');
+    return;
+  }
+  if (!confirm(`คุณต้องการลบตึก "${building.nameBuilding}" หรือไม่?`)) return;
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`http://localhost:9999/HotelSleepGun/pos/buildings/${building._id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message || 'เกิดข้อผิดพลาดในการลบตึก');
+    alert('ลบตึกเรียบร้อยแล้ว');
+    // รีเฟรชข้อมูลตึก
+    buildings.value = await getAllBuildings();
+    // ถ้าตึกที่ลบคือ selectedBuilding ให้ reset
+    if (selectedBuildingId.value === building._id) selectedBuildingId.value = '';
+  } catch (error) {
+    alert(`เกิดข้อผิดพลาดในการลบตึก: ${error.message}`);
+  }
+}
 </script>

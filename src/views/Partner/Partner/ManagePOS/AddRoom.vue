@@ -107,39 +107,125 @@ console.log('🏠 AddRoom props received:', {
   selectedBuildingId: props.selectedBuildingId
 });
 
+// // ตัวแปรสำหรับเก็บข้อมูลตึก
+// const buildings = ref([]);
+
+// // ฟังก์ชันสำหรับดึงชื่อตึกจาก buildingId
+// const getBuildingName = (buildingId) => {
+//   // ตรวจสอบว่า buildings.value เป็น array หรือไม่
+//   if (!Array.isArray(buildings.value)) {
+//     return `ไม่พบตึก (ID: ${buildingId}) - ข้อมูลตึกไม่ถูกต้อง`;
+//   }
+
+//   const building = buildings.value.find(b => b._id === buildingId);
+
+//   if (building) {
+//     return building.nameBuilding;
+//   } else {
+//     // ลองหาแบบอื่นๆ
+//     const buildingByString = buildings.value.find(b => String(b._id) === String(buildingId));
+//     if (buildingByString) {
+//       return buildingByString.nameBuilding;
+//     }
+
+//     return `ไม่พบตึก (ID: ${buildingId})`;
+//   }
+// };
+
+// // ฟังก์ชันสำหรับดึงข้อมูลตึกทั้งหมด
+// const getAllBuildings = async () => {
+//   try {
+//     const token = localStorage.getItem('token');
+//     if (!token) {
+//       throw new Error('ไม่พบ token');
+//     }
+
+//     const response = await fetch('http://localhost:9999/HotelSleepGun/pos/buildings', {
+//       headers: {
+//         'Authorization': `Bearer ${token}`,
+//       },
+//     });
+
+//     if (!response.ok) {
+//       throw new Error('ไม่สามารถดึงข้อมูลตึกได้');
+//     }
+
+//     const data = await response.json();
+
+//     // ตรวจสอบและแปลงข้อมูลให้เป็น array
+//     if (Array.isArray(data)) {
+//       return data;
+//     } else if (data && Array.isArray(data.buildings)) {
+//       return data.buildings;
+//     } else if (data && Array.isArray(data.data)) {
+//       return data.data;
+//     } else {
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error('❌ Error fetching buildings:', error);
+//     return [];
+//   }
+// };
+
+// Define emits
+const emit = defineEmits(['room-saved', 'roomData']);
+
+// Debug
+console.log('🚀 AddRoom component mounted');
+
+// ตัวแปรสำหรับเก็บข้อมูลห้อง
+const roomData = ref({});
+
+// ฟังก์ชันสำหรับดึงข้อมูลห้องตาม id
+const fetchRoomData = async (roomId) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`http://localhost:9999/HotelSleepGun/pos/rooms/${roomId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('ไม่สามารถดึงข้อมูลห้องได้');
+    }
+
+    const data = await response.json();
+    roomData.value = data;
+
+    // กรอกข้อมูลลงในฟิลด์ต่างๆ
+    NumberRoom.value = data.roomNumber || '';
+    selectedTypeRoom.value = data.typeRoom || null;
+    selectedTypeAir.value = data.air || null;
+    Price.value = data.price || null;
+    Stay.value = data.stayPeople || null;
+    RoomDetail.value = data.roomDetail || '';
+
+    // กรอกข้อมูล typeRoomHotel
+    selectedTypeRoomHotel.value = data.typeRoomHotel || [];
+
+    // กรอกข้อมูลรูปภาพ
+    uploadedImages.value = data.images || [];
+
+  } catch (error) {
+    console.error('❌ Error fetching room data:', error);
+  }
+};
+
 // ตัวแปรสำหรับเก็บข้อมูลตึก
 const buildings = ref([]);
 
 // ฟังก์ชันสำหรับดึงชื่อตึกจาก buildingId
 const getBuildingName = (buildingId) => {
-  // ตรวจสอบว่า buildings.value เป็น array หรือไม่
-  if (!Array.isArray(buildings.value)) {
-    return `ไม่พบตึก (ID: ${buildingId}) - ข้อมูลตึกไม่ถูกต้อง`;
-  }
-
   const building = buildings.value.find(b => b._id === buildingId);
-
-  if (building) {
-    return building.nameBuilding;
-  } else {
-    // ลองหาแบบอื่นๆ
-    const buildingByString = buildings.value.find(b => String(b._id) === String(buildingId));
-    if (buildingByString) {
-      return buildingByString.nameBuilding;
-    }
-
-    return `ไม่พบตึก (ID: ${buildingId})`;
-  }
+  return building ? building.nameBuilding : 'ไม่พบตึก';
 };
 
 // ฟังก์ชันสำหรับดึงข้อมูลตึกทั้งหมด
 const getAllBuildings = async () => {
   try {
     const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('ไม่พบ token');
-    }
-
     const response = await fetch('http://localhost:9999/HotelSleepGun/pos/buildings', {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -151,25 +237,15 @@ const getAllBuildings = async () => {
     }
 
     const data = await response.json();
-
-    // ตรวจสอบและแปลงข้อมูลให้เป็น array
-    if (Array.isArray(data)) {
-      return data;
-    } else if (data && Array.isArray(data.buildings)) {
-      return data.buildings;
-    } else if (data && Array.isArray(data.data)) {
-      return data.data;
-    } else {
-      return [];
-    }
+    buildings.value = data.buildings || data.data || [];
   } catch (error) {
     console.error('❌ Error fetching buildings:', error);
-    return [];
   }
 };
 
 // Define emits
-const emit = defineEmits(['roomSaved', 'roomData'])
+
+
 import FloatInput from '@/components/element/FloatInput.vue'
 import FloatInputTextarea from '@/components/element/FloatInputTextarea.vue'
 
@@ -325,7 +401,7 @@ function handleCancel() {
   highlightField.value = '';
 
   // ส่ง event ไปยัง parent component เพื่อปิด Dialog
-  emit('roomSaved', null);
+  emit('room-saved', null);
 }
 
 // 👉 เก็บสถานะ popup save
@@ -337,7 +413,7 @@ function confirmSave() {
     selectedFloor: props.selectedFloor,
     selectedBuildingId: props.selectedBuildingId
   });
-  
+
   // สร้าง FormData
   const formData = new FormData();
   formData.append('roomNumber', NumberRoom.value);
@@ -401,7 +477,7 @@ function confirmSave() {
         };
 
         // ส่งข้อมูลห้องที่บันทึกสำเร็จไปยัง parent component
-        emit('roomSaved', roomData);
+        emit('room-saved', roomData);
 
         // รีเซ็ตค่าทั้งหมดหลังจากบันทึกสำเร็จ
         NumberRoom.value = '';
