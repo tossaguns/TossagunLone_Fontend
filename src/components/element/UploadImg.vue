@@ -128,11 +128,21 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
+// Define props and emits
+const props = defineProps({
+  modelValue: {
+    type: Array,
+    default: () => []
+  }
+})
+
+const emit = defineEmits(['update:modelValue'])
+
 const badToastRef = ref(null)
 const toastRef = ref(null)
 const showConfirm = ref(false)
 const deleteIndex = ref(null)
-const files = ref([])
+const files = ref(props.modelValue || [])
 const fileInput = ref(null)
 const maxFiles = 10
 const showGallery = ref(false)
@@ -152,6 +162,8 @@ function removeFile(index) {
   if (selectedImage.value >= files.value.length) {
     selectedImage.value = Math.max(0, files.value.length - 1)
   }
+  // Emit updated files
+  emit('update:modelValue', files.value)
 }
 
 function clearFiles() {
@@ -163,6 +175,8 @@ function confirmDelete() {
   selectedImage.value = 0
   if (fileInput.value) fileInput.value.value = ''
   showConfirm.value = false
+  // Emit updated files
+  emit('update:modelValue', files.value)
   toastRef.value?.showToast(t('Delete_Completed'), t('DeleteDetail_Completed'))
 }
 
@@ -198,6 +212,8 @@ function prepareFiles(fileList) {
     reader.onload = (e) => {
       file.preview = e.target.result
       files.value.push(file)
+      // Emit updated files after each file is added
+      emit('update:modelValue', files.value)
     }
     reader.readAsDataURL(file)
   })

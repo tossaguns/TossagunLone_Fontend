@@ -51,11 +51,19 @@
             <div class="lg:w-1/2 space-y-2 flex flex-col lg:justify-end lg:items-end px-5">
               <div>
                 <label>จำนวนห้องพักทั้งหมด : </label>
-                <label>{{ tags.lengthRoom }}</label>
+                <label>{{ posSummary.totalRoomCount || 0 }}</label>
               </div>
               <div>
                 <label>โควต้าห้องพัก Sleep Gun :</label>
-                <label>{{ tags.lengthRoomSleepGun }}</label>
+                <label>{{ posSummary.totalRoomCountSleepGun || 0 }}</label>
+              </div>
+              <div>
+                <label>จำนวนตึกทั้งหมด : </label>
+                <label>{{ posSummary.totalBuildingCount || 0 }}</label>
+              </div>
+              <div>
+                <label>จำนวนชั้นทั้งหมด : </label>
+                <label>{{ posSummary.totalFloorCount || 0 }}</label>
               </div>
             </div>
 
@@ -77,20 +85,27 @@
         <div>
           <label class="text-stone-400">เเสดงพรีวิว POS</label>
 
-
+          <!-- กดเลือกตึกในนี้ได้มั้ย -->
           <div class="md:border rounded-md md:p-4">
             <div class="grid grid-cols-2 md:flex md:flex-wrap gap-2">
               <div v-for="building in buildings" :key="building._id"
                 class="md:w-fit border border-stone-300 rounded-md shadow">
-                <button class="w-full md:w-[160px] h-full px-4 py-3 rounded-md font-bold" :style="{
-                  color: building.colorText,
-                  backgroundColor: building.hascolorBG === 'colorBG' ? building.colorBG : 'transparent',
-                  backgroundImage: building.hascolorBG === 'imgBG' ? `url(${building.imgBG})` : 'none',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  textShadow: building.hascolorBG === 'imgBG' ? '2px 2px 4px rgba(0, 0, 0, 0.2), -2px -2px 4px rgba(0, 0, 0, 0.3)' : 'none',
-                  boxShadow: building.hascolorBG === 'imgBG' ? 'inset 0 0 100px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0)' : 'none'
-                }">
+                <button @click="selectBuilding(building._id)"
+                  class="w-full md:w-[160px] h-full px-4 py-3 rounded-md font-bold transition-all duration-300" :class="[
+                    selectedBuildingId === building._id
+                      ? 'border-2 border-yellow-400  shadow-lg scale-105'
+                      : ''
+                  ]" :style="{
+                    color: building.colorText,
+                    backgroundColor: selectedBuildingId === building._id
+                      ? 'rgba(254, 243, 199, 0.8)'
+                      : (building.hascolorBG === 'colorBG' ? building.colorBG : 'transparent'),
+                    backgroundImage: building.hascolorBG === 'imgBG' ? `url(${building.imgBG})` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    textShadow: building.hascolorBG === 'imgBG' ? '2px 2px 4px rgba(0, 0, 0, 0.2), -2px -2px 4px rgba(0, 0, 0, 0.3)' : 'none',
+                    boxShadow: building.hascolorBG === 'imgBG' ? 'inset 0 0 100px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0)' : 'none'
+                  }">
                   {{ building.nameBuilding }}
                 </button>
               </div>
@@ -99,83 +114,235 @@
                 <button @click="openDialog" class="w-full md:w-[160px] hover:bg-stone-50">+ เพิ่มจำนวนตึก</button>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="mt-10">
-              <div class="flex md:justify-start justify-center items-center">
-                <div class="mx-1">
-                  <button
-                    class="xl:w-[305px] md:w-[225px] w-[160px] h-32 border-2 border-dashed border-stone-300 rounded-lg flex items-center justify-center text-3xl text-stone-400 hover:bg-stone-100 transition">
-                    +
-                  </button>
+        <!-- แสดงตึกและชั้น -->
+        <div v-if="buildings.length > 0" class="space-y-6">
+          <!-- แสดงชั้นและห้องของตึกที่เลือก -->
+          <div v-if="selectedBuildingId && selectedBuilding" class="border rounded-lg p-6 bg-gray-50">
+            <!-- หัวข้อตึกที่เลือก -->
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-2xl font-bold text-gray-800">{{ selectedBuilding.nameBuilding }}</h3>
+              <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-600">ชั้น: {{ selectedBuilding.floors?.length || 0 }} ชั้น</span>
+                <span class="text-sm text-gray-600">ห้อง: {{ getTotalRoomsInBuilding(selectedBuilding._id) }}
+                  ห้อง</span>
+              </div>
+            </div>
+
+            <!-- ชั้นที่มีอยู่แล้ว -->
+            <div v-if="selectedBuilding.floors && selectedBuilding.floors.length > 0" class="space-y-4">
+              <div v-for="floor in selectedBuilding.floors" :key="floor.name"
+                class="border rounded-lg p-4 bg-white shadow-sm">
+                <!-- ชื่อชั้น -->
+                <div class="flex items-center justify-between mb-4">
+                  <label class="text-xl font-bold text-gray-800">{{ floor.name }}</label>
+                  <div class="flex space-x-2">
+                    <button @click="toggleFloorExpanded(selectedBuilding._id, floor.name)"
+                      class="text-blue-500 hover:text-blue-700 text-sm font-bold px-3 py-1 rounded hover:bg-blue-50">
+                      {{ isFloorExpanded(selectedBuilding._id, floor.name) ? 'ซ่อนห้อง' : 'ดูห้อง' }}
+                    </button>
+                    <button @click="removeFloorFromBuilding(selectedBuilding._id, floor.name)"
+                      class="text-red-500 hover:text-red-700 text-sm font-bold px-3 py-1 rounded hover:bg-red-50">
+                      ลบชั้น
+                    </button>
+                  </div>
                 </div>
 
-                <div class="border rounded-lg md:p-3 inline-flex flex-col shadow 2xl:text-md lg:text-sm text-xs mx-1">
-                  <div class="md:border md:rounded-lg md:shadow">
-                    <img src="/imgHotel/sea.jpg" alt="imgRoom"
-                      class="xl:w-[280px] md:w-[200px] w-[160px] xl:h-[160px] h-[120px] object-cover rounded-t-md">
-                    <div class="md:border md:rounded-b-md px-2 flex justify-end">
-                      <label class="text-stone-400 lg:text-xs text-xxxs">ตึก {{ }} , ชั้น {{ }}</label>
-                    </div>
-                  </div>
+                <!-- ห้องพักในชั้นนี้ -->
+                <div
+                  v-if="isFloorExpanded(selectedBuilding._id, floor.name) && getRoomsByBuildingAndFloor(selectedBuilding._id, floor.name).length > 0"
+                  class="mb-4">
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <div v-for="room in getRoomsByBuildingAndFloor(selectedBuilding._id, floor.name)" :key="room._id"
+                      class="border rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white flex flex-col h-full">
 
-                  <div class="flex flex-col justify-center items-center mt-2">
-                    <div class="font-bold mt-2">
-                      <label class="text-sm bg-green-600 text-white px-2 py-1 rounded-md">เลขห้อง : 457As{{ }}</label>
-                    </div>
-                    <div class="text-stone-400 2xl:text-sm lg:text-xs text-xxs mt-1">
-                      <label>ประเภท : {{ }}, {{ }}</label>
-                    </div>
-                    <div>
-                      <label>ราคา : THB {{ }}</label>
-                    </div>
-                  </div>
+                      <!-- รูปภาพห้อง -->
+                      <div class="relative mb-3">
+                        <img :src="room.images?.[0]?.preview || '/imgHotel/sea.jpg'" :alt="`ห้อง ${room.roomNumber}`"
+                          class="w-full h-48 object-cover rounded-lg">
 
-                  <div class="px-2 2xl:text-sm lg:text-xs text-xxs mt-1 text-stone-400">
-                    <div class="mt-6 space-x-2">
-                      <label>สถานะห้อง :</label>
-                      <button class="bg-white text-blue-600 px-2 rounded shadow">ว่าง</button>
-                    </div>
-                    <div class="mt-1 space-x-2">
-                      <label>สถานะ :</label>
-                      <button class="bg-white text-amber-600 px-2 rounded shadow">ว่าง</button>
-                    </div>
+                        <!-- สถานะห้อง (Badge) -->
+                        <div class="absolute top-2 right-2">
+                          <span :class="getStatusBadgeClass(room.statusRoom)"
+                            class="px-2 py-1 rounded-full text-xs font-bold text-white">
+                            {{ getStatusText(room.statusRoom) }}
+                          </span>
+                        </div>
 
-                    <div class="my-4 bg-stone-100 rounded-md p-2">
-                      <div class="mt-1 space-x-2">
-                        <label>สถานะโปรโมชั่น :</label>
-                        <button class="bg-white text-green-600 px-2 rounded shadow">ว่าง</button>
+                        <!-- ราคา -->
+                        <div class="absolute bottom-2 left-2">
+                          <span class="bg-black bg-opacity-70 text-white px-2 py-1 rounded text-sm font-bold">
+                            THB {{ room.price?.toLocaleString() }}
+                          </span>
+                        </div>
                       </div>
 
-                      <div class="mt-2">
-                        <div class="px-4 flex items-center space-x-2">
-                          <input type="radio" name="selectPromotion" id="selectPromotion" class="border rounded-md p-2">
-                          <label for="selectPromotion">โปรโมชั่นที่ 1</label>
+                      <!-- ข้อมูลห้อง -->
+                      <div class="space-y-2 flex-grow">
+                        <!-- เลขห้อง -->
+                        <div class="flex items-center justify-between">
+                          <h3 class="text-lg font-bold text-gray-800">ห้อง {{ room.roomNumber }}</h3>
+                          <span :class="getTypeBadgeClass(room.typeRoom)" class="px-2 py-1 rounded text-xs font-medium">
+                            {{ room.typeRoom?.mainName || room.typeRoom }}
+                          </span>
+                        </div>
+
+                        <!-- ข้อมูลพื้นฐาน -->
+                        <div class="text-sm text-gray-600 space-y-1">
+                          <div class="flex items-center">
+                            <span class="font-medium">ประเภท:</span>
+                            <span class="ml-2">{{ room.typeRoom?.name || room.typeRoom }}, {{ room.air ||
+                              'ไม่มีแอร์' }}</span>
+                          </div>
+
+                          <div v-if="room.stayPeople" class="flex items-center">
+                            <span class="font-medium">จำนวนคน:</span>
+                            <span class="ml-2">{{ room.stayPeople }} คน</span>
+                          </div>
+
+                          <div v-if="room.roomDetail" class="flex items-center">
+                            <span class="font-medium">รายละเอียด:</span>
+                            <span class="ml-2 text-xs">{{ room.roomDetail }}</span>
+                          </div>
+                        </div>
+
+                        <!-- แท็กห้อง -->
+                        <div v-if="room.typeRoomHotel && room.typeRoomHotel.length > 0" class="flex flex-wrap gap-1">
+                          <span v-for="tag in room.typeRoomHotel" :key="tag._id"
+                            class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                            {{ tag.name }}
+                          </span>
+                        </div>
+
+                        <!-- ข้อมูลตึกและชั้น -->
+                        <div class="text-xs text-gray-500">
+                          <span v-if="room.buildingId">ตึก {{ room.buildingId.nameBuilding }}</span>
+                          <span v-if="room.floor">, ชั้น {{ room.floor }}</span>
+                        </div>
+                      </div>
+
+                      <!-- ตัวเลือกการจัดการ -->
+                      <div class="my-4">
+                        <hr class="border border-gray-200" />
+                      </div>
+
+                      <div class="space-y-2 mt-auto">
+                        <!-- สถานะห้อง -->
+                        <div class="flex items-center space-x-2">
+                          <label class="text-xs font-medium text-gray-700">สถานะห้อง:</label>
+                          <select v-model="room.statusRoom"
+                            @change="updateRoomStatus(room._id, 'statusRoom', $event.target.value)"
+                            class="text-xs border rounded px-2 py-1 flex-1">
+                            <option value="1">ว่าง</option>
+                            <option value="2">ไม่ว่าง</option>
+                            <option value="3">กำลังทำความสะอาด</option>
+                          </select>
+                        </div>
+
+                        <!-- สถานะการจอง -->
+                        <div class="flex items-center space-x-2">
+                          <label class="text-xs font-medium text-gray-700">สถานะ:</label>
+                          <select v-model="room.status"
+                            @change="updateRoomStatus(room._id, 'status', $event.target.value)"
+                            class="text-xs border rounded px-2 py-1 flex-1">
+                            <option value="1">SleepGunWeb</option>
+                            <option value="2">Walkin</option>
+                          </select>
+                        </div>
+
+                        <!-- สถานะโปรโมชั่น (แสดงเฉพาะเมื่อเป็น SleepGunWeb) -->
+                        <div v-if="room.status === '1'" class="bg-gray-50 rounded p-2">
+                          <div class="flex items-center space-x-2 mb-2">
+                            <label class="text-xs font-medium text-gray-700">สถานะโปรโมชั่น:</label>
+                            <select v-model="room.statusPromotion"
+                              @change="updateRoomStatus(room._id, 'statusPromotion', $event.target.value)"
+                              class="text-xs border rounded px-2 py-1 flex-1">
+                              <option value="1">openPromotion</option>
+                              <option value="2">closePromotion</option>
+                            </select>
+                          </div>
+
+                          <!-- โปรโมชั่น (แสดงเฉพาะเมื่อเป็น openPromotion) -->
+                          <div v-if="room.statusPromotion === '1'" class="space-y-1">
+                            <div class="flex items-center space-x-2">
+                              <input type="radio" name="promotion" :id="`promotion-${room._id}`" class="text-xs">
+                              <label :for="`promotion-${room._id}`" class="text-xs text-gray-600">
+                                โปรโมชั่นที่ 1
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- ปุ่มแก้ไข -->
+                        <div class="flex space-x-2 mt-3">
+                          <button @click="editRoom(room)"
+                            class="flex-1 bg-blue-500 text-white text-xs py-2 px-3 rounded hover:bg-blue-600 transition">
+                            แก้ไข
+                          </button>
+                          <button @click="deleteRoom(room._id)"
+                            class="flex-1 bg-red-500 text-white text-xs py-2 px-3 rounded hover:bg-red-600 transition">
+                            ลบ
+                          </button>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+
+                <!-- ปุ่มสร้างห้องพักในชั้นนี้ -->
+                <div class="flex flex-wrap gap-2">
+                  <button @click="openAddRoomDialog(selectedBuilding._id, floor.name)"
+                    class="xl:w-[305px] md:w-[225px] w-[160px] h-32 border-2 border-dashed border-stone-300 rounded-lg flex items-center justify-center text-3xl text-stone-400 hover:bg-stone-100 transition">
+                    +
+                  </button>
+                </div>
               </div>
+            </div>
+
+            <!-- Input สำหรับเพิ่มชั้นใหม่ในตึกนี้ -->
+            <div class="flex justify-start items-center space-x-2 mt-6 p-4 bg-white rounded-lg">
+              <label class="text-stone-400 font-bold">เพิ่มชั้นใหม่: </label>
+              <input v-model="newFloorName" type="text" class="border rounded-md p-2" placeholder="ชื่อชั้น..."
+                @keyup.enter="addFloorToBuilding(selectedBuilding._id)" :disabled="savingFloor" />
+              <button @click="addFloorToBuilding(selectedBuilding._id)"
+                class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                :disabled="savingFloor || !newFloorName.trim()">
+                {{ savingFloor ? 'กำลังบันทึก...' : 'เพิ่มชั้น' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- แสดงข้อความเมื่อยังไม่ได้เลือกตึก -->
+          <div v-else-if="buildings.length > 0" class="text-center py-12">
+            <div class="text-gray-500 text-lg">
+              <p>กรุณาเลือกตึกเพื่อดูชั้นและห้อง</p>
             </div>
           </div>
         </div>
 
+        <!-- Input สำหรับเพิ่มลำดับชั้นใหม่ (แบบเดิม - เก็บไว้เพื่อความเข้ากันได้) -->
+        <div class="flex justify-start items-center space-x-2 my-12">
+          <label class="text-stone-400 font-bold">ลำดับชั้น : </label>
+          <input v-model="floorDetail" type="text" class="border rounded-md p-2" placeholder="รายละเอียด..."
+            @keyup.enter="addFloorDetail" :disabled="savingFloorDetail" />
+          <button @click="addFloorDetail"
+            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            :disabled="savingFloorDetail || !floorDetail.trim()">
+            {{ savingFloorDetail ? 'กำลังบันทึก...' : 'ตกลง' }}
+          </button>
+        </div>
       </div>
+
     </template>
   </TemplatePartner>
 
-  <Dialog header="จัดการสถานะห้องพัก">
-    <div class="p-4">
-      <label class="block mb-2 font-medium">สถานะห้องพัก</label>
-      <select class="w-full border rounded-md p-2">
-        <option value="1">ว่าง</option>
-        <option value="2">ไม่ว่าง</option>
-        <option value="3">กำลังทำความสะอาด</option>
-      </select>
-    </div>
-  </Dialog>
+  <!-- เพิ่มห้อง -->
+  <AddRoom v-if="addRoomDialogVisible" @room-saved="handleRoomSaved" @close="addRoomDialogVisible = false" />
 
-  <Dialog v-model="dialogVisible" header="เพิ่มตึก">
+  <!-- เพิ่มตึก -->
+  <Dialog :modelValue="dialogVisible" @update:modelValue="dialogVisible = $event" header="เพิ่มตึก">
     <div class="p-4">
       <div class="flex justify-start items-center space-x-2">
         <label class="block  font-bold">ชื่อตึก :</label>
@@ -217,7 +384,6 @@
               <img :src="backgroundImage" alt="Preview" class="w-20 h-20 object-cover rounded border" />
             </div>
           </div>
-
         </div>
       </div>
 
@@ -231,18 +397,15 @@
           </button>
         </div>
 
-      </div>
+      </div>  
+    </div>
+  </Dialog>
 
-      <div class="flex justify-end items-center space-x-2 mt-4">
-        <button @click="cancelDialog" class="bg-white text-red-500 px-4 py-2 rounded-md border hover:bg-stone-50"
-          :disabled="savingBuilding">ยกเลิก</button>
-        <button @click="saveBuilding"
-          class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-          :disabled="savingBuilding">
-          {{ savingBuilding ? 'กำลังบันทึก...' : 'ตกลง' }}
-        </button>
-      </div>
-
+  <!-- เพิ่มห้อง -->
+  <Dialog :modelValue="addRoomDialogVisible" @update:modelValue="addRoomDialogVisible = $event"
+    :header="`เพิ่มห้อง - ตึก ${selectedBuildingId} ชั้น ${selectedFloor}`">
+    <div class="p-4">
+      <AddRoom @roomSaved="handleRoomSaved" :selectedFloor="selectedFloor" :selectedBuildingId="selectedBuildingId" />
     </div>
   </Dialog>
 
@@ -250,26 +413,45 @@
 
 <script setup>
 import TemplatePartner from "@/components/TemplatePartner.vue";
+import AddRoom from "./AddRoom.vue";
 import { useRouter } from "vue-router";
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, nextTick } from 'vue';
 import Dialog from "@/components/element/Dialog.vue";
 import ColorPicker from "@/components/element/ColorPicker.vue";
 
 const router = useRouter();
 const tags = ref([]); // รายการแท็กทั้งหมด
 const buildings = ref([]); // รายการตึกทั้งหมด
+const rooms = ref([]); // รายการห้องทั้งหมด
+const posData = ref([]); // รายการ POS ทั้งหมด
+const posSummary = ref({}); // สรุปข้อมูล POS
 const loading = ref(false); // สถานะการโหลด
+const savedRoomData = ref(null); // ข้อมูลห้องที่บันทึกสำเร็จ
 const savingBuilding = ref(false); // สถานะการบันทึกตึก
 const statusRoomEditable = ref(false); // สถานะการเปิด/ปิด Drawer
 const dialogVisible = ref(false); // สถานะการเปิด/ปิด Dialog
+const addRoomDialogVisible = ref(false); // สถานะการเปิด/ปิด Dialog เพิ่มห้อง
+const selectedFloor = ref(''); // ชั้นที่เลือกสำหรับสร้างห้อง
 const backgroundType = ref('color'); // ประเภทพื้นหลัง (color/image)
 const selectedColor = ref('#FFBB00'); // สีที่เลือก
+const floorDetail = ref(''); // รายละเอียดลำดับชั้น
+const floorDetails = ref([]); // รายการลำดับชั้นที่บันทึกแล้ว
+const floorCount = ref(0); // จำนวนชั้น
+const savingFloorDetail = ref(false); // สถานะการบันทึกลำดับชั้น
+
+// ตัวแปรใหม่สำหรับระบบตึก-ชั้น-ห้อง
+const expandedBuildings = ref([]); // ตึกที่ขยายแล้ว
+const expandedFloors = ref([]); // ชั้นที่ขยายแล้ว
+const newFloorName = ref(''); // ชื่อชั้นใหม่
+const savingFloor = ref(false); // สถานะการบันทึกชั้น
+const selectedBuildingId = ref(''); // ตึกที่เลือกสำหรับสร้างห้อง
 
 // ตัวแปรสำหรับการสร้างตึกใหม่
 const buildingName = ref(''); // ชื่อตึก
 const textColor = ref('#000000'); // สีข้อความ
 const backgroundColor = ref('#FFBB00'); // สีพื้นหลัง
 const backgroundImage = ref(''); // รูปภาพพื้นหลัง
+
 
 // ฟังก์ชันสำหรับคำนวณสีข้อความที่เหมาะสมกับพื้นหลัง
 function getContrastColor(hexColor) {
@@ -285,36 +467,178 @@ function getContrastColor(hexColor) {
   return brightness > 128 ? '#000000' : '#ffffff';
 }
 
+// ฟังก์ชันสำหรับแสดงสถานะห้อง
+function getStatusText(status) {
+  switch (status) {
+    case '1': return 'ว่าง';
+    case '2': return 'ไม่ว่าง';
+    case '3': return 'กำลังทำความสะอาด';
+    default: return 'ไม่ทราบ';
+  }
+}
 
+// ฟังก์ชันสำหรับสี badge สถานะห้อง
+function getStatusBadgeClass(status) {
+  switch (status) {
+    case '1': return 'bg-green-500'; // ว่าง
+    case '2': return 'bg-red-500';   // ไม่ว่าง
+    case '3': return 'bg-yellow-500'; // กำลังทำความสะอาด
+    default: return 'bg-gray-500';
+  }
+}
 
-// ฟังก์ชันดึงข้อมูลแท็กทั้งหมด
-async function getAllTags() {
+// ฟังก์ชันสำหรับสี badge ประเภทห้อง
+function getTypeBadgeClass(type) {
+  // ถ้า type เป็น object ให้ใช้ name property
+  const typeName = typeof type === 'object' && type !== null ? type.name : type;
+
+  switch (typeName) {
+    case 'Standard': return 'bg-blue-100 text-blue-800';
+    case 'Deluxe': return 'bg-purple-100 text-purple-800';
+    case 'Suite': return 'bg-yellow-100 text-yellow-800';
+    case 'VIP': return 'bg-red-100 text-red-800';
+    default: return 'bg-gray-100 text-gray-800';
+  }
+}
+
+// ฟังก์ชันอัปเดตสถานะห้อง
+async function updateRoomStatus(roomId, field, value) {
   try {
-    console.log('🔄 Fetching tags from: http://localhost:9999/HotelSleepGun/tag/getAll');
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+    }
+    const response = await fetch(`http://localhost:9999/HotelSleepGun/pos/rooms/${roomId}/status`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ [field]: value })
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.message || 'เกิดข้อผิดพลาดในการอัปเดตสถานะ');
+    }
+
+    console.log('✅ Room status updated successfully');
+
+    // รีเฟรชข้อมูลห้อง
+    await loadRooms();
+
+  } catch (error) {
+    console.error('❌ Error updating room status:', error);
+    alert(`เกิดข้อผิดพลาดในการอัปเดตสถานะ: ${error.message}`);
+  }
+}
+
+// ฟังก์ชันโหลดข้อมูลห้อง
+async function loadRooms() {
+  try {
+    console.log('🔄 Loading rooms from: http://localhost:9999/HotelSleepGun/pos/rooms');
 
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
     }
 
-    const response = await fetch('http://localhost:9999/HotelSleepGun/tag/getAll', {
+    const response = await fetch('http://localhost:9999/HotelSleepGun/pos/rooms', {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     });
-    console.log('📡 Response status:', response.status);
 
+    console.log('📡 Room response status:', response.status);
+    const result = await response.json();
+    console.log('📦 Room response data:', result);
+
+    if (response.ok) {
+      rooms.value = result.data || [];
+      console.log('✅ Rooms loaded successfully:', rooms.value.length, 'rooms');
+      console.log('📋 Rooms data:', rooms.value);
+    } else {
+      console.error('❌ Error loading rooms:', result.message);
+    }
+  } catch (error) {
+    console.error('❌ Error loading rooms:', error);
+  }
+}
+
+// ฟังก์ชันแก้ไขห้อง
+function editRoom(room) {
+  // TODO: เปิด dialog แก้ไขห้อง
+  console.log('Edit room:', room);
+  // สามารถเปิด dialog หรือ navigate ไปหน้าแก้ไขห้อง
+}
+
+// ฟังก์ชันลบห้อง
+async function deleteRoom(roomId) {
+  if (!confirm('คุณแน่ใจหรือไม่ที่จะลบห้องนี้?')) {
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+    }
+
+    const response = await fetch(`http://localhost:9999/HotelSleepGun/pos/rooms/${roomId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.message || 'เกิดข้อผิดพลาดในการลบห้อง');
+    }
+
+    alert('ลบห้องเรียบร้อยแล้ว');
+
+    // รีเฟรชข้อมูลห้อง
+    await loadRooms();
+
+  } catch (error) {
+    console.error('❌ Error deleting room:', error);
+    alert(`เกิดข้อผิดพลาดในการลบห้อง: ${error.message}`);
+  }
+}
+
+
+
+// ฟังก์ชันดึงข้อมูล POS รวมทั้งหมด
+async function getPOSData() {
+  try {
+    console.log('🔄 Fetching POS data from: http://localhost:9999/HotelSleepGun/pos/pos');
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+    }
+
+    const response = await fetch('http://localhost:9999/HotelSleepGun/pos/pos', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    console.log('📡 Response status:', response.status);
     const result = await response.json();
     console.log('✅ Response data:', result);
 
     if (!response.ok) {
-      throw new Error(result.message || 'เกิดข้อผิดพลาดในการดึงข้อมูลแท็ก');
+      throw new Error(result.message || 'เกิดข้อผิดพลาดในการดึงข้อมูล POS');
     }
 
     return result.data;
   } catch (error) {
-    console.error('❌ Error fetching tags:', error);
+    console.error('❌ Error fetching POS data:', error);
     throw error;
   }
 }
@@ -322,21 +646,21 @@ async function getAllTags() {
 // ฟังก์ชันดึงข้อมูลตึกทั้งหมด
 async function getAllBuildings() {
   try {
-    console.log('🔄 Fetching buildings from: http://localhost:9999/HotelSleepGun/building/getAll');
+    console.log('🔄 Fetching buildings from: http://localhost:9999/HotelSleepGun/pos/buildings');
 
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
     }
 
-    const response = await fetch('http://localhost:9999/HotelSleepGun/building/getAll', {
+    const response = await fetch('http://localhost:9999/HotelSleepGun/pos/buildings', {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     });
-    console.log('📡 Response status:', response.status);
 
+    console.log('📡 Response status:', response.status);
     const result = await response.json();
     console.log('✅ Response data:', result);
 
@@ -351,21 +675,124 @@ async function getAllBuildings() {
   }
 }
 
+// ฟังก์ชันดึงข้อมูลสถิติ POS
+async function getPOSStatistics() {
+  try {
+    console.log('🔄 Fetching POS summary from: http://localhost:9999/HotelSleepGun/pos/pos-summary');
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+    }
+
+    const response = await fetch('http://localhost:9999/HotelSleepGun/pos/pos-summary', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    console.log('📡 Response status:', response.status);
+    const result = await response.json();
+    console.log('✅ Response data:', result);
+
+    if (!response.ok) {
+      throw new Error(result.message || 'เกิดข้อผิดพลาดในการดึงข้อมูลสถิติ POS');
+    }
+
+    return result.data;
+  } catch (error) {
+    console.error('❌ Error fetching POS statistics:', error);
+    throw error;
+  }
+}
+
 // โหลดข้อมูลแท็กและตึกเมื่อ component ถูกสร้าง
 onMounted(async () => {
   try {
     loading.value = true;
-    console.log('🔄 Loading tags and buildings on mount...');
+    console.log('🔄 Loading POS data on mount...');
 
-    // โหลดข้อมูลแท็ก
-    const fetchedTags = await getAllTags();
-    console.log('📦 Fetched tags:', fetchedTags);
-    tags.value = fetchedTags;
+    // โหลดข้อมูล POS ทั้งหมด
+    const posDataResult = await getPOSData();
+    console.log('📦 Fetched POS data:', posDataResult);
 
-    // โหลดข้อมูลตึก
-    const fetchedBuildings = await getAllBuildings();
-    console.log('📦 Fetched buildings:', fetchedBuildings);
-    buildings.value = fetchedBuildings;
+    // โหลดข้อมูลสถิติ POS
+    const posSummaryResult = await getPOSStatistics();
+    console.log('📦 Fetched POS summary:', posSummaryResult);
+
+    // ใช้ข้อมูลจาก POS data (ถ้ามี)
+    if (posDataResult && posDataResult.length > 0) {
+      const posItem = posDataResult[0];
+      posData.value = posItem;
+
+      // ใช้ข้อมูลแท็ก, ตึก, ห้อง จาก POS
+      tags.value = posItem.tags || [];
+      buildings.value = posItem.buildings || [];
+      rooms.value = posItem.rooms || [];
+
+      // โหลดข้อมูลลำดับชั้น
+      if (posItem.floorDetail) {
+        // แยกข้อมูลลำดับชั้นที่คั่นด้วยเครื่องหมายต่างๆ
+        const floorDetailArray = posItem.floorDetail.split(/[,;|]/).map(item => item.trim()).filter(item => item);
+        floorDetails.value = floorDetailArray;
+        floorCount.value = floorDetailArray.length;
+      }
+
+      console.log('📦 POS data loaded:', {
+        tags: tags.value.length,
+        buildings: buildings.value.length,
+        rooms: rooms.value.length,
+        floorDetails: floorDetails.value.length
+      });
+    }
+
+    // ใช้สถิติจาก POS summary
+    if (posSummaryResult) {
+      posSummary.value = {
+        totalRoomCount: posSummaryResult.totalRoomCount || 0,
+        totalRoomCountSleepGun: posSummaryResult.totalRoomCountSleepGun || 0,
+        totalBuildingCount: posSummaryResult.totalBuildingCount || 0,
+        totalFloorCount: posSummaryResult.totalFloorCount || 0,
+        totalPosRecords: posSummaryResult.totalPosRecords || 0
+      };
+    }
+
+    // ถ้าไม่มีข้อมูลใน POS ให้โหลดแยกกัน
+    if (!posDataResult || posDataResult.length === 0) {
+      try {
+        const token = localStorage.getItem('token');
+
+        // โหลดข้อมูลแท็ก
+        const tagsResponse = await fetch('http://localhost:9999/HotelSleepGun/pos/tags', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const tagsResult = await tagsResponse.json();
+        if (tagsResponse.ok) {
+          tags.value = tagsResult.data || [];
+        }
+
+        // โหลดข้อมูลตึก
+        const buildingsResponse = await fetch('http://localhost:9999/HotelSleepGun/pos/buildings', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const buildingsResult = await buildingsResponse.json();
+        if (buildingsResponse.ok) {
+          buildings.value = buildingsResult.data || [];
+        }
+
+        // โหลดข้อมูลห้อง
+        await loadRooms();
+      } catch (error) {
+        console.error('❌ Error loading tags/buildings/rooms:', error);
+      }
+    }
 
   } catch (error) {
     console.error('❌ Error loading data:', error);
@@ -400,6 +827,88 @@ const openDialog = () => {
   console.log('📊 dialogVisible before:', dialogVisible.value);
   dialogVisible.value = true;
   console.log('📊 dialogVisible after:', dialogVisible.value);
+};
+
+// ฟังก์ชันเปิด Dialog เพิ่มห้อง (แบบเก่า - เก็บไว้เพื่อความเข้ากันได้)
+const openAddRoomDialogOld = (floorName) => {
+  selectedFloor.value = floorName;
+  addRoomDialogVisible.value = true;
+};
+
+// ฟังก์ชันรับข้อมูลห้องที่บันทึกสำเร็จ
+const handleRoomSaved = (roomData) => {
+  // ปิด Dialog
+  addRoomDialogVisible.value = false;
+
+  if (roomData) {
+    console.log('📦 Room saved successfully:', roomData);
+    // เก็บข้อมูลห้องที่บันทึกสำเร็จ
+    savedRoomData.value = roomData;
+    // รีเฟรชข้อมูล POS และห้องที่แสดงในหน้า
+    refreshPosData();
+  } else {
+    console.log('❌ Room creation cancelled');
+  }
+};
+
+// ฟังก์ชันรีเฟรชข้อมูล POS
+const refreshPosData = async () => {
+  try {
+    const posDataResult = await getPOSData();
+    const posSummaryResult = await getPOSStatistics();
+
+    // อัปเดตข้อมูล POS
+    if (posDataResult && posDataResult.length > 0) {
+      posData.value = posDataResult[0];
+    }
+
+    // อัปเดตสถิติ
+    if (posSummaryResult) {
+      posSummary.value = {
+        totalRoomCount: posSummaryResult.totalRoomCount || 0,
+        totalRoomCountSleepGun: posSummaryResult.totalRoomCountSleepGun || 0,
+        totalBuildingCount: posSummaryResult.totalBuildingCount || 0,
+        totalFloorCount: posSummaryResult.totalFloorCount || 0,
+        totalPosRecords: posSummaryResult.totalPosRecords || 0
+      };
+    }
+
+    // รีเฟรชข้อมูลแท็กและตึก
+    try {
+      const token = localStorage.getItem('token');
+
+      // โหลดข้อมูลแท็ก
+      const tagsResponse = await fetch('http://localhost:9999/HotelSleepGun/pos/tags', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      const tagsResult = await tagsResponse.json();
+      if (tagsResponse.ok) {
+        tags.value = tagsResult.data || [];
+      }
+
+      // โหลดข้อมูลตึก
+      const buildingsResponse = await fetch('http://localhost:9999/HotelSleepGun/pos/buildings', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      const buildingsResult = await buildingsResponse.json();
+      if (buildingsResponse.ok) {
+        buildings.value = buildingsResult.data || [];
+      }
+
+      // โหลดข้อมูลห้อง
+      await loadRooms();
+    } catch (error) {
+      console.error('❌ Error refreshing tags/buildings/rooms:', error);
+    }
+  } catch (error) {
+    console.error('❌ Error refreshing POS data:', error);
+  }
 };
 
 // Computed property สำหรับ preview style
@@ -450,6 +959,298 @@ const handleImageUpload = (event) => {
   }
 };
 
+// ฟังก์ชันเพิ่มลำดับชั้น
+const addFloorDetail = async () => {
+  if (!floorDetail.value.trim()) {
+    alert('กรุณากรอกรายละเอียดลำดับชั้น');
+    return;
+  }
+
+  // ตรวจสอบว่ามีลำดับชั้นนี้อยู่แล้วหรือไม่
+  if (floorDetails.value.includes(floorDetail.value.trim())) {
+    alert('ลำดับชั้นนี้มีอยู่แล้ว');
+    return;
+  }
+
+  savingFloorDetail.value = true;
+
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+    }
+
+    // เพิ่มลำดับชั้นใหม่ลงในรายการ
+    const newFloorDetails = [...floorDetails.value, floorDetail.value.trim()];
+
+    // สร้างข้อมูล POS ใหม่หรืออัปเดตข้อมูลที่มีอยู่
+    const posData = {
+      buildingCount: buildings.value.length || 0,
+      floorCount: newFloorDetails.length,
+      floorDetail: newFloorDetails.join(', '),
+      roomCount: rooms.value.length || 0,
+      roomCountSleepGun: rooms.value.filter(room => room.status === 'SleepGunWeb').length || 0,
+      quotaRoomSleepGun: 5
+    };
+
+    // ตรวจสอบว่ามีข้อมูล POS อยู่แล้วหรือไม่
+    let response;
+    if (posData.value && posData.value._id) {
+      // อัปเดตข้อมูล POS ที่มีอยู่
+      response = await fetch(`http://localhost:9999/HotelSleepGun/pos/pos/${posData.value._id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(posData),
+      });
+    } else {
+      // สร้างข้อมูล POS ใหม่
+      response = await fetch('http://localhost:9999/HotelSleepGun/pos/pos', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(posData),
+      });
+    }
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+    }
+
+    // อัปเดตรายการลำดับชั้น
+    floorDetails.value = newFloorDetails;
+
+    // รีเซ็ต input
+    floorDetail.value = '';
+
+    // อัปเดตจำนวนชั้น
+    floorCount.value = floorDetails.value.length;
+
+    // อัปเดตข้อมูล POS ใน local state
+    if (result.data) {
+      posData.value = result.data;
+    }
+
+    console.log('✅ Floor detail added successfully:', floorDetails.value);
+
+  } catch (error) {
+    console.error('❌ Error adding floor detail:', error);
+    alert(`เกิดข้อผิดพลาดในการบันทึกข้อมูล: ${error.message}`);
+  } finally {
+    savingFloorDetail.value = false;
+  }
+};
+
+// ฟังก์ชันดึงห้องพักตามชั้น
+const getRoomsByFloor = (floorName) => {
+  return rooms.value.filter(room => room.floor === floorName);
+};
+
+// ฟังก์ชันใหม่สำหรับดึงห้องตามตึกและชั้น
+const getRoomsByBuildingAndFloor = (buildingId, floorName) => {
+  return rooms.value.filter(room => room.buildingId === buildingId && room.floor === floorName);
+};
+
+// ฟังก์ชันสำหรับสลับการแสดง/ซ่อนตึก
+const toggleBuildingExpanded = (buildingId) => {
+  const index = expandedBuildings.value.indexOf(buildingId);
+  if (index > -1) {
+    expandedBuildings.value.splice(index, 1);
+  } else {
+    expandedBuildings.value.push(buildingId);
+  }
+};
+
+// ฟังก์ชันสำหรับสลับการแสดง/ซ่อนชั้น
+const toggleFloorExpanded = (buildingId, floorName) => {
+  const key = `${buildingId}-${floorName}`;
+  const index = expandedFloors.value.indexOf(key);
+  if (index > -1) {
+    expandedFloors.value.splice(index, 1);
+  } else {
+    expandedFloors.value.push(key);
+  }
+};
+
+// ฟังก์ชันสำหรับตรวจสอบว่าชั้นขยายแล้วหรือไม่
+const isFloorExpanded = (buildingId, floorName) => {
+  const key = `${buildingId}-${floorName}`;
+  return expandedFloors.value.includes(key);
+};
+
+// ฟังก์ชันสำหรับเพิ่มชั้นในตึก
+const addFloorToBuilding = async (buildingId) => {
+  if (!newFloorName.value.trim()) {
+    alert('กรุณากรอกชื่อชั้น');
+    return;
+  }
+
+  savingFloor.value = true;
+
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+    }
+
+    const response = await fetch(`http://localhost:9999/HotelSleepGun/pos/buildings/${buildingId}/floors`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: newFloorName.value.trim(),
+        description: ''
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'เกิดข้อผิดพลาดในการเพิ่มชั้น');
+    }
+
+    // อัปเดตข้อมูลตึกใน local state
+    const buildingIndex = buildings.value.findIndex(b => b._id === buildingId);
+    if (buildingIndex !== -1) {
+      buildings.value[buildingIndex] = result.data;
+    }
+
+    // รีเซ็ต input
+    newFloorName.value = '';
+
+    console.log('✅ Floor added successfully to building:', buildingId);
+
+  } catch (error) {
+    console.error('❌ Error adding floor to building:', error);
+    alert(`เกิดข้อผิดพลาดในการเพิ่มชั้น: ${error.message}`);
+  } finally {
+    savingFloor.value = false;
+  }
+};
+
+// ฟังก์ชันสำหรับลบชั้นจากตึก
+const removeFloorFromBuilding = async (buildingId, floorName) => {
+  if (confirm(`คุณต้องการลบชั้น "${floorName}" หรือไม่?`)) {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+      }
+
+      const response = await fetch(`http://localhost:9999/HotelSleepGun/pos/buildings/${buildingId}/floors/${encodeURIComponent(floorName)}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'เกิดข้อผิดพลาดในการลบชั้น');
+      }
+
+      // อัปเดตข้อมูลตึกใน local state
+      const buildingIndex = buildings.value.findIndex(b => b._id === buildingId);
+      if (buildingIndex !== -1) {
+        buildings.value[buildingIndex] = result.data;
+      }
+
+      console.log('✅ Floor removed successfully from building:', buildingId);
+
+    } catch (error) {
+      console.error('❌ Error removing floor from building:', error);
+      alert(`เกิดข้อผิดพลาดในการลบชั้น: ${error.message}`);
+    }
+  }
+};
+
+// ฟังก์ชันลบลำดับชั้น (แบบเดิม - เก็บไว้เพื่อความเข้ากันได้)
+const removeFloorDetail = async (index) => {
+  if (confirm('คุณต้องการลบลำดับชั้นนี้หรือไม่?')) {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+      }
+
+      // ลบลำดับชั้นออกจากรายการ
+      const removedDetail = floorDetails.value.splice(index, 1)[0];
+
+      // อัปเดตจำนวนชั้น
+      floorCount.value = floorDetails.value.length;
+
+      // อัปเดตข้อมูลในฐานข้อมูล
+      const posData = {
+        buildingCount: buildings.value.length || 0,
+        floorCount: floorDetails.value.length,
+        floorDetail: floorDetails.value.join(', '), // รวมรายการที่เหลือ
+        roomCount: rooms.value.length || 0,
+        roomCountSleepGun: rooms.value.filter(room => room.status === 'SleepGunWeb').length || 0,
+        quotaRoomSleepGun: 5
+      };
+
+      let response;
+      if (posData.value && posData.value._id) {
+        // อัปเดตข้อมูล POS ที่มีอยู่
+        response = await fetch(`http://localhost:9999/HotelSleepGun/pos/pos/${posData.value._id}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(posData),
+        });
+      } else {
+        // สร้างข้อมูล POS ใหม่
+        response = await fetch('http://localhost:9999/HotelSleepGun/pos/pos', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(posData),
+        });
+      }
+
+      if (!response.ok) {
+        // ถ้าอัปเดตไม่สำเร็จ ให้คืนค่ากลับ
+        floorDetails.value.splice(index, 0, removedDetail);
+        floorCount.value = floorDetails.value.length;
+        throw new Error('เกิดข้อผิดพลาดในการลบข้อมูล');
+      }
+
+      // อัปเดตข้อมูล POS ใน local state
+      const result = await response.json();
+      if (result.data) {
+        posData.value = result.data;
+      }
+
+      console.log('✅ Floor detail removed successfully');
+
+    } catch (error) {
+      console.error('❌ Error removing floor detail:', error);
+      alert(`เกิดข้อผิดพลาดในการลบข้อมูล: ${error.message}`);
+    }
+  }
+};
+
+// แก้ไขฟังก์ชัน openAddRoomDialog เพื่อรองรับ buildingId
+const openAddRoomDialog = (buildingId, floorName) => {
+  selectedBuildingId.value = buildingId;
+  selectedFloor.value = floorName;
+  addRoomDialogVisible.value = true;
+};
+
 // ฟังก์ชันยกเลิกการสร้างตึก
 const cancelDialog = () => {
   dialogVisible.value = false;
@@ -497,7 +1298,7 @@ const saveBuilding = async () => {
     }
 
     // เรียก API เพื่อบันทึกข้อมูลลงฐานข้อมูล
-    const response = await fetch('http://localhost:9999/HotelSleepGun/building/create', {
+    const response = await fetch('http://localhost:9999/HotelSleepGun/pos/buildings', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -544,5 +1345,23 @@ const saveBuilding = async () => {
     savingBuilding.value = false;
   }
 };
+
+// ฟังก์ชันสำหรับเลือกตึก
+const selectBuilding = (buildingId) => {
+  selectedBuildingId.value = buildingId;
+  // ล้างข้อมูลชั้นที่ขยายแล้วเมื่อเปลี่ยนตึก
+  expandedFloors.value = [];
+};
+
+// Computed property สำหรับตึกที่เลือก
+const selectedBuilding = computed(() => {
+  return buildings.value.find(b => b._id === selectedBuildingId.value);
+});
+
+// ฟังก์ชันสำหรับนับจำนวนห้องทั้งหมดในตึกที่เลือก
+const getTotalRoomsInBuilding = (buildingId) => {
+  return rooms.value.filter(room => room.buildingId === buildingId).length;
+};
+
 
 </script>

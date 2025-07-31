@@ -115,11 +115,10 @@ function goToMainManagePOS() {
 
 
 
-
 // ฟังก์ชันสร้างแท็กใหม่
 async function createTag(tagData) {
   try {
-    console.log('🚀 Sending request to: http://localhost:9999/HotelSleepGun/tag/create');
+    console.log('🚀 Sending request to: http://localhost:9999/HotelSleepGun/pos/tags');
     console.log('📦 Request data:', tagData);
 
     const token = localStorage.getItem('token');
@@ -127,7 +126,7 @@ async function createTag(tagData) {
       throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
     }
 
-    const response = await fetch('http://localhost:9999/HotelSleepGun/tag/create', {
+    const response = await fetch('http://localhost:9999/HotelSleepGun/pos/tags', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -155,14 +154,14 @@ async function createTag(tagData) {
 // ฟังก์ชันดึงข้อมูลแท็กทั้งหมด
 async function getAllTags() {
   try {
-    console.log('🔄 Fetching tags from: http://localhost:9999/HotelSleepGun/tag/getAll');
+    console.log('🔄 Fetching tags from: http://localhost:9999/HotelSleepGun/pos/tags');
 
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
     }
 
-    const response = await fetch('http://localhost:9999/HotelSleepGun/tag/getAll', {
+    const response = await fetch('http://localhost:9999/HotelSleepGun/pos/tags', {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -194,7 +193,7 @@ async function deleteTagById(tagId) {
       throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
     }
 
-    const response = await fetch(`http://localhost:9999/HotelSleepGun/tag/delete/${tagId}`, {
+    const response = await fetch(`http://localhost:9999/HotelSleepGun/pos/tags/${tagId}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
