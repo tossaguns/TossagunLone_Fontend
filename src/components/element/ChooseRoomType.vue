@@ -5,7 +5,7 @@
       <span v-for="(selected, i) in selectedOptions" :key="i"
         class="flex items-center space-x-2 px-3 py-1 bg-amber-100 text-amber-700 text-xs rounded-full">
         <span>{{ selected.label }}</span>
-        <button @click="removeItem(selected.value)" class="text-xs text-red-500 hover:text-red-700"
+        <button @click="removeItem(selected.value)" class="text-xs text-red-500 hover:text-red-700 bg-white rounded-full py-1 px-2"
           aria-label="ลบรายการ">
           ✕
         </button>

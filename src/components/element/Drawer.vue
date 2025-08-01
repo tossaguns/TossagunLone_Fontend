@@ -5,11 +5,11 @@
       <div class="absolute inset-0" @click="emitClose"></div>
 
       <!-- Drawer -->
-      <div class="relative lg:w-80 w-64 max-w-full h-full bg-white shadow-xl z-50 lg:p-2 p-4 overflow-y-auto"
+      <div class="relative xl:w-1/4 md:w-1/3 w-1/2 max-w-full h-full bg-white shadow-xl z-50 lg:p-2 p-4 overflow-y-auto"
         @click.stop>
         <div class="flex justify-between items-center mb-4 lg:px-4">
           <h2 class="text-lg font-semibold pt-8">{{ header }}</h2>
-          <button @click="emitClose" class="text-gray-500 hover:text-gray-800">X</button>
+          <button @click="emitCloseWithReset" class="text-gray-500 hover:text-gray-800">X</button>
         </div>
         <slot />
       </div>
@@ -30,6 +30,11 @@ const emit = defineEmits(['update:visible'])
 
 const emitClose = () => {
   emit('update:visible', false)
+}
+
+const emitCloseWithReset = () => {
+  emit('update:visible', false)
+  emit('reset')
 }
 </script>
 
