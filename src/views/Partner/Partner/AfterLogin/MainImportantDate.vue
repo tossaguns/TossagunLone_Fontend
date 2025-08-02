@@ -38,24 +38,44 @@ const handleNavigation = async () => {
 
 
 onMounted(async () => {
-  if (aboutHotelId.value) {
+  const token = localStorage.getItem('token')
+  if (aboutHotelId.value && token) {
     // ดึงข้อมูลมาแสดง
-    const res = await axios.get(`http://localhost:9999/HotelSleepGun/aboutHotel/get/${aboutHotelId.value}`)
-    Object.assign(form.value, res.data)
+    const res = await axios.get(`http://localhost:9999/HotelSleepGun/pos/about-hotel`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    if (res.data.success && res.data.data) {
+      Object.assign(form.value, res.data.data)
+    }
   }
 })
 
 async function saveAboutHotel() {
+  const token = localStorage.getItem('token')
   if (!aboutHotelId.value) {
     // CREATE
-    const res = await axios.post('http://localhost:9999/HotelSleepGun/aboutHotel/creat', form.value)
-    localStorage.setItem('aboutHotelId', res.data._id)
-    aboutHotelId.value = res.data._id
-    alert('สร้างข้อมูลสำเร็จ')
+    const res = await axios.post('http://localhost:9999/HotelSleepGun/pos/about-hotel', form.value, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    if (res.data.success && res.data.data) {
+      localStorage.setItem('aboutHotelId', res.data.data._id)
+      aboutHotelId.value = res.data.data._id
+      alert('สร้างข้อมูลสำเร็จ')
+    }
   } else {
     // UPDATE
-    await axios.put(`http://localhost:9999/HotelSleepGun/aboutHotel/update/${aboutHotelId.value}`, form.value)
-    alert('อัปเดตข้อมูลสำเร็จ')
+    const res = await axios.put(`http://localhost:9999/HotelSleepGun/pos/about-hotel/${aboutHotelId.value}`, form.value, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    if (res.data.success) {
+      alert('อัปเดตข้อมูลสำเร็จ')
+    }
   }
 }
 </script>

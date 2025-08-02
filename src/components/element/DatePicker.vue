@@ -1,17 +1,10 @@
 <template>
   <div class="relative w-full max-w-xs">
-    <input
-      type="text"
-      class="w-full border rounded px-3 py-2 cursor-pointer"
-      :value="displayValue"
-      readonly
-      @click="togglePopup"
-    />
+    <input type="text" class="w-full border rounded px-3 py-2 cursor-pointer" :value="displayValue" readonly
+      @click="togglePopup" />
 
-    <div
-      v-if="showPopup"
-      class="absolute z-50 bg-white shadow-md border mt-1 p-4 w-[320px] max-w-[90vw] right-0 sm:left-0 sm:right-auto"
-    >
+    <div v-if="showPopup"
+      class="absolute z-50 bg-white shadow-md border mt-1 p-4 w-[320px] max-w-[90vw] right-0 sm:left-0 sm:right-auto">
       <!-- Navigation -->
       <div class="flex justify-between mb-2 items-center">
         <button @click="prevMonth" class="px-2 py-1 text-sm bg-gray-100 rounded hover:bg-gray-200">←</button>
@@ -28,13 +21,8 @@
             <span v-for="d in ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']" :key="d">{{ d }}</span>
           </div>
           <div class="grid grid-cols-7 text-center text-sm">
-            <span
-              v-for="day in getDaysOfMonth(month)"
-              :key="day.date"
-              @click="selectDate(day.date)"
-              :class="dayClass(day.date)"
-              class="py-1 rounded hover:bg-blue-100 cursor-pointer"
-            >
+            <span v-for="day in getDaysOfMonth(month)" :key="day.date" @click="selectDate(day.date)"
+              :class="dayClass(day.date)" class="py-1 rounded hover:bg-blue-100 cursor-pointer">
               {{ day.label }}
             </span>
           </div>
@@ -53,7 +41,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'dateRangeSelected'])
 
 const props = defineProps({
   modelValue: String,
@@ -146,5 +134,14 @@ const prevMonth = () => {
 const confirmSelection = () => {
   showPopup.value = false
   emit('update:modelValue', displayValue.value)
+
+  // ส่งข้อมูลวันที่เริ่มต้นและสิ้นสุดไปยัง parent component
+  if (startDate.value && endDate.value) {
+    emit('dateRangeSelected', {
+      startDate: startDate.value.toISOString(),
+      endDate: endDate.value.toISOString(),
+      displayValue: displayValue.value
+    })
+  }
 }
 </script>

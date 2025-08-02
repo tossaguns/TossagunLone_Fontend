@@ -27,6 +27,10 @@
 
               <p>สิ่งที่ต้องนำมาเมื่อทำการ check-in : <span class="border px-3 mx-3 py-1 rounded-md text-amber-600  ">{{
                 VerifyIden_checkIn }}</span></p>
+              <p>คิดราคาค่าเข้าพักก่อนเวลา/ชั่วโมง : <span class="border px-3 mx-3 py-1 rounded-md text-amber-600">{{
+                checkInEarlyPricePerHour }}</span> บาท</p>
+              <p>คิดราคาค่าออกก่อนเวลา/ชั่วโมง : <span class="border px-3 mx-3 py-1 rounded-md text-amber-600">{{
+                checkOutEarlyPricePerHour }}</span> บาท</p>
             </div>
           </div>
 
@@ -48,7 +52,7 @@
                 <p class="font-bold">ลักษณะเตียงเเละราคา</p>
                 <p>เตียงเด็ก ราคา : <span class="border px-3 mx-3 py-1 rounded-md text-amber-600">{{
                   bedPrice.child }}</span> บาท</p>
-                <p>เตียงปกติ ราคา : <span class="border px-3 mx-3 py-1 rounded-md text-amber-600">{{
+                <p>เตียงธรรมดา ราคา : <span class="border px-3 mx-3 py-1 rounded-md text-amber-600">{{
                   bedPrice.normal }}</span> บาท</p>
               </div>
             </div>
@@ -215,6 +219,8 @@ const checkInTo = ref('')
 const checkOutForm = ref('')
 const checkOutTo = ref('')
 const VerifyIden_checkIn = ref('')
+const checkInEarlyPricePerHour = ref('')
+const checkOutEarlyPricePerHour = ref('')
 const AboutFacilityHotel = ref('')
 const AboutHotelLocation = ref('')
 const AboutRoomHotel = ref('')
@@ -246,11 +252,16 @@ const manageHotelSleepGun = ref('open')
 async function loadAboutHotelData() {
   try {
     const partnerId = localStorage.getItem('partnerId')
-    if (partnerId) {
-      const res = await axios.get(`http://localhost:9999/HotelSleepGun/aboutHotel/getByPartnerId/${partnerId}`)
+    const token = localStorage.getItem('token')
+    if (partnerId && token) {
+      const res = await axios.get(`http://localhost:9999/HotelSleepGun/pos/about-hotel`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
 
-      if (res.data) {
-        const data = res.data
+      if (res.data.success && res.data.data) {
+        const data = res.data.data
 
         // Populate form data
         hasExtraBed.value = data.hasExtraBed || 'no'
@@ -262,6 +273,8 @@ async function loadAboutHotelData() {
         checkOutForm.value = data.checkOutForm || ''
         checkOutTo.value = data.checkOutTo || ''
         VerifyIden_checkIn.value = data.VerifyIden_checkIn || ''
+        checkInEarlyPricePerHour.value = data.checkInEarlyPricePerHour || ''
+        checkOutEarlyPricePerHour.value = data.checkOutEarlyPricePerHour || ''
         AboutFacilityHotel.value = data.AboutFacilityHotel || ''
         AboutHotelLocation.value = data.AboutHotelLocation || ''
         AboutRoomHotel.value = data.AboutRoomHotel || ''

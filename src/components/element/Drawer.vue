@@ -1,8 +1,8 @@
 <template>
   <transition name="drawer">
     <div v-if="visible" class="fixed inset-0 z-50 flex justify-end">
-      <!-- พื้นที่ว่างใสๆ สำหรับคลิกเพื่อปิด -->
-      <div class="absolute inset-0" @click="emitClose"></div>
+      <!-- พื้นที่ว่างใสๆ (ไม่สามารถคลิกเพื่อปิดได้แล้ว) -->
+      <div class="absolute inset-0"></div>
 
       <!-- Drawer -->
       <div class="relative xl:w-1/4 md:w-1/3 w-1/2 max-w-full h-full bg-white shadow-xl z-50 lg:p-2 p-4 overflow-y-auto"

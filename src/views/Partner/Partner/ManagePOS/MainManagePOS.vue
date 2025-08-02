@@ -171,7 +171,7 @@
 
                   <div class="w-1/3">
                     <span class="text-sm text-gray-600">จำนวนห้อง: {{ getRoomsInFloor(selectedBuilding._id, floor.name)
-                      }} ห้อง</span>
+                    }} ห้อง</span>
                   </div>
 
 
@@ -283,8 +283,12 @@
                         <div class="flex items-center space-x-2">
                           <label class="text-xs font-medium text-gray-700">สถานะห้อง:</label>
                           <select v-model="room.statusRoom"
-                            @change="updateRoomStatus(room._id, 'statusRoom', $event.target.value)"
-                            class="text-xs border rounded px-2 py-1 flex-1">
+                            @change="updateRoomStatus(room._id, 'statusRoom', $event.target.value)" :class="[
+                              'text-xs border rounded px-2 py-1 flex-1',
+                              room.statusRoom === 'ว่าง' ? 'bg-green-100 border-green-300 text-green-800' : '',
+                              room.statusRoom === 'ไม่ว่าง' ? 'bg-red-100 border-red-300 text-red-800' : '',
+                              room.statusRoom === 'กำลังทำความสะอาด' ? 'bg-yellow-100 border-yellow-300 text-yellow-800' : ''
+                            ]">
                             <option value="ว่าง">ว่าง</option>
                             <option value="ไม่ว่าง">ไม่ว่าง</option>
                             <option value="กำลังทำความสะอาด">กำลังทำความสะอาด</option>
@@ -295,9 +299,11 @@
                         <div class="flex items-center space-x-2">
                           <label class="text-xs font-medium text-gray-700">สถานะ:</label>
                           <select v-model="room.status"
-                            @change="updateRoomStatus(room._id, 'status', $event.target.value)"
-                            class="text-xs border rounded px-2 py-1 flex-1"
-                            :disabled="room.status !== 'SleepGunWeb' && getSleepGunCount() >= 5">
+                            @change="updateRoomStatus(room._id, 'status', $event.target.value)" :class="[
+                              'text-xs border rounded px-2 py-1 flex-1',
+                              room.status === 'SleepGunWeb' ? 'bg-yellow-100 border-yellow-300 text-yellow-800' : '',
+                              room.status === 'Walkin' ? 'bg-gray-100 border-gray-300 text-gray-800' : ''
+                            ]" :disabled="room.status !== 'SleepGunWeb' && getSleepGunCount() >= 5">
                             <option value="SleepGunWeb"
                               :disabled="room.status !== 'SleepGunWeb' && getSleepGunCount() >= 5">
                               SleepGunWeb {{ room.status !== 'SleepGunWeb' && getSleepGunCount() >= 5 ? '(โควต้าเต็ม)' :

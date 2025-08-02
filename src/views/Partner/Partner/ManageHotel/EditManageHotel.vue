@@ -53,6 +53,21 @@
           </div>
         </div>
 
+        <div class=" px-5 pt-4 pb-2 text-cente space-y-2">
+          <div class="flex space-x-3">
+            <p class="">คิดราคาค่าเข้าพักก่อนเวลา/ชั่วโมง</p>
+            <input v-model="checkInEarlyPricePerHour" class="border rounded-md px-3 py-1 w-24 text-center"
+              placeholder="ราคา" />
+            <span>บาท</span>
+          </div>
+          <div class="flex space-x-3">
+            <p>คิดราคาค่าออกก่อนเวลา/ชั่วโมง</p>
+            <input v-model="checkOutEarlyPricePerHour" class="border rounded-md px-3 py-1 w-24 text-center"
+              placeholder="ราคา" />
+            <span>บาท</span>
+          </div>
+        </div>
+
         <hr class="border-2 my-6" />
 
         <div>
@@ -337,6 +352,8 @@ const checkInTo = ref('')
 const checkOutForm = ref('')
 const checkOutTo = ref('')
 const VerifyIden_checkIn = ref('')
+const checkInEarlyPricePerHour = ref('')
+const checkOutEarlyPricePerHour = ref('')
 const AboutFacilityHotel = ref('')
 const AboutHotelLocation = ref('')
 const AboutRoomHotel = ref('')
@@ -423,12 +440,17 @@ async function loadExistingAboutHotel() {
     const partnerId = localStorage.getItem('partnerId') // Adjust based on your auth system
     console.log('Partner ID:', partnerId) // Debug log
 
-    if (partnerId) {
-      const res = await axios.get(`http://localhost:9999/HotelSleepGun/aboutHotel/getByPartnerId/${partnerId}`)
+    const token = localStorage.getItem('token')
+    if (partnerId && token) {
+      const res = await axios.get(`http://localhost:9999/HotelSleepGun/pos/about-hotel`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       console.log('API Response:', res.data) // Debug log
 
-      if (res.data) {
-        const existingData = res.data
+      if (res.data.success && res.data.data) {
+        const existingData = res.data.data
         console.log('Loaded existing data:', existingData) // Debug log
         existingAboutHotelId.value = existingData._id
         isDataExists.value = true
@@ -443,6 +465,8 @@ async function loadExistingAboutHotel() {
         checkOutForm.value = existingData.checkOutForm || ''
         checkOutTo.value = existingData.checkOutTo || ''
         VerifyIden_checkIn.value = existingData.VerifyIden_checkIn || ''
+        checkInEarlyPricePerHour.value = existingData.checkInEarlyPricePerHour || ''
+        checkOutEarlyPricePerHour.value = existingData.checkOutEarlyPricePerHour || ''
         AboutFacilityHotel.value = existingData.AboutFacilityHotel || ''
         AboutHotelLocation.value = existingData.AboutHotelLocation || ''
         AboutRoomHotel.value = existingData.AboutRoomHotel || ''
@@ -512,6 +536,8 @@ async function saveAboutHotel() {
       checkOutForm: checkOutForm.value,
       checkOutTo: checkOutTo.value,
       VerifyIden_checkIn: VerifyIden_checkIn.value,
+      checkInEarlyPricePerHour: checkInEarlyPricePerHour.value,
+      checkOutEarlyPricePerHour: checkOutEarlyPricePerHour.value,
       AboutFacilityHotel: AboutFacilityHotel.value,
       AboutHotelLocation: AboutHotelLocation.value,
       AboutRoomHotel: AboutRoomHotel.value,
@@ -528,17 +554,28 @@ async function saveAboutHotel() {
 
     console.log('Saving about hotel data:', aboutHotelData) // Debug log
 
+    const token = localStorage.getItem('token')
     let response
     if (isDataExists.value && existingAboutHotelId.value) {
       // Update existing data
-      response = await axios.put(`http://localhost:9999/HotelSleepGun/aboutHotel/update/${existingAboutHotelId.value}`, aboutHotelData)
+      response = await axios.put(`http://localhost:9999/HotelSleepGun/pos/about-hotel/${existingAboutHotelId.value}`, aboutHotelData, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       console.log('Updated about hotel:', response.data)
     } else {
       // Create new data
-      response = await axios.post('http://localhost:9999/HotelSleepGun/aboutHotel/creat', aboutHotelData)
+      response = await axios.post('http://localhost:9999/HotelSleepGun/pos/about-hotel', aboutHotelData, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       console.log('Created about hotel:', response.data)
-      existingAboutHotelId.value = response.data._id
-      isDataExists.value = true
+      if (response.data.success && response.data.data) {
+        existingAboutHotelId.value = response.data.data._id
+        isDataExists.value = true
+      }
     }
 
     Swal.fire({
@@ -578,6 +615,8 @@ async function resetForm() {
     checkOutForm.value = initialData.value.checkOutForm || ''
     checkOutTo.value = initialData.value.checkOutTo || ''
     VerifyIden_checkIn.value = initialData.value.VerifyIden_checkIn || ''
+    checkInEarlyPricePerHour.value = initialData.value.checkInEarlyPricePerHour || ''
+    checkOutEarlyPricePerHour.value = initialData.value.checkOutEarlyPricePerHour || ''
     AboutFacilityHotel.value = initialData.value.AboutFacilityHotel || ''
     AboutHotelLocation.value = initialData.value.AboutHotelLocation || ''
     AboutRoomHotel.value = initialData.value.AboutRoomHotel || ''
@@ -616,6 +655,8 @@ async function resetForm() {
     checkOutForm.value = ''
     checkOutTo.value = ''
     VerifyIden_checkIn.value = ''
+    checkInEarlyPricePerHour.value = ''
+    checkOutEarlyPricePerHour.value = ''
     AboutFacilityHotel.value = ''
     AboutHotelLocation.value = ''
     AboutRoomHotel.value = ''

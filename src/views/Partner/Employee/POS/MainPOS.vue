@@ -11,12 +11,46 @@
         <div class="flex justify-center items-center space-x-4 mt-8">
           <div class="flex items-center space-x-2">
             <label>เลือกวันที่ : </label>
-            <DatePicker />
+            <DatePicker v-model="selectedDateRange" @dateRangeSelected="handleDateRangeSelected" />
           </div>
 
-          <button class="bg-green-500 text-white px-4 py-2 rounded-md">ค้นหาห้องว่าง</button>
-          <button class="bg-red-500 text-white px-4 py-2 rounded-md">ล้างการค้นหา</button>
+          <button @click="searchAvailableRooms" :disabled="!selectedDateRange || isSearching"
+            class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed">
+            {{ isSearching ? 'กำลังค้นหา...' : 'ค้นหาห้องว่าง' }}
+          </button>
+          <button @click="clearSearch" :disabled="!hasSearchResults"
+            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed">
+            ล้างการค้นหา
+          </button>
+        </div>
 
+        <!-- แสดงผลการค้นหา -->
+        <div v-if="searchResults && searchResults.length > 0" class="mt-6 p-4 bg-blue-50 rounded-lg">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-blue-800">
+              ผลการค้นหาห้องว่าง ({{ searchSummary.availableRooms }} ห้อง)
+            </h3>
+            <div class="text-sm text-blue-600">
+              {{ formatDateRange(searchCriteria.startDate, searchCriteria.endDate) }}
+              ({{ searchCriteria.duration }} วัน)
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div v-for="building in searchResults" :key="building.buildingId" class="bg-white p-4 rounded-lg shadow">
+              <h4 class="font-bold text-lg mb-2">{{ building.buildingName }}</h4>
+              <div v-for="floor in building.floors" :key="floor.floorName" class="mb-3">
+                <div class="text-sm font-semibold text-gray-600 mb-2">ชั้น {{ floor.floorName }}</div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div v-for="room in floor.rooms" :key="room._id" class="p-2 bg-green-100 rounded text-sm">
+                    <div class="font-medium">ห้อง {{ room.roomNumber }}</div>
+                    <div class="text-xs text-gray-600">{{ room.typeRoom?.mainName || room.typeRoom }}</div>
+                    <div class="text-xs text-gray-600">THB {{ room.price?.toLocaleString() }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- สรุปสถิติ -->
@@ -141,7 +175,7 @@
                     <label class="text-xl font-bold text-gray-800">{{ floor.name }}</label>
                   </div>
 
-                  <div class="w-1/3 space-x-4">
+                  <div class="w-2/4 space-x-4">
                     <span class="text-sm text-gray-600">จำนวนห้อง: {{ getRoomsInFloor(selectedBuilding._id, floor.name)
                     }} ห้อง</span>
                     <span class="text-sm text-gray-600">ห้องว่างเเต่ละชั้น: {{
@@ -167,7 +201,7 @@
                       class="border rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col h-full relative bg-white">
                       <!-- กรอบดำทับสำหรับห้องที่ไม่ว่าง -->
                       <div v-if="room.statusRoom === 'ไม่ว่าง'"
-                        class="absolute inset-0 bg-black bg-opacity-40 rounded-lg pointer-events-none z-10"></div>
+                        class="absolute inset-0 bg-red-900 bg-opacity-30 rounded-lg pointer-events-none z-10"></div>
                       <!-- กรอบดำทับสำหรับห้อง SleepGunWeb -->
                       <div v-if="room.status === 'SleepGunWeb'"
                         class="absolute inset-0 bg-black bg-opacity-20 rounded-lg pointer-events-none z-10"></div>
@@ -418,7 +452,7 @@ import Tooltip from "@/components/element/Tooltip.vue";
 import TemplateEmployee from "@/components/TemplateEmployee.vue";
 import DatePicker from "@/components/element/DatePicker.vue";
 import { ref, onMounted, computed } from 'vue';
-import Drawer from '@/components/element/Drawer.vue' 
+import Drawer from '@/components/element/Drawer.vue'
 import CheckInOrder from '@/views/Partner/Employee/POS/CheckInOrder.vue'
 
 const isDrawerVisible = ref(false)
@@ -432,7 +466,17 @@ const loading = ref(false); // สถานะการโหลด
 const statusEditable = ref(false); // สถานะการเปิด/ปิดการแสดงสถานะแบบ dropdown
 const statusRoomEditable = ref(false); // สถานะการเปิด/ปิดการแสดงสถานะห้องแบบ dropdown
 const expandedFloors = ref([]); // ชั้นที่ขยายแล้ว
+const collapsedFloors = ref([]); // ชั้นที่ถูกซ่อนไว้
+const isFirstLoad = ref(true); // สถานะการโหลดครั้งแรก
 const selectedBuildingId = ref(''); // ตึกที่เลือก
+
+// ตัวแปรสำหรับการค้นหาห้องว่าง
+const selectedDateRange = ref(''); // ช่วงวันที่ที่เลือก
+const dateRangeData = ref(null); // ข้อมูลวันที่เริ่มต้นและสิ้นสุด
+const isSearching = ref(false); // สถานะการค้นหา
+const searchResults = ref([]); // ผลการค้นหา
+const searchSummary = ref({}); // สรุปผลการค้นหา
+const searchCriteria = ref({}); // เกณฑ์การค้นหา
 
 // ฟังก์ชันสำหรับคำนวณสีข้อความที่เหมาะสมกับพื้นหลัง
 function getContrastColor(hexColor) {
@@ -689,30 +733,47 @@ const refreshPosData = async () => {
 // ฟังก์ชันสำหรับสลับการแสดง/ซ่อนชั้น
 const toggleFloorExpanded = (buildingId, floorName) => {
   const key = `${buildingId}-${floorName}`;
-  const index = expandedFloors.value.indexOf(key);
-  if (index > -1) {
-    expandedFloors.value.splice(index, 1);
+
+  // ตรวจสอบว่าชั้นนี้ถูกซ่อนไว้หรือไม่
+  const isCollapsed = collapsedFloors.value.includes(key);
+
+  if (isCollapsed) {
+    // ถ้าชั้นถูกซ่อนไว้ ให้แสดงชั้น
+    const collapsedIndex = collapsedFloors.value.indexOf(key);
+    collapsedFloors.value.splice(collapsedIndex, 1);
   } else {
-    expandedFloors.value.push(key);
+    // ถ้าชั้นแสดงอยู่ ให้ซ่อนชั้น
+    collapsedFloors.value.push(key);
   }
 };
 
 // ฟังก์ชันสำหรับตรวจสอบว่าชั้นขยายแล้วหรือไม่
 const isFloorExpanded = (buildingId, floorName) => {
   const key = `${buildingId}-${floorName}`;
-  return expandedFloors.value.includes(key);
+
+  // ถ้าเป็นการโหลดครั้งแรก ให้แสดงทุกชั้น
+  if (isFirstLoad.value) {
+    return true;
+  }
+
+  // ตรวจสอบว่าชั้นนี้ถูกซ่อนไว้หรือไม่
+  return !collapsedFloors.value.includes(key);
 };
 
 // ฟังก์ชันสำหรับเลือกตึก
 const selectBuilding = (buildingId) => {
   selectedBuildingId.value = buildingId;
-  // ล้างข้อมูลชั้นที่ขยายแล้วเมื่อเปลี่ยนตึก
-  expandedFloors.value = [];
+  // ไม่ต้องล้างข้อมูลชั้นที่ซ่อนไว้เมื่อเปลี่ยนตึก เพื่อให้จำสถานะได้
 };
 
 // Computed property สำหรับตึกที่เลือก
 const selectedBuilding = computed(() => {
   return buildings.value.find(b => b._id === selectedBuildingId.value);
+});
+
+// Computed property สำหรับตรวจสอบว่ามีผลการค้นหาหรือไม่
+const hasSearchResults = computed(() => {
+  return searchResults.value && searchResults.value.length > 0;
 });
 
 // ฟังก์ชันสำหรับนับจำนวนห้องทั้งหมดในตึกที่เลือก
@@ -822,6 +883,115 @@ const openStatusEditablePopup = () => {
 // ฟังก์ชันเปิด/ปิดการแสดงสถานะห้องแบบ dropdown
 const openStatusRoomEditablePopup = () => {
   statusRoomEditable.value = !statusRoomEditable.value;
+};
+
+// ฟังก์ชันจัดการเมื่อเลือกช่วงวันที่
+const handleDateRangeSelected = (dateRange) => {
+  dateRangeData.value = dateRange;
+  console.log('📅 Date range selected:', dateRange);
+};
+
+// ฟังก์ชันค้นหาห้องว่างตามช่วงวันที่
+const searchAvailableRooms = async () => {
+  try {
+    if (!dateRangeData.value) {
+      alert('กรุณาเลือกช่วงวันที่ก่อน');
+      return;
+    }
+
+    isSearching.value = true;
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+    }
+
+    const response = await fetch('http://localhost:9999/HotelSleepGun/pos/rooms/search-by-date', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        startDate: dateRangeData.value.startDate,
+        endDate: dateRangeData.value.endDate
+      })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'เกิดข้อผิดพลาดในการค้นหาห้องว่าง');
+    }
+
+    // อัปเดตผลการค้นหา
+    searchResults.value = result.data.rooms;
+    searchSummary.value = result.data.summary;
+    searchCriteria.value = result.data.searchCriteria;
+
+    console.log('✅ Search results:', result.data);
+    alert(`พบห้องว่าง ${result.data.summary.availableRooms} ห้อง`);
+
+  } catch (error) {
+    console.error('❌ Error searching available rooms:', error);
+    alert(`เกิดข้อผิดพลาดในการค้นหาห้องว่าง: ${error.message}`);
+  } finally {
+    isSearching.value = false;
+  }
+};
+
+// ฟังก์ชันล้างการค้นหา
+const clearSearch = async () => {
+  try {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('ไม่พบ token กรุณาเข้าสู่ระบบใหม่');
+    }
+
+    const response = await fetch('http://localhost:9999/HotelSleepGun/pos/rooms/search', {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      const result = await response.json();
+      throw new Error(result.message || 'เกิดข้อผิดพลาดในการล้างการค้นหา');
+    }
+
+    // ล้างข้อมูลการค้นหา
+    searchResults.value = [];
+    searchSummary.value = {};
+    searchCriteria.value = {};
+    selectedDateRange.value = '';
+    dateRangeData.value = null;
+
+    console.log('✅ Search cleared successfully');
+
+  } catch (error) {
+    console.error('❌ Error clearing search:', error);
+    alert(`เกิดข้อผิดพลาดในการล้างการค้นหา: ${error.message}`);
+  }
+};
+
+// ฟังก์ชันจัดรูปแบบช่วงวันที่
+const formatDateRange = (startDate, endDate) => {
+  if (!startDate || !endDate) return '';
+
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  const formatDate = (date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  return `${formatDate(start)} - ${formatDate(end)}`;
 };
 
 // ฟังก์ชัน Check In
@@ -934,6 +1104,11 @@ onMounted(async () => {
 
     // โหลดข้อมูลห้อง
     await loadRooms();
+
+    // หลังจากโหลดข้อมูลเสร็จแล้ว ให้ตั้งค่า isFirstLoad เป็น false
+    setTimeout(() => {
+      isFirstLoad.value = false;
+    }, 100);
 
   } catch (error) {
     console.error('❌ Error loading data:', error);
