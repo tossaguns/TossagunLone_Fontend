@@ -50,7 +50,7 @@ const emitCloseWithReset = () => {
 }
 
 .drawer-leave-from {
-  transform: translateX(0);
+  transform: translateX(0) scale(1);
   opacity: 1;
 }
 
@@ -61,6 +61,6 @@ const emitCloseWithReset = () => {
 
 .drawer-enter-active,
 .drawer-leave-active {
-  transition: all 0.3s ease;
+  transition: all 0.8s ease;
 }
 </style>
