@@ -1,0 +1,129 @@
+{
+  "welcome": "ยินดีต้อนรับ",
+  "font": "ฟอนต์",
+  "language": "ภาษา",
+
+  "MainTossagun": "หน้าหลัก",
+
+  "Tossagun": "ทศกัณฐ์",
+  "LoginTopic": "เข้าสู่ระบบหรือสร้างเเอคเคาท์",
+  "LoginP": "สามารถเข้าสู่ระบบโดยเเอคเคาท์ที่ท่านลงทะเบียนกับเรา",
+  "Email": "อีเมล",
+  "EmailLabel": "ดำเนินการโดยใช้อีเมล",
+
+  "SignInHr": "หรือใช้ตัวเลือกใดตัวเลือกหนึ่งในนี้",
+
+  "Conditions1": "เมื่อเข้าสู่ระบบหรือสร้างเเอคเคาท์จะถือว่าท่านยอมรับ",
+  "Conditions2": "ข้อกำหนดเเละเงื่อนไข",
+  "Conditions3": "เเละ",
+  "Conditions4": "เเถลงการณ์เกี่ยวกับความเป็ฯส่วนตัว",
+
+  "Copyright1": "สงวนลิขสิทธิ์",
+  "Copyright2": "ลิขสิทธิ์ (2006 - 2025) - Tossagun.com™",
+  "ContactLabel": "ติดตามเราได้ที่นี่",
+
+  "CompanyDetailFooter": "ร้านเดียว สินค้าครบ จบทุกบริการ",
+  "Company": "บริษัท",
+  "About": "เกี่ยวกับเรา",
+  "News": "ข่าวสาร",
+  "GropCompany": "บริษัทในกลุ่ม DNG",
+  "Collaboration": "ร่วมงานกับ Tossagun",
+
+  "SelectHotel": "เลือกโรงเเรมจาก",
+  "TypeHotel": "ประเภทห้องพัก",
+  "ProvinceHotel": "จังหวัด",
+  "PromotionHotel": "โปรโมชั่น",
+  "Recommend": "เเนะนำ",
+
+  "Policies": "นโยบายความปลอดภัย",
+  "TermsConditions": "ข้อกำหนดเเละการใช้งานเว็บไซต์",
+  "PrivacyPolicy": "นโยบายความเป็นส่วนตัว",
+  "Cookies": "นโยบายคุกกี้",
+  "DataExport": "นโยบายการนำข้อมูลออกจากระบบ",
+  "ServiceAgreement": "ข้อตกลงการให้บริการ",
+
+  "Stay": "เข้าพัก",
+  "BookwithSleepGun": "จองกับ SleepGun",
+  "Report": "รายงาน",
+  "Dashboard": "เเดชบอร์ด",
+  "Promotion": "โปรโมชั่น",
+  "ManageRooms": "จัดการห้องพัก",
+  "ManageEmployee": "จัดการพนักงาน",
+  "Profile": "โปรไฟล์",
+  "Role": "ตำเเหน่ง",
+  "LogOut": "ลงชื่อออก",
+
+  "Yes": "ใช่",
+  "No": "ยกเลิก",
+  "Reset": "รีเซ็ท",
+  "Save": "บันทึก",
+  "Delete": "ลบ",
+
+  "Yes_Button": "ใช่",
+  "NO_Button": "ไม่ใช่",
+
+  "ConfirmCancel_Button": "ยืนยันการยกเลิก",
+  "ConfirmCancelDetail_Button": "คุณต้องการยกเลิกการกรอกข้อมูลใช่หรือไม่?",
+
+  "ConfirmReset_Button": "ยืนยันการรีเซ็ท",
+  "ConfirmResetDetail_Button": "คุณต้องการรีเซ็ทข้อมูลทั้งหมดใช่หรือไม่?",
+
+  "ConfirmSave_Button": "ยืนยันการบันทึก",
+  "ConfirmSaveDetail_Button": "คุณต้องการบันทึกข้อมูลทั้งหมดใช่หรือไม่?",
+
+  "UploadImg_Text": "ลากรูปมาวาง หรือคลิกเพื่อเลือกไฟล์ (สูงสุด 10 รูป)",
+
+  "Upload": "อัปโหลด",
+  "Clear": "ล้าง",
+  "Pending": "รอดำเนินการ",
+  "Completed": "เสร็จสมบูรณ์",
+
+  "AskDeleteImg_Upload": "คุณแน่ใจหรือไม่ว่าจะลบรูปนี้?",
+
+  "Upload_Completed": "อัปโหลดสำเร็จ",
+  "UploadDetail_Completed": "รูปภาพถูกอัปโหลดเรียบร้อยแล้ว",
+
+  "Delete_Completed": "ลบสำเร็จ",
+  "DeleteDetail_Completed": "รูปภาพถูกลบเรียบร้อยแล้ว",
+
+  "OverMaxImg": "เกินจำนวนไฟล์",
+  "maxUpload_Text": "อัปโหลดได้สูงสุด {count} รูปเท่านั้น",
+
+  "RoomTypeSelected": "เลือกประเภทห้องพัก",
+
+  "ManageRoom": "จัดการห้องพัก",
+  "AddRoom": "เพิ่มห้องพัก",
+  "DetailRoom": "รายละเอียดห้องพัก",
+  "RoomNumber": "หมายเลขห้อง",
+  "RoomNumber_Label": "หมายเลขห้องพัก",
+  "Price_Label": "ราคาห้องพัก / บาท",
+  "Stay_Label": "จำนวนเข้าพักได้สูงสุด / คน",
+  "RoomDetail_Label": "รายละเอียดห้องพัก",
+
+  "SelectTypeRoom": "เลือกลักษณะห้องพัก",
+  "AddImg": "เพิ่มรูปภาพ",
+
+  "NumberRoom_Error": "กรุณากรอกหมายเลขห้องพัก",
+  "selectedTypeRoom_Error": "กรุณาเลือกประเภทห้องพัก",
+  "Price_Error": "กรุณากรอกราคาห้องพัก",
+  "Stay_Error": "กรุณากรอกจำนวนเข้าพักสูงสุด",
+  "RoomDetail_Error": "กรุณากรอกรายละเอียดห้องพัก",
+  "EditRoom": "เเก้ไขห้องพัก",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": ""
+}

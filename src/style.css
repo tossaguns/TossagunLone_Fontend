@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Minimal scrollbar for modern browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d6d3d1; /* stone-300 */
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a29e; /* stone-400 */
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d6d3d1 transparent;
+}
+
+.minimal-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #d6d3d1 transparent;
+}
+.minimal-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+.minimal-scrollbar::-webkit-scrollbar-thumb {
+  background: #d6d3d1;
+  border-radius: 8px;
+}
+.minimal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a8a29e;
+}
